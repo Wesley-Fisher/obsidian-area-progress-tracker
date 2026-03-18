@@ -1,0 +1,56 @@
+import type { ActivitiesLayout, BlockConfig, IsoDate } from "./types";
+
+function isIsoDate(value: string): value is IsoDate {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+export function parseBlockConfig(source: string): BlockConfig {
+  const trimmed = source.trim();
+  if (!trimmed) {
+    throw new Error("Block config is empty. Expected JSON.");
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(trimmed);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    throw new Error(`Invalid JSON in progress-tracker block: ${msg}`);
+  }
+
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error("Block JSON must be an object.");
+  }
+
+  const obj = parsed as Record<string, unknown>;
+  const modeRaw = obj.mode ?? "day";
+  if (modeRaw !== "day") {
+    throw new Error(`Unsupported mode: ${String(modeRaw)}`);
+  }
+
+  const dateRaw = obj.date;
+  if (typeof dateRaw !== "string" || !isIsoDate(dateRaw)) {
+    throw new Error("Missing or invalid 'date'. Expected YYYY-MM-DD.");
+  }
+
+  const showRaw = obj.show;
+  const show =
+    Array.isArray(showRaw) &&
+    showRaw.every((s) => s === "areas" || s === "actions" || s === "plan-day" || s === "plan-week")
+      ? (showRaw as Array<"areas" | "actions" | "plan-day" | "plan-week">)
+      : undefined;
+
+  const activitiesLayoutRaw = obj.activitiesLayout;
+  const activitiesLayout =
+    activitiesLayoutRaw === undefined
+      ? undefined
+      : isActivitiesLayout(activitiesLayoutRaw)
+        ? activitiesLayoutRaw
+        : undefined;
+
+  return { mode: "day", date: dateRaw, show, activitiesLayout };
+}
+
+function isActivitiesLayout(value: unknown): value is ActivitiesLayout {
+  return value === "list" || value === "columns" || value === "tabs";
+}

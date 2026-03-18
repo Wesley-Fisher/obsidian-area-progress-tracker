@@ -1,0 +1,96 @@
+import type { DailyLog, IsoDate, SystemConfig } from "../../types";
+import type { ActivitiesSectionModel, ActivitiesGroupModel, ActivityRowModel, ActionEntryModel, RecordEntryModel } from "./models";
+import { buildActivityGroupsFromConfig } from "./grouping";
+
+export function translateActivitiesSection(args: {
+  date: IsoDate;
+  config: SystemConfig;
+  dayLog: DailyLog | null;
+}): ActivitiesSectionModel {
+  const records = args.config.records ?? [];
+  if (args.config.actions.length === 0 && records.length === 0) {
+    return { kind: "activitiesEmpty", message: "No actions or records configured." };
+  }
+
+  const groups = buildActivityGroupsFromConfig(args.config);
+  const outGroups: ActivitiesGroupModel[] = [];
+
+  for (const g of groups) {
+    const rows: ActivityRowModel[] = [];
+
+    for (const action of g.actions) {
+      const currentRaw = Number(args.dayLog?.actions?.[action.id] ?? 0);
+      const current = Number.isFinite(currentRaw) ? currentRaw : 0;
+      const currentText = String(current);
+
+      const configMax =
+        typeof action.max === "number" && Number.isFinite(action.max) && action.max >= 0 ? action.max : undefined;
+
+      const entry: ActionEntryModel = (() => {
+        if (action.input.type === "button") {
+          const step = action.input.step;
+          return {
+            kind: "button",
+            plus: {
+              label: "+",
+              disabled: configMax !== undefined ? current >= configMax : false,
+              event: { kind: "adjustActionTotal", date: args.date, actionId: action.id, delta: step },
+            },
+            minus: {
+              label: "-",
+              disabled: current <= 0,
+              event: { kind: "adjustActionTotal", date: args.date, actionId: action.id, delta: -step },
+            },
+          };
+        }
+
+        if (action.input.type === "checkbox") {
+          const disabledByMax = configMax === 0;
+          const checked = !disabledByMax && current > 0;
+          return {
+            kind: "checkbox",
+            disabled: disabledByMax,
+            checked,
+            eventOnCheck: { kind: "adjustActionTotal", date: args.date, actionId: action.id, delta: 1 - current },
+            eventOnUncheck: { kind: "adjustActionTotal", date: args.date, actionId: action.id, delta: 0 - current },
+          };
+        }
+
+        const effectiveMax =
+          action.input.max !== undefined && configMax !== undefined
+            ? Math.min(action.input.max, configMax)
+            : (action.input.max ?? configMax);
+
+        return {
+          kind: "number",
+          min: action.input.min !== undefined ? String(action.input.min) : undefined,
+          max: effectiveMax !== undefined ? String(effectiveMax) : undefined,
+          step: action.input.step !== undefined ? String(action.input.step) : undefined,
+          value: String(current),
+          eventBase: { kind: "adjustActionTotal", date: args.date, actionId: action.id },
+          current,
+        };
+      })();
+
+      rows.push({ kind: "action", actionId: action.id, name: action.name, currentText, entry });
+    }
+
+    for (const rec of g.records) {
+      const currentText = String(args.dayLog?.records?.[rec.id] ?? "");
+      const entry: RecordEntryModel = {
+        kind: "recordInput",
+        inputType: rec.input.type === "number" ? "number" : "text",
+        min: rec.input.type === "number" && rec.input.min !== undefined ? String(rec.input.min) : undefined,
+        max: rec.input.type === "number" && rec.input.max !== undefined ? String(rec.input.max) : undefined,
+        step: rec.input.type === "number" && rec.input.step !== undefined ? String(rec.input.step) : undefined,
+        value: currentText,
+        eventBase: { kind: "setRecordValue", date: args.date, recordId: rec.id },
+      };
+      rows.push({ kind: "record", recordId: rec.id, name: rec.name, currentText, entry });
+    }
+
+    outGroups.push({ id: g.id, name: g.name, rows });
+  }
+
+  return { kind: "activitiesTabs", groups: outGroups };
+}

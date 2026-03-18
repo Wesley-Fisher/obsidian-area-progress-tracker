@@ -1,0 +1,199 @@
+import { describe, expect, it } from "vitest";
+import {
+  renderProgressTrackerBody,
+} from "../../../core/render/renderFromModel";
+import type { RenderBodyModel } from "../../../core/render/translate/models";
+import { FakeButton, FakeElement, FakeInput, asHTMLElement } from "./fakeDom";
+
+describe("core/render/renderFromModel", () => {
+  it("renders errorList with items", () => {
+    const root = new FakeElement("div");
+    const runtime = { date: "2026-03-16", onUserAction: async () => {} } as any;
+
+    const model: RenderBodyModel = { kind: "errorList", message: "Bad things", items: ["a", "b"] };
+    renderProgressTrackerBody(asHTMLElement(root), runtime, model);
+
+    expect(root.textContent()).toContain("Bad things");
+    expect(root.textContent()).toContain("a");
+    expect(root.textContent()).toContain("b");
+  });
+
+  it("wires activities: button/checkbox/number and record input events", () => {
+    const root = new FakeElement("div");
+    const calls: any[] = [];
+    const runtime = {
+      date: "2026-03-16",
+      onUserAction: async (evt: any) => {
+        calls.push(evt);
+      },
+    };
+
+    const model: RenderBodyModel = {
+      kind: "day",
+      sections: [
+        {
+          kind: "activitiesTabs",
+          groups: [
+            {
+              id: "g1",
+              name: "Group",
+              rows: [
+                {
+                  kind: "action",
+                  actionId: "walk",
+                  name: "Walk",
+                  currentText: "1",
+                  entry: {
+                    kind: "button",
+                    plus: { label: "+", disabled: false, event: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "walk", delta: 1 } as any },
+                    minus: { label: "-", disabled: false, event: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "walk", delta: -1 } as any },
+                  },
+                },
+                {
+                  kind: "action",
+                  actionId: "meditate",
+                  name: "Meditate",
+                  currentText: "0",
+                  entry: {
+                    kind: "checkbox",
+                    disabled: false,
+                    checked: false,
+                    eventOnCheck: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "meditate", delta: 1 } as any,
+                    eventOnUncheck: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "meditate", delta: -1 } as any,
+                  },
+                },
+                {
+                  kind: "action",
+                  actionId: "pushups",
+                  name: "Pushups",
+                  currentText: "1",
+                  entry: {
+                    kind: "number",
+                    min: "0",
+                    max: "5",
+                    step: "1",
+                    value: "1",
+                    eventBase: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "pushups" },
+                    current: 1,
+                  },
+                },
+                {
+                  kind: "record",
+                  recordId: "mood",
+                  name: "Mood",
+                  currentText: "ok",
+                  entry: {
+                    kind: "recordInput",
+                    inputType: "text",
+                    value: "ok",
+                    eventBase: { kind: "setRecordValue", date: "2026-03-16", recordId: "mood" },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    renderProgressTrackerBody(asHTMLElement(root), runtime as any, model);
+
+    const btns = root.findAllByTag("button") as unknown as FakeButton[];
+    const plus = btns.find((b) => b.text === "+")!;
+    const minus = btns.find((b) => b.text === "-")!;
+    plus.click();
+    minus.click();
+
+    const inputs = root.findAllByTag("input") as unknown as FakeInput[];
+    const checkbox = inputs.find((i) => i.type === "checkbox")!;
+    checkbox.checked = true;
+    checkbox.change();
+
+    const number = inputs.find((i) => i.type === "number")!;
+    number.change("100");
+
+    const text = inputs.find((i) => i.type === "text")!;
+    text.change("great");
+
+    expect(calls.some((c) => c.kind === "adjustActionTotal" && c.actionId === "walk" && c.delta === 1)).toBe(true);
+    expect(calls.some((c) => c.kind === "adjustActionTotal" && c.actionId === "walk" && c.delta === -1)).toBe(true);
+    expect(calls.some((c) => c.kind === "adjustActionTotal" && c.actionId === "meditate" && c.delta === 1)).toBe(true);
+    // max=5 clamp: current=1, next=5 => delta=4
+    expect(calls.some((c) => c.kind === "adjustActionTotal" && c.actionId === "pushups" && c.delta === 4)).toBe(true);
+    expect(calls.some((c) => c.kind === "setRecordValue" && c.recordId === "mood" && c.value === "great")).toBe(true);
+  });
+
+  it("renders plan sections (hidden/no-actions/tabs) and emits setPlanTarget clamped to >=0", () => {
+    const root = new FakeElement("div");
+    const calls: any[] = [];
+    const runtime = {
+      date: "2026-03-16",
+      onUserAction: async (evt: any) => {
+        calls.push(evt);
+      },
+    };
+
+    const model: RenderBodyModel = {
+      kind: "day",
+      sections: [
+        {
+          kind: "planHidden",
+          scope: "day",
+          toggle: { label: "Show", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: false } as any },
+          message: "(Day plan hidden)",
+        },
+        {
+          kind: "planNoActions",
+          scope: "week",
+          toggle: { label: "Hide", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanWeek", value: true } as any },
+          message: "No actions",
+        },
+        {
+          kind: "planTabs",
+          scope: "day",
+          toggle: { label: "Hide", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: true } as any },
+          groups: [
+            {
+              id: "g1",
+              name: "Group",
+              rows: [
+                {
+                  actionId: "walk",
+                  name: "Walk",
+                  plannedText: "2",
+                  scope: "day",
+                  eventBase: { kind: "setPlanTarget", scope: "day", actionId: "walk" },
+                  entry: {
+                    kind: "number",
+                    min: "0",
+                    max: undefined,
+                    step: "1",
+                    value: "2",
+                    eventBase: { kind: "setPlanTarget", scope: "day", actionId: "walk" },
+                    current: 2,
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    renderProgressTrackerBody(asHTMLElement(root), runtime as any, model);
+
+    const btns = root.findAllByTag("button") as unknown as FakeButton[];
+    expect(btns.length).toBeGreaterThanOrEqual(3);
+    btns[0].click();
+    btns[1].click();
+
+    const inputs = root.findAllByTag("input") as unknown as FakeInput[];
+    expect(inputs.length).toBe(1);
+    inputs[0].change("-5");
+    inputs[0].change("not-a-number");
+
+    expect(calls.some((c) => c.kind === "setDayUiFlag" && c.flag === "hidePlanDay" && c.value === false)).toBe(true);
+    expect(calls.some((c) => c.kind === "setDayUiFlag" && c.flag === "hidePlanWeek" && c.value === true)).toBe(true);
+    expect(calls.some((c) => c.kind === "setPlanTarget" && c.actionId === "walk" && c.value === 0)).toBe(true);
+  });
+});

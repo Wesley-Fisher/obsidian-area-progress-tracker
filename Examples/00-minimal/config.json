@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "areas": [
+    {
+      "id": "health",
+      "name": "Health",
+      "minScore": 0,
+      "maxScore": 1000,
+      "baseScore": 500,
+      "dailyDecay": 10
+    }
+  ],
+  "actions": [
+    {
+      "id": "walk",
+      "name": "Walk 20m",
+      "input": { "type": "button", "step": 1 },
+      "effects": { "health": 12 }
+    },
+    {
+      "id": "stretch",
+      "name": "Stretch",
+      "input": { "type": "checkbox" },
+      "effects": { "health": 3 }
+    }
+  ],
+  "groups": [],
+  "records": []
+}

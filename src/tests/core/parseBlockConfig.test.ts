@@ -1,0 +1,54 @@
+import { describe, expect, it } from "vitest";
+import { parseBlockConfig } from "../../core/parseBlockConfig";
+
+describe("parseBlockConfig (JSON)", () => {
+  it("parses required fields", () => {
+    const cfg = parseBlockConfig('{"mode":"day","date":"2026-03-14"}');
+    expect(cfg.mode).toBe("day");
+    expect(cfg.date).toBe("2026-03-14");
+  });
+
+  it("parses show list", () => {
+    const cfg = parseBlockConfig('{"date":"2026-03-14","show":["areas","actions","plan-day","plan-week"]}');
+    expect(cfg.show).toEqual(["areas", "actions", "plan-day", "plan-week"]);
+  });
+
+  it("parses activitiesLayout", () => {
+    const cfg = parseBlockConfig('{"date":"2026-03-14","activitiesLayout":"tabs"}');
+    expect(cfg.activitiesLayout).toBe("tabs");
+  });
+
+  it("rejects invalid date", () => {
+    expect(() => parseBlockConfig('{"date":"2026/03/14"}')).toThrow(/date/i);
+  });
+
+  it("rejects empty string", () => {
+    expect(() => parseBlockConfig('')).toThrow(/empty/i);
+  });
+
+  it("rejects invalid json", () => {
+    const input = '{"date":"2026-03-14"'; // No closing },
+    expect(() => parseBlockConfig(input)).toThrow(/json/i);
+  });
+
+  it("rejects invalid json 2", () => {
+    const input = '{"date":"2026-03-14",,'; // No closing }, extra commas
+    expect(() => parseBlockConfig(input)).toThrow(/json/i);
+  });
+
+  it("rejects json not parsed as an object", () => {
+    const input = '["date","2026-03-14"]'; // Not an object
+    expect(() => parseBlockConfig(input)).toThrow(/must be an object/i);
+  });
+
+  it("rejects invalid mode", () => {
+    const input = '{"date":"2026/03/14", "mode" : "invalid"}';
+    expect(() => parseBlockConfig(input)).toThrow(/Unsupported mode/i);
+  });
+
+  it("handles null activitiesLayout", () => {
+    const input = '{"date":"2026-03-14", "mode" : "day", "activitiesLayout": null}';
+    const out = parseBlockConfig(input);
+    expect(out.activitiesLayout).toBeUndefined();
+  });
+});

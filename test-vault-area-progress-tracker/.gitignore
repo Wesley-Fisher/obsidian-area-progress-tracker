@@ -1,0 +1,4 @@
+!.gitignore
+!FileA.md
+.obsidian/
+!.obsidian/plugins/area-progress-tracker

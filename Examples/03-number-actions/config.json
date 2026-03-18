@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "areas": [
+    {
+      "id": "career",
+      "name": "Career",
+      "minScore": 0,
+      "maxScore": 1000,
+      "baseScore": 500,
+      "dailyDecay": 6
+    }
+  ],
+  "actions": [
+    {
+      "id": "deep_work_minutes",
+      "name": "Deep work (minutes)",
+      "input": { "type": "number", "min": 0, "max": 240, "step": 15 },
+      "effects": { "career": 0.25 },
+      "max": 180
+    },
+    {
+      "id": "admin_tasks",
+      "name": "Admin tasks (count)",
+      "input": { "type": "button", "step": 1 },
+      "effects": { "career": 1 }
+    }
+  ],
+  "groups": [],
+  "records": []
+}
