@@ -13,6 +13,7 @@ describe("core/vault/repo", () => {
     const date = "2026-03-16" as any;
     const paths = repo.getPaths(date);
     expect(paths.dailyLogPath).toContain("logs");
+    expect(paths.dailyLogPath).toContain("apt.");
 
     await repo.writeDailyLogRaw(date, { hello: "world" });
     expect(await repo.existsDailyLog(date)).toBe(true);

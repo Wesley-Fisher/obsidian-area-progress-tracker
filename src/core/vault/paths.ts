@@ -37,7 +37,7 @@ export function getDataPaths(dataFolder: string, date: IsoDate): DataPaths {
   const { configPath, dayPlanPath, weekPlanPath, logsFolder } = getStaticDataPaths(dataFolder);
   return {
     configPath,
-    dailyLogPath: `${logsFolder}/${date}.json`,
+    dailyLogPath: `${logsFolder}/apt.${date}.json`,
     dayPlanPath,
     weekPlanPath,
   };

@@ -41,7 +41,7 @@ describe("vault setup", () => {
     expect(await vault.exists(staticPaths.dayPlanPath)).toBe(true);
     expect(await vault.exists(staticPaths.weekPlanPath)).toBe(true);
 
-    const dailyLogPath = `${staticPaths.logsFolder}/${date}.json`;
+    const dailyLogPath = `${staticPaths.logsFolder}/apt.${date}.json`;
     expect(await vault.exists(dailyLogPath)).toBe(true);
   });
 

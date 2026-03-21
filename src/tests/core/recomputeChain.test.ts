@@ -6,7 +6,7 @@ import { createVaultRepo } from "../../core/vault/repo";
 import { MemoryVault } from "../memoryVault";
 
 function dayPath(d: IsoDate): string {
-  return `ProgressTracker/logs/${d}.json`;
+  return `ProgressTracker/logs/apt.${d}.json`;
 }
 
 describe("scoresEqual", () => {
