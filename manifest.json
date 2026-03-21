@@ -1,7 +1,7 @@
 {
   "id": "area-progress-tracker",
   "name": "Area Progress Tracker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "minAppVersion": "1.5.0",
   "description": "Track area-based progress in periodic notes via a progress-tracker code block.",
   "author": "",
