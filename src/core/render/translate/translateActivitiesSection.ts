@@ -32,7 +32,7 @@ export function translateActivitiesSection(args: {
           {
             for (const req of args.config.requiredActions[areaReqKey]) {
               if (req.action === action.id) {
-                needed = Math.max(req.req, needed);
+                needed = Math.max(req.req - current, 0);
               }
             }
           }
