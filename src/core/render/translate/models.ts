@@ -47,6 +47,7 @@ export type ActivitiesGroupModel = {
   id: string;
   name: string;
   rows: Array<ActivityRowModel>;
+  numActionsStillRequired: number;
 };
 
 export type ActivityRowModel =

@@ -1,7 +1,9 @@
-export function renderTabbedGroups<T extends { id: string; name: string }>(
+import { ActivitiesGroupModel } from "./translate/models";
+
+export function renderTabbedGroups(
   sec: HTMLElement,
-  groups: T[],
-  renderPanel: (panel: HTMLElement, g: T) => void
+  groups: ActivitiesGroupModel[],
+  renderPanel: (panel: HTMLElement, g: ActivitiesGroupModel) => void
 ): void {
   const tabBar = sec.createDiv({ cls: "apt-activities-tabs" });
   const panels = sec.createDiv({ cls: "apt-activities-tabpanels" });
@@ -18,7 +20,12 @@ export function renderTabbedGroups<T extends { id: string; name: string }>(
   };
 
   for (const [idx, g] of groups.entries()) {
-    const btn = tabBar.createEl("button", { text: g.name }) as HTMLButtonElement;
+    let buttonName = g.name;
+    if (g.numActionsStillRequired > 0) {
+      buttonName += ` (${g.numActionsStillRequired})`;
+    }
+    const btn = tabBar.createEl("button", { text: buttonName }) as HTMLButtonElement;
+
     buttons.push(btn);
     btn.onclick = () => setActive(idx);
 

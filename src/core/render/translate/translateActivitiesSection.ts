@@ -17,6 +17,7 @@ export function translateActivitiesSection(args: {
 
   for (const g of groups) {
     const rows: ActivityRowModel[] = [];
+    let numActionsStillRequired = 0;
 
     for (const action of g.actions) {
       const currentRaw = Number(args.dayLog?.actions?.[action.id] ?? 0);
@@ -36,6 +37,10 @@ export function translateActivitiesSection(args: {
             }
           }
         }
+      }
+      if (needed > 0)
+      {
+        numActionsStillRequired += 1;
       }
 
       const configMax =
@@ -104,7 +109,7 @@ export function translateActivitiesSection(args: {
       rows.push({ kind: "record", recordId: rec.id, name: rec.name, currentText, entry });
     }
 
-    outGroups.push({ id: g.id, name: g.name, rows });
+    outGroups.push({ id: g.id, name: g.name, rows, numActionsStillRequired: numActionsStillRequired});
   }
 
   return { kind: "activitiesTabs", groups: outGroups };
