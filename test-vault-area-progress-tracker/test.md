@@ -214,6 +214,26 @@ This is already demonstrated by the existing chain:
 { "date": "2026-03-03", "show": ["areas"] }
 ```
 
+## 6) Showing Actions and Records in Multiple Groups
+
+**Actions to take**
+- Confirm there is a "Walk 20min" action under both "morning" and "evening".
+- Add "+1" for "Walk 20 min" under "morning".
+- Add "-1" for "Walk 20 min" under "evening".
+- Repeat the "+1"/"-1" entries another time or two.
+- Enter a "Weight" under "morning", and confirm it is visible under "evening".
+- Change the "Weight" under "evening", and confirm it changes under "morning".
+
+**Expect**
+- The "Walk 20min" action appears under both tabs.
+- Both "+1" and "-1" buttons from different tabs modify the day's score.
+- The "+1"/"-1" cycle always returns to the same values at the end.
+- Entering "Weight" in one tab makes it's value change when viewing the other tab.
+
+```progress-tracker
+{ "date": "2026-03-03", "show": ["areas", "actions"] }
+```
+
 ---
 
 ## Cleanup / Restore

@@ -21,10 +21,10 @@ describe("render/translate/grouping", () => {
     const config = mkConfig({
       groups: [{ id: "g1", name: "Group 1" }],
       actions: [
-        { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupId: "g1" },
-        { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {} },
+        { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: ["g1"] },
+        { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: []},
       ],
-      records: [{ id: "r1", name: "R1", input: { type: "text" }, groupId: "g1" }],
+      records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: ["g1"] }],
     });
 
     const groups = buildActivityGroupsFromConfig(config);
@@ -37,8 +37,8 @@ describe("render/translate/grouping", () => {
 
   it("buildActivityGroupsFromConfig falls back to All when nothing is grouped", () => {
     const config = mkConfig({
-      actions: [{ id: "a1", name: "A1", input: { type: "checkbox" }, effects: {} }],
-      records: [{ id: "r1", name: "R1", input: { type: "text" } }],
+      actions: [{ id: "a1", name: "A1", input: { type: "checkbox" }, effects: {}, groupIds: [] }],
+      records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: [] }],
     });
 
     const groups = buildActivityGroupsFromConfig(config);
@@ -51,8 +51,8 @@ describe("render/translate/grouping", () => {
     const config = mkConfig({
       groups: [{ id: "g1", name: "Group 1" }],
       actions: [
-        { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {} },
-        { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {} },
+        { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
+        { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
       ],
     });
 
@@ -65,7 +65,7 @@ describe("render/translate/grouping", () => {
     const config = mkConfig({
       groups: [{ id: "g1", name: "Group 1" }],
       // action references unknown groupId so it won't match g1, and isn't considered ungrouped
-      actions: [{ id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupId: "unknown" }],
+      actions: [{ id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: ["unknown"] }],
       records: [],
     });
 
@@ -77,7 +77,7 @@ describe("render/translate/grouping", () => {
   it("buildActionOnlyGroupsFromConfig skips empty configured groups and falls back to All", () => {
     const config = mkConfig({
       groups: [{ id: "g1", name: "Group 1" }],
-      actions: [{ id: "a1", name: "A1", input: { type: "checkbox" }, effects: {}, groupId: "unknown" }],
+      actions: [{ id: "a1", name: "A1", input: { type: "checkbox" }, effects: {}, groupIds: ["unknown"] }],
     });
 
     const groups = buildActionOnlyGroupsFromConfig(config);

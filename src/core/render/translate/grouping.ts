@@ -11,14 +11,14 @@ export function buildActivityGroupsFromConfig(config: SystemConfig): ActivityGro
   const groupsInConfig = config.groups ?? [];
   const records = config.records ?? [];
 
-  const ungroupedActions = config.actions.filter((a) => !a.groupId);
-  const ungroupedRecords = records.filter((r) => !r.groupId);
+  const ungroupedActions = config.actions.filter((a) => !a.groupIds || a.groupIds.length === 0);
+  const ungroupedRecords = records.filter((r) => !r.groupIds || r.groupIds.length === 0);
 
   const groups: ActivityGroup[] = [];
 
   for (const group of groupsInConfig) {
-    const a = config.actions.filter((act) => act.groupId === group.id);
-    const r = records.filter((rec) => rec.groupId === group.id);
+    const a = config.actions.filter((act) => act.groupIds.includes(group.id));
+    const r = records.filter((rec) => rec.groupIds.includes(group.id));
     if (a.length === 0 && r.length === 0) continue;
     groups.push({ id: group.id, name: group.name, actions: a, records: r });
   }
@@ -42,12 +42,12 @@ export type ActionOnlyGroup = {
 
 export function buildActionOnlyGroupsFromConfig(config: SystemConfig): ActionOnlyGroup[] {
   const groupsInConfig = config.groups ?? [];
-  const ungroupedActions = config.actions.filter((a) => !a.groupId);
+  const ungroupedActions = config.actions.filter((a) => !a.groupIds || a.groupIds.length === 0);
 
   const groups: ActionOnlyGroup[] = [];
 
   for (const group of groupsInConfig) {
-    const a = config.actions.filter((act) => act.groupId === group.id);
+    const a = config.actions.filter((act) => act.groupIds.includes(group.id));
     if (a.length === 0) continue;
     groups.push({ id: group.id, name: group.name, actions: a });
   }

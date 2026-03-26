@@ -31,21 +31,21 @@
       "name": "Walk 20m",
       "input": { "type": "button", "step": 1 },
       "effects": { "health": 12 },
-      "groupId": "morning"
+      "groupIds": ["morning", "evening"]
     },
     {
       "id": "deep_work",
       "name": "Deep work (45m)",
       "input": { "type": "number", "min": 0, "step": 1 },
       "effects": { "career": 5 },
-      "groupId": "work"
+      "groupIds": ["work"]
     },
     {
       "id": "junk_food",
       "name": "Junk food",
       "input": { "type": "button", "step": 1 },
       "effects": { "health": -15 },
-      "groupId": "evening"
+      "groupIds": ["evening"]
     }
   ],
   "records": [
@@ -53,13 +53,13 @@
       "id": "weight",
       "name": "Weight",
       "input": { "type": "number", "min": 50, "max": 400, "step": 0.1 },
-      "groupId": "morning"
+      "groupIds": ["morning", "evening"]
     },
     {
       "id": "mood",
       "name": "Mood",
       "input": { "type": "text" },
-      "groupId": "evening"
+      "groupIds": ["evening"]
     }
   ]
 }

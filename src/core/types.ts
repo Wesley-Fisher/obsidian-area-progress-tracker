@@ -39,7 +39,7 @@ export interface ActionConfig {
   /** Optional per-day cap on how many times this action can be recorded. */
   max?: number;
   /** Optional UI grouping for columns/tabs (independent of Areas). */
-  groupId?: ActivityGroupId;
+  groupIds: ActivityGroupId[];
 }
 
 export type RecordInputConfig =
@@ -51,7 +51,7 @@ export interface RecordConfig {
   name: string;
   input: RecordInputConfig;
   /** Optional UI grouping for columns/tabs (independent of Areas). */
-  groupId?: ActivityGroupId;
+  groupIds: ActivityGroupId[];
 }
 
 export interface SystemConfig {

@@ -159,14 +159,14 @@ Actions are set up as a list of JSON elements as below:
       "name": "Walk 20m",
       "input": { "type": "button", "step": 1 },
       "effects": { "health": 12 },
-      "groupId": "morning"
+      "groupIds": ["morning", "afternoon"]
     },
     {
       "id": "junk_food",
       "name": "Junk food",
       "input": { "type": "button", "step": 1 },
       "effects": { "health": -15, "finances": -5 },
-      "groupId": "evening"
+      "groupIds": ["evening"]
     },
     ...
 ]
@@ -184,7 +184,7 @@ The elements needed for each Action are:
   * Within the `effects` object, there must be key/value pairs (see the "Junk Food" entry).
   * The keys must match the `id` field of the created Area (the "finances" area is not shown in these examples).
   * The numbers are the effect on the Area's score.
-* `groupId`: (optional) the Group tab to show the action under. If provided, it should match the `id` of a configured Group.
+* `groupIds`: A list of Group tabs to show the action under. Each entry should match an `id` of a configured Group.
 * `max`: (optional) a per-day cap on how many times an action can be recorded.
 
 ### Records Setup
@@ -247,7 +247,7 @@ The items in the list of required actions must include:
 
 Actions:
 * the keys in the `effects` list must match the `id` of Areas
-* The `groupId` (if used) must match an `id` of a Group
+* The `groupIds` entries must match an `id` of a Group
 
 Records:
 * The `groupId` (if used) must match an `id` of a Group
