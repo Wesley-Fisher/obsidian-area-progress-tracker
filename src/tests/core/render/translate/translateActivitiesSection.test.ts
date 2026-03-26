@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { DailyLog, SystemConfig } from "../../../../core/types";
 import { translateActivitiesSection } from "../../../../core/render/translate/translateActivitiesSection";
+import { ActivitiesSectionModel, ActivitiesSectionModelEmpty } from "../../../../core/render/translate/models";
 
 describe("render/translate/translateActivitiesSection", () => {
   it("returns activitiesEmpty when no actions or records are configured", () => {
@@ -10,7 +11,7 @@ describe("render/translate/translateActivitiesSection", () => {
       date: "2026-03-16" as any,
       config,
       dayLog: null,
-    });
+    }) as ActivitiesSectionModelEmpty;
 
     expect(model.kind).toBe("activitiesEmpty");
     expect(model.message).toContain("No actions or records");

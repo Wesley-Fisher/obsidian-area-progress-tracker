@@ -29,9 +29,19 @@ export type AreaRowModel = {
   possibleWeekText: string;
 };
 
+export type ActivitiesSectionModelEmpty = {
+  kind: "activitiesEmpty";
+  message: string;
+}
+
+export type ActivitiesSectionModelFilled = {
+  kind: "activitiesTabs";
+  groups: ActivitiesGroupModel[];
+}
+
 export type ActivitiesSectionModel =
-  | { kind: "activitiesEmpty"; message: string }
-  | { kind: "activitiesTabs"; groups: ActivitiesGroupModel[] };
+  | ActivitiesSectionModelEmpty
+  | ActivitiesSectionModelFilled;
 
 export type ActivitiesGroupModel = {
   id: string;

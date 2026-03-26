@@ -9,6 +9,8 @@ import type {
   RecordEntryModel,
   RenderBodyModel,
   RenderErrorModel,
+  ActivitiesSectionModelEmpty,
+  ActivitiesSectionModelFilled,
 } from "./translate/models";
 import { addThreeColRow, renderTabbedGroups, renderThreeColumnTable } from "./commonTable";
 
@@ -99,7 +101,7 @@ function renderAreasTable(container: HTMLElement, model: Extract<AreasSectionMod
   }
 }
 
-function renderActivitiesEmpty(container: HTMLElement, model: Extract<ActivitiesSectionModel, { kind: "activitiesEmpty" }>): void {
+function renderActivitiesEmpty(container: HTMLElement, model: ActivitiesSectionModelEmpty): void {
   const sec = container.createDiv({ cls: "apt-section" });
   sec.createEl("h4", { text: "Actions" });
   sec.createEl("div", { text: model.message });
@@ -108,7 +110,7 @@ function renderActivitiesEmpty(container: HTMLElement, model: Extract<Activities
 function renderActivitiesTabs(
   container: HTMLElement,
   runtime: RenderRuntime,
-  model: Extract<ActivitiesSectionModel, { kind: "activitiesTabs" }>
+  model: ActivitiesSectionModelFilled
 ): void {
   const sec = container.createDiv({ cls: "apt-section" });
   sec.createEl("h4", { text: "Actions" });
