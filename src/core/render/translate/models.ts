@@ -56,6 +56,7 @@ export type ActivityRowModel =
       name: string;
       currentText: string;
       entry: ActionEntryModel;
+      requiredLeft: number;
     }
   | {
       kind: "record";

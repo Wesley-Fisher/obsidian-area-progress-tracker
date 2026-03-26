@@ -23,6 +23,21 @@ export function translateActivitiesSection(args: {
       const current = Number.isFinite(currentRaw) ? currentRaw : 0;
       const currentText = String(current);
 
+      // Find the maximum required count of this action, across all possible requirements
+      let needed = 0;
+      if (args.config.requiredActions) {
+        for (const areaReqKey in args.config.requiredActions) {
+          if (args.config.requiredActions[areaReqKey])
+          {
+            for (const req of args.config.requiredActions[areaReqKey]) {
+              if (req.action === action.id) {
+                needed = Math.max(req.req, needed);
+              }
+            }
+          }
+        }
+      }
+
       const configMax =
         typeof action.max === "number" && Number.isFinite(action.max) && action.max >= 0 ? action.max : undefined;
 
@@ -72,7 +87,7 @@ export function translateActivitiesSection(args: {
         };
       })();
 
-      rows.push({ kind: "action", actionId: action.id, name: action.name, currentText, entry });
+      rows.push({ kind: "action", actionId: action.id, name: action.name, currentText, entry, requiredLeft: Math.max(needed - current, 0)});
     }
 
     for (const rec of g.records) {
