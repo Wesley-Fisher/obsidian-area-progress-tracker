@@ -52,11 +52,15 @@ export function addThreeColRow(
   tbody: HTMLElement,
   name: string,
   currentText: string,
+  doUnderline: boolean,
   renderEntry: (cell: HTMLElement) => void
 ): void {
   const tr = tbody.createEl("tr");
-  tr.createEl("td", { text: name });
-  tr.createEl("td", { text: currentText });
-  const entry = tr.createEl("td");
-  renderEntry(entry);
+  const tdName = tr.createEl("td", { text: name });
+  if (doUnderline) {
+    tdName.style.textDecoration = "underline";
+  }
+  const tdCurrent = tr.createEl("td", { text: currentText });
+  const tdEntry = tr.createEl("td");
+  renderEntry(tdEntry);
 }

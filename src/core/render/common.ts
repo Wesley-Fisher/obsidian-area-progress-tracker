@@ -29,14 +29,14 @@ function renderActivitiesTable(
     for (const action of actions) {
       const current = Number(args.dayLog?.actions?.[action.id] ?? 0);
       const safeCurrent = Number.isFinite(current) ? current : 0;
-      addThreeColRow(tbody, action.name, String(safeCurrent), (cell) => {
+      addThreeColRow(tbody, action.name, String(safeCurrent), false, (cell) => {
         renderActionEntry(cell, args, action, safeCurrent);
       });
     }
 
     for (const rec of records) {
       const current = args.dayLog?.records?.[rec.id] ?? "";
-      addThreeColRow(tbody, rec.name, String(current), (cell) => {
+      addThreeColRow(tbody, rec.name, String(current), false, (cell) => {
         renderRecordEntry(cell, args, rec, String(current));
       });
     }

@@ -119,9 +119,10 @@ function renderActivitiesTabs(
     renderThreeColumnTable(panel, "apt-activities-table", (tbody) => {
       for (const row of g.rows) {
         if (row.kind === "action") {
-          addThreeColRow(tbody, row.name, row.currentText, (cell) => renderActionEntry(cell, runtime, row.entry));
+          const doUnderline = row.requiredLeft > 0;
+          addThreeColRow(tbody, row.name, row.currentText, doUnderline, (cell) => renderActionEntry(cell, runtime, row.entry));
         } else {
-          addThreeColRow(tbody, row.name, row.currentText, (cell) => renderRecordEntry(cell, runtime, row.entry));
+          addThreeColRow(tbody, row.name, row.currentText, false, (cell) => renderRecordEntry(cell, runtime, row.entry));
         }
       }
     });
@@ -219,7 +220,7 @@ function renderPlanTabs(container: HTMLElement, runtime: RenderRuntime, model: E
   renderTabbedGroups(sec, model.groups, (panel, g) => {
     renderThreeColumnTable(panel, "apt-plan-table", (tbody) => {
       for (const row of g.rows) {
-        addThreeColRow(tbody, row.name, row.plannedText, (cell) => renderPlanEntry(cell, runtime, row.entry));
+        addThreeColRow(tbody, row.name, row.plannedText, false, (cell) => renderPlanEntry(cell, runtime, row.entry));
       }
     });
   });

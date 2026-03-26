@@ -14,7 +14,7 @@ export function renderPlanTabs(
       for (const action of g.actions) {
         const plannedRaw = planActions[action.id] ?? 0;
         const planned = Number.isFinite(plannedRaw) ? Math.max(0, plannedRaw) : 0;
-        addThreeColRow(tbody, action.name, String(planned), (cell) => {
+        addThreeColRow(tbody, action.name, String(planned), false, (cell) => {
           renderPlanEntry(cell, args, scope, action.id, planned);
         });
       }
