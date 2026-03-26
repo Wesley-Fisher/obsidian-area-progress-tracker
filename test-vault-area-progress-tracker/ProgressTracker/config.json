@@ -61,5 +61,9 @@
       "input": { "type": "text" },
       "groupIds": ["evening"]
     }
-  ]
+  ],
+  "requiredActions":
+  {
+    "health": [{"action": "walk", "req": 1}]
+  }
 }
