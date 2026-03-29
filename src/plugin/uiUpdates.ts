@@ -114,7 +114,7 @@ public captureUiState(blockEls: HTMLElement[]): CapturedUiState {
   })();
 
   const scrollBasis = (activeInBlock ? active : null) ?? blockEls[0] ?? null;
-  const scrollEl = scrollBasis ? findScrollableParent(scrollBasis) : (document.scrollingElement as HTMLElement | null);
+  const scrollEl = scrollBasis ? this.findScrollableParent(scrollBasis) : (document.scrollingElement as HTMLElement | null);
   const resolvedScrollEl = scrollEl ?? (document.scrollingElement as HTMLElement | null);
 
   const anchorOffset = (() => {
@@ -156,7 +156,7 @@ public captureUiState(blockEls: HTMLElement[]): CapturedUiState {
     // First: restore focus (prefer preventScroll).
     let target: HTMLElement | null = null;
     if (state.focusKey) {
-      const selector = `[data-apt-focus-key="${escapeAttributeValue(state.focusKey)}"]`;
+      const selector = `[data-apt-focus-key="${this.escapeAttributeValue(state.focusKey)}"]`;
       for (const b of blockEls) {
         const found = b.querySelector(selector) as HTMLElement | null;
         if (found) {
@@ -226,7 +226,7 @@ public captureUiState(blockEls: HTMLElement[]): CapturedUiState {
 public findScrollableParent(start: HTMLElement): HTMLElement | null {
   let el: HTMLElement | null = start;
   while (el) {
-    if (isScrollable(el)) return el;
+    if (this.isScrollable(el)) return el;
     el = el.parentElement;
   }
   return null;
