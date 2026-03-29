@@ -1,14 +1,19 @@
 import { describe, expect, it } from "vitest";
 import {
   renderProgressTrackerBody,
+  RenderRuntime,
 } from "../../../core/render/renderFromModel";
 import type { RenderBodyModel } from "../../../core/translate/models";
 import { FakeButton, FakeElement, FakeInput, asHTMLElement } from "./fakeDom";
+import { UserEvent } from "../../../core/handleEvents/types";
 
 describe("core/render/renderFromModel", () => {
   it("renders errorList with items", () => {
     const root = new FakeElement("div");
-    const runtime = { date: "2026-03-16", onUserAction: async () => {} } as any;
+
+    // Need to specify function, but no need to do anything
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const runtime = { date: "2026-03-16", onUserAction: async (evt: UserEvent) => {} } as RenderRuntime;
 
     const model: RenderBodyModel = { kind: "errorList", message: "Bad things", items: ["a", "b"] };
     renderProgressTrackerBody(asHTMLElement(root), runtime, model);
@@ -20,10 +25,10 @@ describe("core/render/renderFromModel", () => {
 
   it("wires activities: button/checkbox/number and record input events", () => {
     const root = new FakeElement("div");
-    const calls: any[] = [];
+    const calls: UserEvent[] = [];
     const runtime = {
       date: "2026-03-16",
-      onUserAction: async (evt: any) => {
+      onUserAction: async (evt: UserEvent) => {
         calls.push(evt);
       },
     };
@@ -37,6 +42,7 @@ describe("core/render/renderFromModel", () => {
             {
               id: "g1",
               name: "Group",
+              numActionsStillRequired: 0,
               rows: [
                 {
                   kind: "action",
@@ -45,9 +51,10 @@ describe("core/render/renderFromModel", () => {
                   currentText: "1",
                   entry: {
                     kind: "button",
-                    plus: { label: "+", disabled: false, event: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "walk", delta: 1 } as any },
-                    minus: { label: "-", disabled: false, event: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "walk", delta: -1 } as any },
+                    plus: { label: "+", disabled: false, event: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "walk", delta: 1 } as UserEvent },
+                    minus: { label: "-", disabled: false, event: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "walk", delta: -1 } as UserEvent },
                   },
+                  requiredLeft: 0,
                 },
                 {
                   kind: "action",
@@ -58,9 +65,10 @@ describe("core/render/renderFromModel", () => {
                     kind: "checkbox",
                     disabled: false,
                     checked: false,
-                    eventOnCheck: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "meditate", delta: 1 } as any,
-                    eventOnUncheck: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "meditate", delta: -1 } as any,
+                    eventOnCheck: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "meditate", delta: 1 } as UserEvent,
+                    eventOnUncheck: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "meditate", delta: -1 } as UserEvent,
                   },
+                  requiredLeft: 0,
                 },
                 {
                   kind: "action",
@@ -73,9 +81,10 @@ describe("core/render/renderFromModel", () => {
                     max: "5",
                     step: "1",
                     value: "1",
-                    eventBase: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "pushups" },
+                    eventBase: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "pushups"},
                     current: 1,
                   },
+                  requiredLeft: 0,
                 },
                 {
                   kind: "record",
@@ -96,7 +105,7 @@ describe("core/render/renderFromModel", () => {
       ],
     };
 
-    renderProgressTrackerBody(asHTMLElement(root), runtime as any, model);
+    renderProgressTrackerBody(asHTMLElement(root), runtime as RenderRuntime, model);
 
     const btns = root.findAllByTag("button") as unknown as FakeButton[];
     const plus = btns.find((b) => b.text === "+")!;
@@ -125,10 +134,10 @@ describe("core/render/renderFromModel", () => {
 
   it("renders plan sections (hidden/no-actions/tabs) and emits setPlanTarget clamped to >=0", () => {
     const root = new FakeElement("div");
-    const calls: any[] = [];
-    const runtime = {
+    const calls: UserEvent[] = [];
+    const runtime: RenderRuntime = {
       date: "2026-03-16",
-      onUserAction: async (evt: any) => {
+      onUserAction: async (evt: UserEvent) => {
         calls.push(evt);
       },
     };
@@ -139,19 +148,19 @@ describe("core/render/renderFromModel", () => {
         {
           kind: "planHidden",
           scope: "day",
-          toggle: { label: "Show", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: false } as any },
+          toggle: { label: "Show", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: false } as UserEvent },
           message: "(Day plan hidden)",
         },
         {
           kind: "planNoActions",
           scope: "week",
-          toggle: { label: "Hide", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanWeek", value: true } as any },
+          toggle: { label: "Hide", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanWeek", value: true } as UserEvent },
           message: "No actions",
         },
         {
           kind: "planTabs",
           scope: "day",
-          toggle: { label: "Hide", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: true } as any },
+          toggle: { label: "Hide", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: true } as UserEvent },
           groups: [
             {
               id: "g1",
@@ -180,7 +189,7 @@ describe("core/render/renderFromModel", () => {
       ],
     };
 
-    renderProgressTrackerBody(asHTMLElement(root), runtime as any, model);
+    renderProgressTrackerBody(asHTMLElement(root), runtime as RenderRuntime, model);
 
     const btns = root.findAllByTag("button") as unknown as FakeButton[];
     expect(btns.length).toBeGreaterThanOrEqual(3);

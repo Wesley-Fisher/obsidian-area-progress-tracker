@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { SystemConfig } from "../../core/types";
+import type { RequiredAction, Scores, Scores, SystemConfig } from "../../core/types";
 import { normalizePreviousScores, recomputeDayScores, requirementsMetForArea, buildDailyLog } from "../../core/scoring";
 
 const config: SystemConfig = {
@@ -25,7 +25,7 @@ describe("normalizePreviousScores", () => {
 
     expect(result.health).toEqual({ score: 600, daysSince: 2, decayActive: false });
     expect(result.career).toEqual({ score: 500, daysSince: 0, decayActive: false });
-    expect((result as any).social).toBeUndefined();
+    expect((result as Scores).social).toBeUndefined();
   });
 });
 
@@ -42,7 +42,7 @@ describe("requirementsMetForArea", () => {
   it("handles 0-length requirements", () => {
     const configWithoutReqs: SystemConfig = {
       ...config,
-      requiredActions: [] as any
+      requiredActions: {} as Partial<Record<string, RequiredAction[]>>,
     };
     expect(requirementsMetForArea(configWithoutReqs, "health", {})).toBe(true);
   }
