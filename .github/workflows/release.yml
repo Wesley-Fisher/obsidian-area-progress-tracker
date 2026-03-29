@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: "18.x"
 
+      - name: Check All
+        run: npm run check
+
       - name: Build plugin
         run: |
           npm install
