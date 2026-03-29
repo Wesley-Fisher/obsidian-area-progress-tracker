@@ -15,7 +15,7 @@ describe("handleAdjustActionTotal", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {} }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] }],
       records: [],
     };
 
@@ -42,7 +42,7 @@ describe("handleAdjustActionTotal", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {} }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] }],
       records: [],
     };
 
@@ -68,7 +68,7 @@ describe("handleAdjustActionTotal", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 2 }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 2, groupIds: [] }],
       records: [],
     };
 
@@ -95,7 +95,7 @@ describe("handleAdjustActionTotal", () => {
       version: 1,
       areas: [],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: Number.NaN },
+        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: Number.NaN, groupIds: [] },
       ],
       records: [],
     };
@@ -122,7 +122,7 @@ describe("handleAdjustActionTotal", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {} }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] }],
       records: [],
     };
 

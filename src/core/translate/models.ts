@@ -17,9 +17,20 @@ export type DaySectionModel =
   | ActivitiesSectionModel
   | PlanSectionModel;
 
+
+export type AreasSectionModelEmpty = {
+  kind: "areasEmpty";
+  message: string;
+}
+
+export type AreasSectionModelFilled = {
+  kind: "areasTable";
+  rows: AreaRowModel[];
+}
+
 export type AreasSectionModel =
-  | { kind: "areasEmpty"; message: string }
-  | { kind: "areasTable"; rows: AreaRowModel[] };
+  | AreasSectionModelEmpty
+  | AreasSectionModelFilled;
 
 export type AreaRowModel = {
   areaName: string;

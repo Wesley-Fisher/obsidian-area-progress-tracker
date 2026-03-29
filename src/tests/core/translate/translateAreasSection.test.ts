@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { DailyLog, PlanFile, SystemConfig } from "../../../core/types";
 import { translateAreasSection } from "../../../core/translate/inner/translateAreasSection";
+import { AreasSectionModelEmpty } from "../../../core/translate/models";
 
 describe("render/translate/translateAreasSection", () => {
   it("returns areasEmpty when scores are missing", () => {
@@ -19,14 +20,14 @@ describe("render/translate/translateAreasSection", () => {
     });
 
     expect(model.kind).toBe("areasEmpty");
-    expect(model.message).toContain("No scores yet");
+    expect((model as AreasSectionModelEmpty).message).toContain("No scores yet");
   });
 
   it("computes possible day/week score columns from plans", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecay: 1 }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 10 } }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 10 }, groupIds: [] }],
       records: [],
     };
 

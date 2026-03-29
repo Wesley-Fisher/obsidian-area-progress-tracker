@@ -103,8 +103,8 @@ describe("render/translate/translateRenderBlock", () => {
       version: 1,
       areas: [],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {} },
-        { id: "walk", name: "Walk2", input: { type: "button", step: 1 }, effects: {} },
+        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: []  },
+        { id: "walk", name: "Walk2", input: { type: "button", step: 1 }, effects: {}, groupIds: []  },
       ],
       records: [],
     };
