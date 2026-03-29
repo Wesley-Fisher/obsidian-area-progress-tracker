@@ -1,0 +1,45 @@
+{
+  "previousScore": {
+    "health": {
+      "score": 492,
+      "daysSince": 1,
+      "decayActive": false
+    },
+    "career": {
+      "score": 490,
+      "daysSince": 2,
+      "decayActive": false
+    }
+  },
+  "startingScore": {
+    "health": {
+      "score": 492,
+      "daysSince": 2,
+      "decayActive": false
+    },
+    "career": {
+      "score": 490,
+      "daysSince": 3,
+      "decayActive": false
+    }
+  },
+  "updatedScore": {
+    "health": {
+      "score": 492,
+      "daysSince": 2,
+      "decayActive": true
+    },
+    "career": {
+      "score": 500,
+      "daysSince": 0,
+      "decayActive": false
+    }
+  },
+  "actions": {
+    "deep_work": 2,
+    "walk": 0
+  },
+  "records": {
+    "weight": "140"
+  }
+}
