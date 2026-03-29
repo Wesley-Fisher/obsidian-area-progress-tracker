@@ -1,34 +1,33 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, PlanFile, SystemConfig } from "../../../core/types";
+import type { DailyLog, IsoDate, PlanFile, ShowableAreas, SystemConfig } from "../../../core/types";
 import { onRenderProgressTrackerBlock } from "../../../core/render/renderBlock";
 import { getDataPaths } from "../../../core/vault/paths";
 import { buildDailyLog } from "../../../core/scoring";
 import { createVaultRepo } from "../../../core/vault/repo";
 import { MemoryVault } from "../../memoryVault";
 import { FakeElement, asHTMLElement } from "./fakeDom";
+import { RenderBlockArgs } from "../../../core/render/renderTypes";
 
 function mkArgs(opts: {
   vault: MemoryVault;
   dataFolder: string;
   date: string;
   mode?: string;
-  show?: any;
-}): any {
+  show?: ShowableAreas[];
+}): RenderBlockArgs  & { __root: FakeElement } {
   const el = new FakeElement("div");
   const repo = createVaultRepo(opts.vault, opts.dataFolder);
   return {
-    plugin: {} as any,
-    ctx: {} as any,
     el: asHTMLElement(el),
     blockConfig: {
-      mode: (opts.mode ?? "day") as any,
-      date: opts.date as any,
+      mode: "day",
+      date: opts.date as IsoDate,
       show: opts.show,
     },
     repo,
     onUserAction: async () => {},
     __root: el,
-  };
+  } as RenderBlockArgs & { __root: FakeElement };
 }
 
 describe("onRenderProgressTrackerBlock", () => {
@@ -46,19 +45,19 @@ describe("onRenderProgressTrackerBlock", () => {
     const dataFolder = "ProgressTracker";
     const date = "2026-03-16";
 
-    const paths = getDataPaths(dataFolder, date as any);
+    const paths = getDataPaths(dataFolder, date as IsoDate);
 
     const badConfig: SystemConfig = {
       version: 1,
       areas: [],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {} },
-        { id: "walk", name: "Walk2", input: { type: "button", step: 1 }, effects: {} },
+        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
+        { id: "walk", name: "Walk2", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
       ],
       records: [],
     };
 
-    const dayLog: DailyLog = buildDailyLog({ ...badConfig, actions: [] }, undefined, {}, {});
+    const dayLog: DailyLog = buildDailyLog({ ...badConfig, actions: [] }, undefined, {}, {}) as DailyLog;
     const dayPlan: PlanFile = { actions: {} };
     const weekPlan: PlanFile = { actions: {} };
 
@@ -79,7 +78,7 @@ describe("onRenderProgressTrackerBlock", () => {
     const vault = new MemoryVault();
     const dataFolder = "ProgressTracker";
     const date = "2026-03-16";
-    const paths = getDataPaths(dataFolder, date as any);
+    const paths = getDataPaths(dataFolder, date as IsoDate);
 
     const config: SystemConfig = { version: 1, areas: [], actions: [], records: [] };
     const dayLog: DailyLog = buildDailyLog(config, undefined, {}, {});
@@ -91,6 +90,10 @@ describe("onRenderProgressTrackerBlock", () => {
     await vault.write(paths.weekPlanPath, JSON.stringify(plan));
 
     const args = mkArgs({ vault, dataFolder, date, mode: "week" });
+
+    // Allow testing an incorrect mode string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    args.blockConfig.mode = "week" as any;
     await onRenderProgressTrackerBlock(args);
 
     expect(args.__root.textContent()).toContain("Unsupported mode: week");
@@ -100,7 +103,7 @@ describe("onRenderProgressTrackerBlock", () => {
     const vault = new MemoryVault();
     const dataFolder = "ProgressTracker";
     const date = "2026-03-16";
-    const paths = getDataPaths(dataFolder, date as any);
+    const paths = getDataPaths(dataFolder, date as IsoDate);
 
     const config: SystemConfig = {
       version: 1,
@@ -133,12 +136,12 @@ describe("onRenderProgressTrackerBlock", () => {
     const vault = new MemoryVault();
     const dataFolder = "ProgressTracker";
     const date = "2026-03-16";
-    const paths = getDataPaths(dataFolder, date as any);
+    const paths = getDataPaths(dataFolder, date as IsoDate);
 
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {} }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] }],
       records: [],
     };
 
@@ -146,7 +149,7 @@ describe("onRenderProgressTrackerBlock", () => {
       ...buildDailyLog(config, undefined, {}, {}),
       ui: {},
       actions: { walk: 0 },
-    } as any;
+    } as DailyLog;
 
     await vault.write(paths.configPath, JSON.stringify(config));
     await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));

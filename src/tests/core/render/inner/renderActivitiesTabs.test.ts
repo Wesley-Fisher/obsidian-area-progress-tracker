@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 import type { DailyLog, IsoDate, SystemConfig } from "../../../../core/types";
 import { renderActivitiesTabs } from "../../../../core/render/inner/common";
 import { FakeButton, FakeElement, FakeInput, asHTMLElement } from "../fakeDom";
+import { UserEvent } from "../../../../core/handleEvents/types";
 
+// This was a useful AI-gen way to allow overriding lots of these elements
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mkArgs(overrides: Partial<any> = {}): any {
   const container = new FakeElement("div");
   const config: SystemConfig = {
@@ -35,7 +38,7 @@ function mkArgs(overrides: Partial<any> = {}): any {
 
 describe("renderActivitiesTabs", () => {
   it("wires button (+/-) actions with step and respects max/0 disabling", () => {
-    const calls: any[] = [];
+    const calls: UserEvent[] = [];
     const args = mkArgs({
       config: {
         version: 1,
@@ -43,8 +46,8 @@ describe("renderActivitiesTabs", () => {
         actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2 }],
         records: [],
       },
-      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { walk: 1 } } as any,
-      onUserAction: async (evt: any) => {
+      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { walk: 1 } } as DailyLog,
+      onUserAction: async (evt: UserEvent) => {
         calls.push(evt);
       },
     });
@@ -77,7 +80,7 @@ describe("renderActivitiesTabs", () => {
   });
 
   it("renders checkbox actions and emits delta based on checked state", () => {
-    const calls: any[] = [];
+    const calls: UserEvent[] = [];
     const args = mkArgs({
       config: {
         version: 1,
@@ -85,8 +88,8 @@ describe("renderActivitiesTabs", () => {
         actions: [{ id: "meditate", name: "Meditate", input: { type: "checkbox" }, effects: {} }],
         records: [],
       },
-      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { meditate: 0 } } as any,
-      onUserAction: async (evt: any) => {
+      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { meditate: 0 } } as DailyLog,
+      onUserAction: async (evt: UserEvent) => {
         calls.push(evt);
       },
     });
@@ -103,7 +106,7 @@ describe("renderActivitiesTabs", () => {
   });
 
   it("renders number actions and clamps value to >=0 and <= effective max", () => {
-    const calls: any[] = [];
+    const calls: UserEvent[] = [];
     const args = mkArgs({
       config: {
         version: 1,
@@ -113,8 +116,8 @@ describe("renderActivitiesTabs", () => {
         ],
         records: [],
       },
-      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { pushups: 1 } } as any,
-      onUserAction: async (evt: any) => {
+      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { pushups: 1 } } as DailyLog,
+      onUserAction: async (evt: UserEvent) => {
         calls.push(evt);
       },
     });
@@ -134,7 +137,7 @@ describe("renderActivitiesTabs", () => {
   });
 
   it("renders record inputs and emits setRecordValue on change", () => {
-    const calls: any[] = [];
+    const calls: UserEvent[] = [];
     const args = mkArgs({
       config: {
         version: 1,
@@ -142,8 +145,8 @@ describe("renderActivitiesTabs", () => {
         actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {} }],
         records: [{ id: "mood", name: "Mood", input: { type: "text" } }],
       },
-      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: {}, records: { mood: "ok" } } as any,
-      onUserAction: async (evt: any) => {
+      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: {}, records: { mood: "ok" } } as DailyLog,
+      onUserAction: async (evt: UserEvent) => {
         calls.push(evt);
       },
     });
@@ -159,7 +162,7 @@ describe("renderActivitiesTabs", () => {
   });
 
   it("disables checkbox when max=0 and does not emit events", () => {
-    const calls: any[] = [];
+    const calls: UserEvent[] = [];
     const args = mkArgs({
       config: {
         version: 1,
@@ -167,8 +170,8 @@ describe("renderActivitiesTabs", () => {
         actions: [{ id: "meditate", name: "Meditate", input: { type: "checkbox" }, effects: {}, max: 0 }],
         records: [],
       },
-      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { meditate: 0 } } as any,
-      onUserAction: async (evt: any) => {
+      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { meditate: 0 } } as DailyLog,
+      onUserAction: async (evt: UserEvent) => {
         calls.push(evt);
       },
     });

@@ -14,7 +14,7 @@ describe("render/commonTable", () => {
     ];
 
     renderTabbedGroups(asHTMLElement(root), groups, (panel, g) => {
-      (panel as any).createEl("div", { text: `panel-${g.id}` });
+      (panel as HTMLElement).createEl("div", { text: `panel-${g.id}` });
     });
 
     const buttons = root.findAllByTag("button") as unknown as FakeButton[];
