@@ -15,6 +15,8 @@ export function renderTabbedGroups(
     for (let i = 0; i < buttons.length; i++) {
       const active = i === idx;
       buttons[i].toggleClass("is-active", active);
+      buttons[i].style.fontWeight = active ? "bold" : "normal";
+      buttons[i].style.textDecoration = active ? "underline" : "none";
       panelEls[i].style.display = active ? "block" : "none";
     }
   };
