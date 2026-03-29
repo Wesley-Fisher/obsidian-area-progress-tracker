@@ -97,7 +97,7 @@ describe("handleUserEvent", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 1 }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 1, groupIds: [] }],
       records: [],
     };
     await vault.write(staticPaths.configPath, JSON.stringify(config));
