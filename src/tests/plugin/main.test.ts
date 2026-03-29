@@ -34,8 +34,10 @@ describe("plugin/main", () => {
   it("onload loads settings, adds tab, registers impl; onunload unregisters", async () => {
     const MainPlugin = (await import("../../plugin/main")).default;
 
-    // @ts-ignore - Ignore missing arguments for this test
-    const p = new MainPlugin();
+    const p = new MainPlugin(
+      {} as any,
+      {} as any
+    );
     await p.onload();
 
     // addSettingTab comes from mocked base Plugin

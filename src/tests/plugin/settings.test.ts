@@ -5,7 +5,7 @@ let lastOnChange: ((value: string) => Promise<void> | void) | null = null;
 
 vi.mock("obsidian", () => {
   class PluginSettingTab {
-    containerEl: any;
+    containerEl: HTMLElement;
     constructor(_app: any, _plugin: any) {
       this.containerEl = asHTMLElement(new FakeElement("div"));
     }

@@ -25,6 +25,22 @@ export default [
     }
   },
   {
+    // Allow 'any' for testing files very close to Obsidian
+    files: [
+      "src/tests/obsidianStub.ts",
+      "src/tests/plugin/settings.test.ts",
+      "src/tests/plugin/plugin.test.ts",
+      "src/tests/plugin/main.test.ts"],
+    languageOptions: {
+      parserOptions: {
+        project: "./tsconfig.json",
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off"
+    }
+  },
+  {
     ignores: [
       "dist/**",
       "node_modules/**",
