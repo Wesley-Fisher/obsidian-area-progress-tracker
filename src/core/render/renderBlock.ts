@@ -6,6 +6,12 @@ import { translateRenderBlock } from "./translate/translateRenderBlock";
 export async function onRenderProgressTrackerBlock(args: RenderBlockArgs): Promise<void> {
   const { el, blockConfig } = args;
 
+  // Persist across rerenders: attributes on `el` survive `el.empty()`.
+  const ds: any = (el as any).dataset ?? ((el as any).dataset = {});
+  if (!ds.aptInstanceId) {
+    ds.aptInstanceId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  }
+
   el.empty();
 
   const header = el.createEl("div", { text: "Area Progress Tracker" });
@@ -24,6 +30,8 @@ export async function onRenderProgressTrackerBlock(args: RenderBlockArgs): Promi
     {
       date: blockConfig.date,
       onUserAction: args.onUserAction,
+      uiRoot: el,
+      instanceId: ds.aptInstanceId,
     },
     translated
   );

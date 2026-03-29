@@ -17,7 +17,20 @@ import { addThreeColRow, renderTabbedGroups, renderThreeColumnTable } from "./co
 export type RenderRuntime = {
   date: IsoDate;
   onUserAction: (evt: UserEvent) => Promise<void>;
+  uiRoot?: HTMLElement;
+  instanceId?: string;
 };
+
+function ensureDataset(el: HTMLElement): any {
+  const anyEl = el as any;
+  if (!anyEl.dataset) anyEl.dataset = {};
+  return anyEl.dataset as any;
+}
+
+function setFocusKey(el: HTMLElement, focusKey: string): void {
+  const ds: any = (el as any).dataset ?? ((el as any).dataset = {});
+  ds.aptFocusKey = focusKey;
+}
 
 export function renderProgressTrackerBody(container: HTMLElement, runtime: RenderRuntime, model: RenderBodyModel): void {
   if (model.kind === "day") {
@@ -115,29 +128,61 @@ function renderActivitiesTabs(
   const sec = container.createDiv({ cls: "apt-section" });
   sec.createEl("h4", { text: "Actions" });
 
-  renderTabbedGroups(sec, model.groups, (panel, g) => {
+  const uiRoot = runtime.uiRoot ?? container;
+  const ds = ensureDataset(uiRoot);
+  const instanceId = runtime.instanceId ?? ds.aptInstanceId ?? "apt";
+
+  const tabStateKey = "aptActivitiesActiveGroupId";
+  const initialActiveGroupId = ds[tabStateKey];
+
+  renderTabbedGroups(
+    sec,
+    model.groups,
+    (panel, g) => {
     renderThreeColumnTable(panel, "apt-activities-table", (tbody) => {
       for (const row of g.rows) {
         if (row.kind === "action") {
           const doUnderline = row.requiredLeft > 0;
-          addThreeColRow(tbody, row.name, row.currentText, doUnderline, (cell) => renderActionEntry(cell, runtime, row.entry));
+          const focusKeyBase = `${instanceId}:activities:${g.id}:action:${row.actionId}`;
+          addThreeColRow(tbody, row.name, row.currentText, doUnderline, (cell) => renderActionEntry(cell, runtime, row.entry, focusKeyBase));
         } else {
-          addThreeColRow(tbody, row.name, row.currentText, false, (cell) => renderRecordEntry(cell, runtime, row.entry));
+          const focusKey = `${instanceId}:activities:${g.id}:record:${row.recordId}`;
+          addThreeColRow(tbody, row.name, row.currentText, false, (cell) => renderRecordEntry(cell, runtime, row.entry, focusKey));
         }
       }
     });
-  });
+    },
+    {
+      tabGroupKey: "activities",
+      initialActiveGroupId,
+      onActiveGroupIdChange: (groupId) => {
+        ds[tabStateKey] = groupId;
+      },
+      getButtonText: (g) => {
+        let buttonName = g.name;
+        if (g.numActionsStillRequired > 0) buttonName += ` (${g.numActionsStillRequired})`;
+        return buttonName;
+      },
+    }
+  );
 }
 
-function renderActionEntry(container: HTMLElement, runtime: RenderRuntime, model: ActionEntryModel): void {
+function renderActionEntry(
+  container: HTMLElement,
+  runtime: RenderRuntime,
+  model: ActionEntryModel,
+  focusKeyBase: string
+): void {
   if (model.kind === "button") {
     const plus = container.createEl("button", { text: model.plus.label }) as HTMLButtonElement;
+    setFocusKey(plus, `${focusKeyBase}:plus`);
     plus.disabled = model.plus.disabled;
     plus.onclick = () => {
       void runtime.onUserAction(model.plus.event);
     };
 
     const minus = container.createEl("button", { text: model.minus.label }) as HTMLButtonElement;
+    setFocusKey(minus, `${focusKeyBase}:minus`);
     minus.disabled = model.minus.disabled;
     minus.onclick = () => {
       void runtime.onUserAction(model.minus.event);
@@ -148,6 +193,7 @@ function renderActionEntry(container: HTMLElement, runtime: RenderRuntime, model
   if (model.kind === "checkbox") {
     const input = container.createEl("input") as HTMLInputElement;
     input.type = "checkbox";
+    setFocusKey(input, `${focusKeyBase}:input`);
     input.disabled = model.disabled;
     input.checked = model.checked;
     input.onchange = () => {
@@ -158,6 +204,7 @@ function renderActionEntry(container: HTMLElement, runtime: RenderRuntime, model
 
   const input = container.createEl("input") as HTMLInputElement;
   input.type = "number";
+  setFocusKey(input, `${focusKeyBase}:input`);
   if (model.min !== undefined) input.min = model.min;
   if (model.max !== undefined) input.max = model.max;
   if (model.step !== undefined) input.step = model.step;
@@ -173,9 +220,10 @@ function renderActionEntry(container: HTMLElement, runtime: RenderRuntime, model
   };
 }
 
-function renderRecordEntry(container: HTMLElement, runtime: RenderRuntime, model: RecordEntryModel): void {
+function renderRecordEntry(container: HTMLElement, runtime: RenderRuntime, model: RecordEntryModel, focusKey: string): void {
   const input = container.createEl("input") as HTMLInputElement;
   input.type = model.inputType;
+  setFocusKey(input, `${focusKey}:input`);
   if (model.min !== undefined) input.min = model.min;
   if (model.max !== undefined) input.max = model.max;
   if (model.step !== undefined) input.step = model.step;
@@ -217,24 +265,50 @@ function renderPlanTabs(container: HTMLElement, runtime: RenderRuntime, model: E
     void runtime.onUserAction(model.toggle.event);
   };
 
-  renderTabbedGroups(sec, model.groups, (panel, g) => {
+  const uiRoot = runtime.uiRoot ?? container;
+  const ds = ensureDataset(uiRoot);
+  const instanceId = runtime.instanceId ?? ds.aptInstanceId ?? "apt";
+
+  const tabStateKey = model.scope === "day" ? "aptPlanDayActiveGroupId" : "aptPlanWeekActiveGroupId";
+  const initialActiveGroupId = ds[tabStateKey];
+
+  renderTabbedGroups(
+    sec,
+    model.groups,
+    (panel, g) => {
     renderThreeColumnTable(panel, "apt-plan-table", (tbody) => {
       for (const row of g.rows) {
-        addThreeColRow(tbody, row.name, row.plannedText, false, (cell) => renderPlanEntry(cell, runtime, row.entry));
+        const focusKeyBase = `${instanceId}:plan:${model.scope}:${g.id}:action:${row.actionId}`;
+        addThreeColRow(tbody, row.name, row.plannedText, false, (cell) => renderPlanEntry(cell, runtime, row.entry, focusKeyBase));
       }
     });
-  });
+    },
+    {
+      tabGroupKey: model.scope === "day" ? "plan-day" : "plan-week",
+      initialActiveGroupId,
+      onActiveGroupIdChange: (groupId) => {
+        ds[tabStateKey] = groupId;
+      },
+    }
+  );
 }
 
-function renderPlanEntry(container: HTMLElement, runtime: RenderRuntime, model: PlanEntryModel): void {
+function renderPlanEntry(
+  container: HTMLElement,
+  runtime: RenderRuntime,
+  model: PlanEntryModel,
+  focusKeyBase: string
+): void {
   if (model.kind === "button") {
     const plus = container.createEl("button", { text: model.plus.label }) as HTMLButtonElement;
+    setFocusKey(plus, `${focusKeyBase}:plus`);
     plus.disabled = model.plus.disabled;
     plus.onclick = () => {
       void runtime.onUserAction(model.plus.event);
     };
 
     const minus = container.createEl("button", { text: model.minus.label }) as HTMLButtonElement;
+    setFocusKey(minus, `${focusKeyBase}:minus`);
     minus.disabled = model.minus.disabled;
     minus.onclick = () => {
       void runtime.onUserAction(model.minus.event);
@@ -245,6 +319,7 @@ function renderPlanEntry(container: HTMLElement, runtime: RenderRuntime, model: 
   if (model.kind === "checkbox") {
     const input = container.createEl("input") as HTMLInputElement;
     input.type = "checkbox";
+    setFocusKey(input, `${focusKeyBase}:input`);
     input.disabled = model.disabled;
     input.checked = model.checked;
     input.onchange = () => {
@@ -255,6 +330,7 @@ function renderPlanEntry(container: HTMLElement, runtime: RenderRuntime, model: 
 
   const input = container.createEl("input") as HTMLInputElement;
   input.type = "number";
+  setFocusKey(input, `${focusKeyBase}:input`);
   if (model.min !== undefined) input.min = model.min;
   if (model.max !== undefined) input.max = model.max;
   if (model.step !== undefined) input.step = model.step;

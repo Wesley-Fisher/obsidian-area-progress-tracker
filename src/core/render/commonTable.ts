@@ -1,9 +1,17 @@
-import { ActivitiesGroupModel } from "./translate/models";
+export type TabbedGroup = { id: string; name: string };
 
-export function renderTabbedGroups(
+export type RenderTabbedGroupsOptions<TGroup extends TabbedGroup> = {
+  initialActiveGroupId?: string;
+  onActiveGroupIdChange?: (groupId: string) => void;
+  getButtonText?: (g: TGroup) => string;
+  tabGroupKey?: string;
+};
+
+export function renderTabbedGroups<TGroup extends TabbedGroup>(
   sec: HTMLElement,
-  groups: ActivitiesGroupModel[],
-  renderPanel: (panel: HTMLElement, g: ActivitiesGroupModel) => void
+  groups: TGroup[],
+  renderPanel: (panel: HTMLElement, g: TGroup) => void,
+  options: RenderTabbedGroupsOptions<TGroup> = {}
 ): void {
   const tabBar = sec.createDiv({ cls: "apt-activities-tabs" });
   const panels = sec.createDiv({ cls: "apt-activities-tabpanels" });
@@ -19,14 +27,17 @@ export function renderTabbedGroups(
       buttons[i].style.textDecoration = active ? "underline" : "none";
       panelEls[i].style.display = active ? "block" : "none";
     }
+
+    const activeGroupId = groups[idx]?.id;
+    if (activeGroupId) options.onActiveGroupIdChange?.(activeGroupId);
   };
 
   for (const [idx, g] of groups.entries()) {
-    let buttonName = g.name;
-    if (g.numActionsStillRequired > 0) {
-      buttonName += ` (${g.numActionsStillRequired})`;
-    }
-    const btn = tabBar.createEl("button", { text: buttonName }) as HTMLButtonElement;
+    const buttonText = options.getButtonText ? options.getButtonText(g) : g.name;
+    const btn = tabBar.createEl("button", { text: buttonText }) as HTMLButtonElement;
+    const ds: any = (btn as any).dataset ?? ((btn as any).dataset = {});
+    if (options.tabGroupKey) ds.aptTabGroup = options.tabGroupKey;
+    ds.aptGroupId = g.id;
 
     buttons.push(btn);
     btn.onclick = () => setActive(idx);
@@ -36,7 +47,14 @@ export function renderTabbedGroups(
     renderPanel(panel, g);
   }
 
-  setActive(0);
+  const initialIdx =
+    options.initialActiveGroupId !== undefined
+      ? Math.max(
+          0,
+          groups.findIndex((g) => g.id === options.initialActiveGroupId)
+        )
+      : 0;
+  setActive(initialIdx);
 }
 
 export function renderThreeColumnTable(
