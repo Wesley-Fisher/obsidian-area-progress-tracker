@@ -1,5 +1,5 @@
-import { RenderDayModeArgs } from "./renderTypes";
-import { RecordConfig, SystemConfig } from "../types";
+import { RenderDayModeArgs } from "../renderTypes";
+import { RecordConfig, SystemConfig } from "../../types";
 import { renderTabbedGroups, renderThreeColumnTable, addThreeColRow } from "./commonTable";
 
 export function renderActivitiesTabs(

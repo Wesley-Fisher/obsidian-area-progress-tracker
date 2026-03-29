@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, PlanFile, SystemConfig } from "../../../core/types";
-import { renderPlanTabs } from "../../../core/render/commonPlan";
-import { FakeElement, FakeInput, asHTMLElement } from "./fakeDom";
+import type { DailyLog, PlanFile, SystemConfig } from "../../../../core/types";
+import { renderPlanTabs } from "../../../../core/render/inner/commonPlan";
+import { FakeElement, FakeInput, asHTMLElement } from "../fakeDom";
 
 describe("core/render/commonPlan", () => {
   it("renders plan table and emits setPlanTarget with clamped numeric values", () => {

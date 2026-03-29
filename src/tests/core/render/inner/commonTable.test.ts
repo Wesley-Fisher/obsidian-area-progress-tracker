@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { renderTabbedGroups } from "../../../core/render/commonTable";
-import type { ActivityGroup } from "../../../core/render/common";
-import { FakeButton, FakeElement, asHTMLElement } from "./fakeDom";
+import { renderTabbedGroups } from "../../../../core/render/inner/commonTable";
+import type { ActivityGroup } from "../../../../core/render/inner/common";
+import { FakeButton, FakeElement, asHTMLElement } from "../fakeDom";
 
 
 describe("render/commonTable", () => {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, IsoDate, SystemConfig } from "../../../core/types";
-import { renderActivitiesTabs } from "../../../core/render/common";
-import { FakeButton, FakeElement, FakeInput, asHTMLElement } from "./fakeDom";
+import type { DailyLog, IsoDate, SystemConfig } from "../../../../core/types";
+import { renderActivitiesTabs } from "../../../../core/render/inner/common";
+import { FakeButton, FakeElement, FakeInput, asHTMLElement } from "../fakeDom";
 
 function mkArgs(overrides: Partial<any> = {}): any {
   const container = new FakeElement("div");

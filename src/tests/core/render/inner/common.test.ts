@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { RenderDayModeArgs } from "../../../core/render/renderTypes";
-import { buildActionOnlyGroups, buildActivityGroups } from "../../../core/render/common";
+import type { RenderDayModeArgs } from "../../../../core/render/renderTypes";
+import { buildActionOnlyGroups, buildActivityGroups } from "../../../../core/render/inner/common";
 
 function mkArgs(partial: Partial<RenderDayModeArgs>): RenderDayModeArgs {
   return {

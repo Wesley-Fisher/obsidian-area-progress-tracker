@@ -1,4 +1,4 @@
-import { RenderDayModeArgs } from "./renderTypes";
+import { RenderDayModeArgs } from "../renderTypes";
 import { renderTabbedGroups, renderThreeColumnTable, addThreeColRow } from "./commonTable";
 import { buildActionOnlyGroups} from "./common";
 

@@ -12,7 +12,7 @@ import type {
   ActivitiesSectionModelEmpty,
   ActivitiesSectionModelFilled,
 } from "../translate/models";
-import { addThreeColRow, renderTabbedGroups, renderThreeColumnTable } from "./commonTable";
+import { addThreeColRow, renderTabbedGroups, renderThreeColumnTable } from "./inner/commonTable";
 
 export type RenderRuntime = {
   date: IsoDate;
