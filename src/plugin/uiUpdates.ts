@@ -49,7 +49,7 @@ export class UIUpdate {
           for (const [el, refresh] of entries) {
             // Obsidian may temporarily detach/re-attach elements during re-renders or virtualization.
             // Don't drop refreshers in that case; just skip this refresh pass.
-            if ((el as any).isConnected === false) continue;
+            if ((el as HTMLElement)?.isConnected === false) continue;
   
             try {
               await refresh();
@@ -168,6 +168,8 @@ public captureUiState(blockEls: HTMLElement[]): CapturedUiState {
 
     if (target) {
       try {
+        // Unsure of handling here; Will revisit later
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (target as any).focus?.({ preventScroll: true });
       } catch {
         try {
@@ -246,6 +248,9 @@ public isScrollable(el: HTMLElement): boolean {
 
 public escapeAttributeValue(value: string): string {
   // Escapes for inclusion inside a double-quoted CSS attribute selector.
+
+  // Keep original values here (AI)
+  // eslint-disable-next-line no-useless-escape
   return value.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"");
 }
 }

@@ -126,7 +126,8 @@ describe("handleAdjustActionTotal", () => {
       records: [],
     };
 
-    let dayLog = buildDailyLog(config, undefined, {}, {});
+    
+    const dayLog = buildDailyLog(config, undefined, {}, {});
     const date = "2026-03-16" as IsoDate;
 
     await handleAdjustActionTotal(repo, dayLog, config, {

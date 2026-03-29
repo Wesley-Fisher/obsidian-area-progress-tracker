@@ -137,6 +137,8 @@ describe("mergePreviousIntoNextDay", () => {
     };
     await vault.write(dayPath(d2), JSON.stringify(day2));
 
+    // day1Raw is not used in this test
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const day1Raw = await repo.readDailyLogRaw(d1);
     const day2Raw = await repo.readDailyLogRaw(d2);
     const {merged, nextLog, didChange} = await mergePreviousIntoNextDay(d2, day2Raw, config, day1.updatedScore);
@@ -153,8 +155,8 @@ describe("mergePreviousIntoNextDay", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
       groups: [{ id: "morning", name: "Morning" }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 } }],
-      records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupId: "morning" }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
     };
 
     const d1 = "2026-03-16" as IsoDate;
@@ -172,6 +174,8 @@ describe("mergePreviousIntoNextDay", () => {
     await vault.write(dayPath(d2), JSON.stringify(day2));
     const d2Raw = await repo.readDailyLogRaw(d2);
 
+    // nextLog is not used in this test
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {merged, nextLog, didChange} = await mergePreviousIntoNextDay(d2, d2Raw, config, day1.updatedScore);
 
     expect(merged.records?.weight).toBe("181");
@@ -188,8 +192,8 @@ describe("recomputeForwardChain", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
       groups: [{ id: "morning", name: "Morning" }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 } }],
-      records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupId: "morning" }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
     };
 
     const d1 = "2026-03-14" as IsoDate;

@@ -12,6 +12,8 @@ describe("handleUserEvent", () => {
     const dataFolder = "ProgressTracker";
     const repo = createVaultRepo(vault, dataFolder);
 
+    // Allow any for this test
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await handleUserEvent({ kind: "noop" } as unknown as any, repo);
 
     const staticPaths = getStaticDataPaths(dataFolder);

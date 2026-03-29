@@ -1,14 +1,16 @@
 import { describe, expect, it } from "vitest";
 import type { RenderDayModeArgs } from "../../../../core/render/renderTypes";
 import { buildActionOnlyGroups, buildActivityGroups } from "../../../../core/render/inner/common";
+import { IsoDate } from "../../../../core/types";
 
 function mkArgs(partial: Partial<RenderDayModeArgs>): RenderDayModeArgs {
   return {
     el: {} as HTMLElement,
-    repo: {} as any,
+    // Allow 'any' to pass blank objects for test
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    repo: {} as any, container: {} as any,
     onUserAction: async () => {},
-    container: {} as any,
-    blockConfig: { mode: "day", date: "2026-03-16" as any },
+    blockConfig: { mode: "day", date: "2026-03-16" as IsoDate },
     config: { version: 1, areas: [], actions: [], records: [], groups: [] },
     dayLog: null,
     dayPlan: null,

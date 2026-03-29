@@ -37,6 +37,8 @@ export class FakeElement {
     return el;
   }
 
+  // Allow any for this testing util
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   createEl(tag: string, opts?: CreateElOpts): any {
     let el: FakeElement;
 
@@ -45,6 +47,9 @@ export class FakeElement {
     else el = new FakeElement(tag, opts);
 
     this.children.push(el);
+
+    // Allow any for this testing util
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     return el as any;
   }
 
