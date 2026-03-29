@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, IsoDate, SystemConfig } from "../../../core/types";
+import type { DailyLog, IsoDate, Scores, SystemConfig } from "../../../core/types";
 import { ensureDailyLogFile } from "../../../core/vault/setup";
 import { getDataPaths } from "../../../core/vault/paths";
 import { buildDailyLog } from "../../../core/scoring";
 import { MemoryVault } from "../../memoryVault";
+import { VaultLike } from "../../../core/vault/storage";
 
 describe("core/vault/setup ensureDailyLogFile", () => {
   it("uses a fallback empty config when config file cannot be read", async () => {
@@ -14,7 +15,7 @@ describe("core/vault/setup ensureDailyLogFile", () => {
 
     await vault.write(paths.configPath, "{ this is not json }");
 
-    await ensureDailyLogFile(vault as any, dataFolder, paths.configPath, date);
+    await ensureDailyLogFile(vault as VaultLike, dataFolder, paths.configPath, date);
 
     const created = JSON.parse(await vault.read(paths.dailyLogPath)) as DailyLog;
     expect(created.actions).toBeDefined();
@@ -37,7 +38,7 @@ describe("core/vault/setup ensureDailyLogFile", () => {
 
     const prevDate = "2026-03-15" as IsoDate;
     const prevPaths = getDataPaths(dataFolder, prevDate);
-    const prevUpdated = { health: { score: 42, daysSince: 3 } } as any;
+    const prevUpdated = { health: { score: 42, daysSince: 3 } } as Scores;
 
     await vault.write(paths.configPath, JSON.stringify(config));
     await vault.write(prevPaths.dailyLogPath, JSON.stringify({
@@ -45,7 +46,7 @@ describe("core/vault/setup ensureDailyLogFile", () => {
       updatedScore: prevUpdated,
     }));
 
-    await ensureDailyLogFile(vault as any, dataFolder, paths.configPath, date);
+    await ensureDailyLogFile(vault as VaultLike, dataFolder, paths.configPath, date);
 
     const created = JSON.parse(await vault.read(paths.dailyLogPath)) as DailyLog;
     expect(created.previousScore.health.score).toBe(42);
@@ -58,7 +59,7 @@ describe("core/vault/setup ensureDailyLogFile", () => {
     const paths = getDataPaths(dataFolder, date);
 
     await vault.write(paths.dailyLogPath, JSON.stringify({ hello: "existing" }));
-    await ensureDailyLogFile(vault as any, dataFolder, paths.configPath, date);
+    await ensureDailyLogFile(vault as VaultLike, dataFolder, paths.configPath, date);
 
     const after = await vault.read(paths.dailyLogPath);
     expect(JSON.parse(after)).toMatchObject({ hello: "existing" });

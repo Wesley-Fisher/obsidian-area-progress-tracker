@@ -1,16 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { createVaultRepo } from "../../../core/vault/repo";
 import { MemoryVault } from "../../memoryVault";
+import { IsoDate } from "../../../core/types";
+import { VaultLike } from "../../../core/vault/storage";
 
 describe("core/vault/repo", () => {
   it("exposes paths and supports basic daily log read/write", async () => {
     const vault = new MemoryVault();
-    const repo = createVaultRepo(vault as any, "ProgressTrackerBase");
+    const repo = createVaultRepo(vault as VaultLike, "ProgressTrackerBase");
 
     const staticPaths = repo.getStaticPaths();
     expect(staticPaths.configPath).toContain("config.json");
 
-    const date = "2026-03-16" as any;
+    const date = "2026-03-16" as IsoDate;
     const paths = repo.getPaths(date);
     expect(paths.dailyLogPath).toContain("logs");
     expect(paths.dailyLogPath).toContain("apt.");
