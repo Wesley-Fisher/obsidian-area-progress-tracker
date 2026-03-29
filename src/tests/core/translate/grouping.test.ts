@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { SystemConfig } from "../../../../core/types";
+import type { SystemConfig } from "../../../core/types";
 import {
   buildActionOnlyGroupsFromConfig,
   buildActivityGroupsFromConfig,
-} from "../../../../core/translate/grouping";
+} from "../../../core/translate/grouping";
 
 function mkConfig(partial: Partial<SystemConfig>): SystemConfig {
   return {

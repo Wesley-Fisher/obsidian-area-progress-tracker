@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, PlanFile, SystemConfig } from "../../../../core/types";
-import { translateRenderBlock } from "../../../../core/translate/translateRenderBlock";
-import { getDataPaths } from "../../../../core/vault/paths";
-import { createVaultRepo } from "../../../../core/vault/repo";
-import { MemoryVault } from "../../../memoryVault";
-import { buildDailyLog } from "../../../../core/scoring";
+import type { DailyLog, PlanFile, SystemConfig } from "../../../core/types";
+import { translateRenderBlock } from "../../../core/translate/translateRenderBlock";
+import { getDataPaths } from "../../../core/vault/paths";
+import { createVaultRepo } from "../../../core/vault/repo";
+import { MemoryVault } from "../../memoryVault";
+import { buildDailyLog } from "../../../core/scoring";
 
 function mkArgs(opts: { vault: MemoryVault; dataFolder: string; date: string; mode?: any; show?: any }): any {
   const repo = createVaultRepo(opts.vault, opts.dataFolder);
