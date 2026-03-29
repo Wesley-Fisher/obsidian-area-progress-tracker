@@ -50,9 +50,7 @@ export class AreaProgressTrackerPlugin {
 
         refreshSelf = async (): Promise<void> => {
           await onRenderProgressTrackerBlock({
-            plugin: this.plugin,
             el,
-            ctx,
             blockConfig,
             repo,
             onUserAction,

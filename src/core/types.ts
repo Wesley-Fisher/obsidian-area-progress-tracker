@@ -102,10 +102,14 @@ export interface DailyLog {
 
 export type ActivitiesLayout = "list" | "columns" | "tabs";
 
+export type PossibleModes = "day";
+
+export type ShowableAreas = "areas" | "actions" | "plan-day" | "plan-week";
+
 export interface BlockConfig {
-  mode: "day";
+  mode: PossibleModes;
   date: IsoDate;
-  show?: Array<"areas" | "actions" | "plan-day" | "plan-week">;
+  show?: Array<ShowableAreas>;
   /** Controls how actions + records are visually grouped. Defaults to "list". */
   activitiesLayout?: ActivitiesLayout;
 }

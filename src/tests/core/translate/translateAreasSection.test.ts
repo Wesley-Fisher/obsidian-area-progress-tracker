@@ -14,7 +14,7 @@ describe("render/translate/translateAreasSection", () => {
 
     const model = translateAreasSection({
       config,
-      dayLog: { updatedScore: {} } as any,
+      dayLog: { updatedScore: {} } as DailyLog,
       dayPlan: { actions: {} },
       weekPlan: { actions: {} },
     });

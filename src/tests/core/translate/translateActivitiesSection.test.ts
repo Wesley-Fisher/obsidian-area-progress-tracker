@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, SystemConfig } from "../../../core/types";
+import type { DailyLog, IsoDate, SystemConfig } from "../../../core/types";
 import { translateActivitiesSection } from "../../../core/translate/inner/translateActivitiesSection";
 import { ActivitiesSectionModel, ActivitiesSectionModelEmpty } from "../../../core/translate/models";
 
@@ -8,13 +8,13 @@ describe("render/translate/translateActivitiesSection", () => {
     const config: SystemConfig = { version: 1, areas: [], actions: [], records: [] };
 
     const model = translateActivitiesSection({
-      date: "2026-03-16" as any,
+      date: "2026-03-16" as IsoDate,
       config,
       dayLog: null,
-    }) as ActivitiesSectionModelEmpty;
+    }) as ActivitiesSectionModel;
 
     expect(model.kind).toBe("activitiesEmpty");
-    expect(model.message).toContain("No actions or records");
+    expect((model as ActivitiesSectionModelEmpty).message).toContain("No actions or records");
   });
 
   it("translates button/checkbox/number actions and record inputs into entry models", () => {
@@ -39,7 +39,7 @@ describe("render/translate/translateActivitiesSection", () => {
     };
 
     const model = translateActivitiesSection({
-      date: "2026-03-16" as any,
+      date: "2026-03-16" as IsoDate,
       config,
       dayLog,
     });
@@ -109,7 +109,7 @@ describe("render/translate/translateActivitiesSection", () => {
     };
 
     const model = translateActivitiesSection({
-      date: "2026-03-16" as any,
+      date: "2026-03-16" as IsoDate,
       config,
       dayLog,
     });

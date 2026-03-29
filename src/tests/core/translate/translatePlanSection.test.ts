@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, PlanFile, SystemConfig } from "../../../core/types";
+import type { DailyLog, IsoDate, PlanFile, SystemConfig } from "../../../core/types";
 import { translatePlanSection } from "../../../core/translate/inner/translatePlanSection";
 
 describe("render/translate/translatePlanSection", () => {
@@ -17,11 +17,11 @@ describe("render/translate/translatePlanSection", () => {
       updatedScore: {},
       actions: {},
       ui: { hidePlanDay: true },
-    } as any;
+    } as DailyLog;
 
     const model = translatePlanSection({
       scope: "day",
-      date: "2026-03-16" as any,
+      date: "2026-03-16" as IsoDate,
       config,
       dayLog,
       plan: { actions: { walk: 1 } } as PlanFile,
@@ -43,11 +43,11 @@ describe("render/translate/translatePlanSection", () => {
       updatedScore: {},
       actions: {},
       ui: { hidePlanWeek: false },
-    } as any;
+    } as DailyLog;
 
     const model = translatePlanSection({
       scope: "week",
-      date: "2026-03-16" as any,
+      date: "2026-03-16" as IsoDate,
       config,
       dayLog,
       plan: { actions: {} },
@@ -77,13 +77,15 @@ describe("render/translate/translatePlanSection", () => {
       updatedScore: {},
       actions: {},
       ui: { hidePlanDay: false },
-    } as any;
+    } as DailyLog;
 
+    // Next line tests incorrect types to ensure robustness
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const plan: PlanFile = { actions: { walk: Number.NaN as any, done: -3 as any, deep_work: "not-a-number" as any } };
 
     const model = translatePlanSection({
       scope: "day",
-      date: "2026-03-16" as any,
+      date: "2026-03-16" as IsoDate,
       config,
       dayLog,
       plan,

@@ -11,9 +11,7 @@ import { UserEvent } from "../handleEvents/types";
 
 
 export interface RenderBlockArgs {
-  plugin: Plugin;
   el: HTMLElement;
-  ctx: MarkdownPostProcessorContext;
   blockConfig: BlockConfig;
   repo: VaultRepo;
   onUserAction: (evt: UserEvent) => Promise<void>;

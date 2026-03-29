@@ -4,9 +4,7 @@ import { buildActionOnlyGroups, buildActivityGroups } from "../../../../core/ren
 
 function mkArgs(partial: Partial<RenderDayModeArgs>): RenderDayModeArgs {
   return {
-    plugin: {} as any,
-    el: {} as any,
-    ctx: {} as any,
+    el: {} as HTMLElement,
     repo: {} as any,
     onUserAction: async () => {},
     container: {} as any,

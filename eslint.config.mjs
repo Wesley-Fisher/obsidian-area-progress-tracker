@@ -30,7 +30,9 @@ export default [
       "src/tests/obsidianStub.ts",
       "src/tests/plugin/settings.test.ts",
       "src/tests/plugin/plugin.test.ts",
-      "src/tests/plugin/main.test.ts"],
+      "src/tests/plugin/main.test.ts",
+      "src/tests/core/vault/obsidianAdapter.test.ts"
+    ],
     languageOptions: {
       parserOptions: {
         project: "./tsconfig.json",
