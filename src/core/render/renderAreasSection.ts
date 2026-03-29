@@ -1,6 +1,6 @@
 import { RenderDayModeArgs } from "./renderTypes";
 import { renderAreasSectionModel } from "./renderFromModel";
-import { translateAreasSection } from "../translate/translateAreasSection";
+import { translateAreasSection } from "../translate/inner/translateAreasSection";
 
 export function renderAreasSection(args: RenderDayModeArgs): void {
   const model = translateAreasSection({

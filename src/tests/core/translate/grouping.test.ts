@@ -3,7 +3,7 @@ import type { SystemConfig } from "../../../core/types";
 import {
   buildActionOnlyGroupsFromConfig,
   buildActivityGroupsFromConfig,
-} from "../../../core/translate/grouping";
+} from "../../../core/translate/inner/grouping";
 
 function mkConfig(partial: Partial<SystemConfig>): SystemConfig {
   return {

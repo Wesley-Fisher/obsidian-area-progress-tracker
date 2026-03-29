@@ -1,4 +1,4 @@
-import type { ActionConfig, RecordConfig, SystemConfig } from "../types";
+import type { ActionConfig, RecordConfig, SystemConfig } from "../../types";
 
 export type ActivityGroup = {
   id: string;

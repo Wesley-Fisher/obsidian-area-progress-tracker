@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DailyLog, SystemConfig } from "../../../core/types";
-import { translateActivitiesSection } from "../../../core/translate/translateActivitiesSection";
+import { translateActivitiesSection } from "../../../core/translate/inner/translateActivitiesSection";
 import { ActivitiesSectionModel, ActivitiesSectionModelEmpty } from "../../../core/translate/models";
 
 describe("render/translate/translateActivitiesSection", () => {

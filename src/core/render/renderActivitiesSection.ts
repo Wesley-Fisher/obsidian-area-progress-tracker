@@ -1,7 +1,7 @@
 import { RenderDayModeArgs } from "./renderTypes";
 import { ActivitiesLayout} from "../types";
 import { renderActivitiesSectionModel } from "./renderFromModel";
-import { translateActivitiesSection } from "../translate/translateActivitiesSection";
+import { translateActivitiesSection } from "../translate/inner/translateActivitiesSection";
 
 export function renderActivitiesSection(args: RenderDayModeArgs): void {
   // v1: tabs-only layout. Keep activitiesLayout in BlockConfig for future development.

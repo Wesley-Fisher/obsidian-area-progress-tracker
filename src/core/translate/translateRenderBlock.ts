@@ -1,9 +1,9 @@
 import { checkConfiguration } from "../checkConfiguration";
 import type { RenderBlockArgs } from "../render/renderTypes";
 import type { DaySectionModel, RenderBodyModel } from "./models";
-import { translateAreasSection } from "./translateAreasSection";
-import { translateActivitiesSection } from "./translateActivitiesSection";
-import { translatePlanSection } from "./translatePlanSection";
+import { translateAreasSection } from "./inner/translateAreasSection";
+import { translateActivitiesSection } from "./inner/translateActivitiesSection";
+import { translatePlanSection } from "./inner/translatePlanSection";
 
 export async function translateRenderBlock(args: RenderBlockArgs): Promise<RenderBodyModel> {
   const { blockConfig } = args;

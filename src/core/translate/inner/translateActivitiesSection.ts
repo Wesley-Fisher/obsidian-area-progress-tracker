@@ -1,5 +1,5 @@
-import type { DailyLog, IsoDate, SystemConfig } from "../types";
-import type { ActivitiesSectionModel, ActivitiesGroupModel, ActivityRowModel, ActionEntryModel, RecordEntryModel } from "./models";
+import type { DailyLog, IsoDate, SystemConfig } from "../../types";
+import type { ActivitiesSectionModel, ActivitiesGroupModel, ActivityRowModel, ActionEntryModel, RecordEntryModel } from "../models";
 import { buildActivityGroupsFromConfig } from "./grouping";
 
 export function translateActivitiesSection(args: {

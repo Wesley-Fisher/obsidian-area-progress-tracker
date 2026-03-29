@@ -1,6 +1,6 @@
 import { RenderDayModeArgs } from "./renderTypes";
 import { renderPlanSectionModel } from "./renderFromModel";
-import { translatePlanSection } from "../translate/translatePlanSection";
+import { translatePlanSection } from "../translate/inner/translatePlanSection";
 
 export function renderPlanWeekSection(args: RenderDayModeArgs): void {
   const model = translatePlanSection({

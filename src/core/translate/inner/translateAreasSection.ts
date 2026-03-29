@@ -1,5 +1,5 @@
-import type { DailyLog, PlanFile, SystemConfig } from "../types";
-import type { AreasSectionModel, AreaRowModel } from "./models";
+import type { DailyLog, PlanFile, SystemConfig } from "../../types";
+import type { AreasSectionModel, AreaRowModel } from "../models";
 
 export function translateAreasSection(args: {
   config: SystemConfig;
