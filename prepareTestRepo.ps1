@@ -5,3 +5,5 @@ Copy-Item ".\manifest.json" -Destination ".\\test-vault-area-progress-tracker\\.
 
 Copy-Item ".\\test-vault-area-progress-tracker\\ProgressTrackerSource\\*.json" -Destination ".\\test-vault-area-progress-tracker\\ProgressTracker\\" -Force
 Copy-Item ".\\test-vault-area-progress-tracker\\ProgressTrackerSource\\logs\\*.json" -Destination ".\\test-vault-area-progress-tracker\\ProgressTracker\\logs" -Force
+
+Remove-Item ".\test-vault-area-progress-tracker\\ProgressTracker\\logs\\apt.2026-03-04.json"

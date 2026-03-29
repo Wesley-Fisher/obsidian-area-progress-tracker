@@ -39,6 +39,7 @@ Notes:
   - Career: `daysSince=1`, `updatedScore=495`
 - Actions show (at least): Walk 20m, Deep work (45m), Junk food
 - Plan (day) and Plan (week) sections are visible
+- Actions and Plan areas have current tab highlighted
 
 ```progress-tracker
 { "date": "2026-03-01" }
@@ -52,6 +53,8 @@ Notes:
 - No actions recorded, so decay applies from the prior day:
   - Health: `daysSince=1`, `updatedScore=492` (502 - 10)
   - Career: `daysSince=2`, `updatedScore=490` (495 - 5)
+- Morning and Evening tabs show `(1)` for 1 required action
+- `Walk 20m` is underlined under Morning and Evening
 
 ```progress-tracker
 { "date": "2026-03-02" }
@@ -141,7 +144,7 @@ Use **Day 2026-03-01**, **2026-03-02**, and **2026-03-03** blocks below.
 
 **Expect**
 - The **same day** scores update:
-  - Day 2026-03-01 Health updated score becomes `514` (starting 490 + 2*12)
+  - Day 2026-03-01 Health updated score becomes `514` (starting 490 + 2x12)
 
 ```progress-tracker
 { "date": "2026-03-01", "show": ["areas"] }
@@ -183,7 +186,7 @@ This verifies that opening a new date creates its `logs/YYYY-MM-DD.json` file (s
   - Health: `daysSince=3`, `updatedScore=494` (from 2026-03-03 Health 504 - 10)
   - Career: `daysSince=1`, `updatedScore=495` (no decay from last day yet)
 
-```progress-trackerBlock
+```progress-tracker
 { "date": "2026-03-04" }
 ```
 
