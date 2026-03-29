@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   renderProgressTrackerBody,
 } from "../../../core/render/renderFromModel";
-import type { RenderBodyModel } from "../../../core/render/translate/models";
+import type { RenderBodyModel } from "../../../core/translate/models";
 import { FakeButton, FakeElement, FakeInput, asHTMLElement } from "./fakeDom";
 
 describe("core/render/renderFromModel", () => {

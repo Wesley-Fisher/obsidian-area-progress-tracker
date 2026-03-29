@@ -1,5 +1,5 @@
-import type { ActionConfig, IsoDate, RecordConfig } from "../../types";
-import type { UserEvent } from "../../handleEvents/types";
+import type { ActionConfig, IsoDate, RecordConfig } from "../types";
+import type { UserEvent } from "../handleEvents/types";
 
 export type RenderBodyModel = RenderErrorModel | RenderDayBodyModel;
 

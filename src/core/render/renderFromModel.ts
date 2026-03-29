@@ -11,7 +11,7 @@ import type {
   RenderErrorModel,
   ActivitiesSectionModelEmpty,
   ActivitiesSectionModelFilled,
-} from "./translate/models";
+} from "../translate/models";
 import { addThreeColRow, renderTabbedGroups, renderThreeColumnTable } from "./commonTable";
 
 export type RenderRuntime = {

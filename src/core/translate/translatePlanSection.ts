@@ -1,4 +1,4 @@
-import type { DailyLog, IsoDate, PlanFile, SystemConfig } from "../../types";
+import type { DailyLog, IsoDate, PlanFile, SystemConfig } from "../types";
 import type { PlanGroupModel, PlanSectionModel } from "./models";
 import { buildActionOnlyGroupsFromConfig } from "./grouping";
 

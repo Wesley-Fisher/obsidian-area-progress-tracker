@@ -1,6 +1,6 @@
 import { RenderBlockArgs } from "./renderTypes";
 import { renderProgressTrackerBody } from "./renderFromModel";
-import { translateRenderBlock } from "./translate/translateRenderBlock";
+import { translateRenderBlock } from "../translate/translateRenderBlock";
 
 
 export async function onRenderProgressTrackerBlock(args: RenderBlockArgs): Promise<void> {

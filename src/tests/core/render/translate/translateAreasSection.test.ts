@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DailyLog, PlanFile, SystemConfig } from "../../../../core/types";
-import { translateAreasSection } from "../../../../core/render/translate/translateAreasSection";
+import { translateAreasSection } from "../../../../core/translate/translateAreasSection";
 
 describe("render/translate/translateAreasSection", () => {
   it("returns areasEmpty when scores are missing", () => {

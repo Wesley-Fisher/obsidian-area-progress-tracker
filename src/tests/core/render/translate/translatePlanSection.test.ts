@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DailyLog, PlanFile, SystemConfig } from "../../../../core/types";
-import { translatePlanSection } from "../../../../core/render/translate/translatePlanSection";
+import { translatePlanSection } from "../../../../core/translate/translatePlanSection";
 
 describe("render/translate/translatePlanSection", () => {
   it("returns planHidden and wires toggle event when hidden", () => {

@@ -1,5 +1,5 @@
-import { checkConfiguration } from "../../checkConfiguration";
-import type { RenderBlockArgs } from "../renderTypes";
+import { checkConfiguration } from "../checkConfiguration";
+import type { RenderBlockArgs } from "../render/renderTypes";
 import type { DaySectionModel, RenderBodyModel } from "./models";
 import { translateAreasSection } from "./translateAreasSection";
 import { translateActivitiesSection } from "./translateActivitiesSection";
