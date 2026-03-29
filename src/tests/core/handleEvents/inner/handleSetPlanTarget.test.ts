@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { PlanFile } from "../../../core/types";
-import { handleSetPlanTarget } from "../../../core/handleEvents/handleSetPlanTarget";
-import { createVaultRepo } from "../../../core/vault/repo";
-import { getStaticDataPaths } from "../../../core/vault/paths";
-import { MemoryVault } from "../../memoryVault";
+import type { PlanFile } from "../../../../core/types";
+import { handleSetPlanTarget } from "../../../../core/handleEvents/inner/handleSetPlanTarget";
+import { createVaultRepo } from "../../../../core/vault/repo";
+import { getStaticDataPaths } from "../../../../core/vault/paths";
+import { MemoryVault } from "../../../memoryVault";
 
 
 describe("handleSetPlanTarget", () => {

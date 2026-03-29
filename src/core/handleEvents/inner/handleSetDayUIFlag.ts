@@ -1,5 +1,5 @@
-import type { VaultRepo } from "../vault/repo";
-import { UserDayUiEvent } from "./types";
+import type { VaultRepo } from "../../vault/repo";
+import { UserDayUiEvent } from "../types";
 
 export async function handleSetDayUIFlag(repo: VaultRepo, evt: UserDayUiEvent): Promise<void> {
     await repo.ensureConfigFile();

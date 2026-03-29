@@ -1,6 +1,6 @@
-import { PlanFile } from "../types";
-import type { VaultRepo } from "../vault/repo";
-import { UserPlanEvent } from "./types";
+import { PlanFile } from "../../types";
+import type { VaultRepo } from "../../vault/repo";
+import { UserPlanEvent } from "../types";
 
 
 export async function handleSetPlanTarget(repo: VaultRepo, evt: UserPlanEvent): Promise<void> {

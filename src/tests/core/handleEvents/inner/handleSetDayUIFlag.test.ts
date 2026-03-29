@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, IsoDate, SystemConfig } from "../../../core/types";
-import { handleSetDayUIFlag } from "../../../core/handleEvents/handleSetDayUIFlag";
-import { buildDailyLog } from "../../../core/scoring";
-import { createVaultRepo } from "../../../core/vault/repo";
-import { getStaticDataPaths } from "../../../core/vault/paths";
-import { MemoryVault } from "../../memoryVault";
+import type { DailyLog, IsoDate, SystemConfig } from "../../../../core/types";
+import { handleSetDayUIFlag } from "../../../../core/handleEvents/inner/handleSetDayUIFlag";
+import { buildDailyLog } from "../../../../core/scoring";
+import { createVaultRepo } from "../../../../core/vault/repo";
+import { getStaticDataPaths } from "../../../../core/vault/paths";
+import { MemoryVault } from "../../../memoryVault";
 
 
 describe("handleSetDayUIFlag", () => {

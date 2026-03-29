@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { IsoDate, SystemConfig } from "../../../core/types";
-import { buildDailyLog } from "../../../core/scoring";
-import { handleAdjustActionTotal } from "../../../core/handleEvents/handleAdjustActionTotal";
-import { createVaultRepo } from "../../../core/vault/repo";
-import { MemoryVault } from "../../memoryVault";
+import type { IsoDate, SystemConfig } from "../../../../core/types";
+import { buildDailyLog } from "../../../../core/scoring";
+import { handleAdjustActionTotal } from "../../../../core/handleEvents/inner/handleAdjustActionTotal";
+import { createVaultRepo } from "../../../../core/vault/repo";
+import { MemoryVault } from "../../../memoryVault";
 
 
 describe("handleAdjustActionTotal", () => {

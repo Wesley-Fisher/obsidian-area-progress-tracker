@@ -1,6 +1,6 @@
-import { DailyLog, SystemConfig } from "../types";
-import type { VaultRepo } from "../vault/repo";
-import { UserActionEvent } from "./types";
+import { DailyLog, SystemConfig } from "../../types";
+import type { VaultRepo } from "../../vault/repo";
+import { UserActionEvent } from "../types";
 
 
 export async function handleAdjustActionTotal(repo: VaultRepo, dayLog: DailyLog, config: SystemConfig, evt: UserActionEvent) {

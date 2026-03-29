@@ -1,9 +1,10 @@
 import { UserEvent } from "./types";
 import type { VaultRepo } from "../vault/repo";
 import { recomputeForwardChain } from "../recomputeChain";
-import { handleSetPlanTarget } from "./handleSetPlanTarget";
-import { handleSetDayUIFlag } from "./handleSetDayUIFlag";
-import { handleAdjustActionTotal } from "./handleAdjustActionTotal";
+
+import { handleSetPlanTarget } from "./inner/handleSetPlanTarget";
+import { handleSetDayUIFlag } from "./inner/handleSetDayUIFlag";
+import { handleAdjustActionTotal } from "./inner/handleAdjustActionTotal";
 
 export async function handleUserEvent(evt: UserEvent, repo: VaultRepo): Promise<void> {
     if (
