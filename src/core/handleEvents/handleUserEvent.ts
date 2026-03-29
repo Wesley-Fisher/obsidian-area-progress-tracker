@@ -29,8 +29,6 @@ export async function handleUserEvent(evt: UserEvent, repo: VaultRepo): Promise<
       return;
     }
 
-    const paths = repo.getPaths(evt.date);
-
     await repo.ensureConfigFile();
     await repo.ensureDailyLogFile(evt.date);
 

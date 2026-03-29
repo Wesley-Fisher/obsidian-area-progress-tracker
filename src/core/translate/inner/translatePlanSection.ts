@@ -1,4 +1,4 @@
-import type { DailyLog, IsoDate, PlanFile, SystemConfig } from "../../types";
+import type { ActionConfig, DailyLog, IsoDate, PlanFile, SystemConfig } from "../../types";
 import type { PlanGroupModel, PlanSectionModel } from "../models";
 import { buildActionOnlyGroupsFromConfig } from "./grouping";
 
@@ -7,7 +7,7 @@ function finiteNonNegativeNumber(value: unknown): number {
   return Number.isFinite(n) ? Math.max(0, n) : 0;
 }
 
-function parseEffectiveMax(action: { max?: number; input: any }): number | undefined {
+function parseEffectiveMax(action: ActionConfig): number | undefined {
   const configMax =
     typeof action.max === "number" && Number.isFinite(action.max) && action.max >= 0 ? action.max : undefined;
 

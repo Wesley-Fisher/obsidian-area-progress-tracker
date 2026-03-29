@@ -35,6 +35,8 @@ export function renderTabbedGroups<TGroup extends TabbedGroup>(
   for (const [idx, g] of groups.entries()) {
     const buttonText = options.getButtonText ? options.getButtonText(g) : g.name;
     const btn = tabBar.createEl("button", { text: buttonText }) as HTMLButtonElement;
+    // Unsure of proper handling here; Will revisit later.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ds: any = (btn as any).dataset ?? ((btn as any).dataset = {});
     if (options.tabGroupKey) ds.aptTabGroup = options.tabGroupKey;
     ds.aptGroupId = g.id;
@@ -87,7 +89,7 @@ export function addThreeColRow(
   if (doUnderline) {
     tdName.style.textDecoration = "underline";
   }
-  const tdCurrent = tr.createEl("td", { text: currentText });
+  tr.createEl("td", { text: currentText });
   const tdEntry = tr.createEl("td");
   renderEntry(tdEntry);
 }

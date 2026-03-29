@@ -7,6 +7,9 @@ export async function onRenderProgressTrackerBlock(args: RenderBlockArgs): Promi
   const { el, blockConfig } = args;
 
   // Persist across rerenders: attributes on `el` survive `el.empty()`.
+
+  // Unsure of proper handling here; Will revisit later.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ds: any = (el as any).dataset ?? ((el as any).dataset = {});
   if (!ds.aptInstanceId) {
     ds.aptInstanceId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;

@@ -1,4 +1,3 @@
-import type { Plugin, MarkdownPostProcessorContext } from "obsidian";
 import {
   BlockConfig,
   DailyLog,

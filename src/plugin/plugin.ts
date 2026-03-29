@@ -61,7 +61,10 @@ export class AreaProgressTrackerPlugin {
           this.uiUpdate.registerRefresher(notePath, el, refreshSelf);
 
           // Ensure we don't retain refreshers for blocks that Obsidian unloads.
-          const maybeCtx = ctx as any;
+
+          // Unsure of best type handling here; will revisit later.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           const maybeCtx = ctx as any;
           if (typeof maybeCtx?.addChild === "function") {
             const child = new MarkdownRenderChild(el);
             child.onunload = () => {

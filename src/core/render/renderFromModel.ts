@@ -21,13 +21,21 @@ export type RenderRuntime = {
   instanceId?: string;
 };
 
+// Unsure of proper handling here; Will revisit later.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ensureDataset(el: HTMLElement): any {
+  // Unsure of proper handling here; Will revisit later.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const anyEl = el as any;
   if (!anyEl.dataset) anyEl.dataset = {};
+  // Unsure of proper handling here; Will revisit later.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return anyEl.dataset as any;
 }
 
 function setFocusKey(el: HTMLElement, focusKey: string): void {
+  // Unsure of proper handling here; Will revisit later.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ds: any = (el as any).dataset ?? ((el as any).dataset = {});
   ds.aptFocusKey = focusKey;
 }
