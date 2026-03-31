@@ -32,7 +32,7 @@ export function translateActivitiesSection(args: {
           {
             for (const req of args.config.requiredActions[areaReqKey]) {
               if (req.action === action.id) {
-                needed = Math.max(req.req - current, 0);
+                needed = Math.max(req.req - current, needed);
               }
             }
           }
@@ -92,7 +92,7 @@ export function translateActivitiesSection(args: {
         };
       })();
 
-      rows.push({ kind: "action", actionId: action.id, name: action.name, currentText, entry, requiredLeft: Math.max(needed - current, 0)});
+      rows.push({ kind: "action", actionId: action.id, name: action.name, currentText, entry, requiredLeft: Math.max(needed, 0)});
     }
 
     for (const rec of g.records) {

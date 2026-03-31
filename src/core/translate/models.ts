@@ -61,22 +61,27 @@ export type ActivitiesGroupModel = {
   numActionsStillRequired: number;
 };
 
-export type ActivityRowModel =
-  | {
+export type ActivityRowModelAction = {
       kind: "action";
       actionId: string;
       name: string;
       currentText: string;
       entry: ActionEntryModel;
       requiredLeft: number;
-    }
-  | {
+};
+
+export type ActivityRowModelRecord = {
       kind: "record";
       recordId: string;
       name: string;
       currentText: string;
       entry: RecordEntryModel;
-    };
+};
+
+export type ActivityRowModel =
+  | ActivityRowModelAction
+  | ActivityRowModelRecord
+  ;
 
 export type ActionEntryModel =
   | {

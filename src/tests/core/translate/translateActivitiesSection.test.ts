@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { DailyLog, IsoDate, SystemConfig } from "../../../core/types";
 import { translateActivitiesSection } from "../../../core/translate/inner/translateActivitiesSection";
-import { ActivitiesSectionModel, ActivitiesSectionModelEmpty } from "../../../core/translate/models";
+import { ActivitiesSectionModel, ActivitiesSectionModelEmpty, ActivityRowModelAction } from "../../../core/translate/models";
 
 describe("render/translate/translateActivitiesSection", () => {
   it("returns activitiesEmpty when no actions or records are configured", () => {
@@ -141,5 +141,95 @@ describe("render/translate/translateActivitiesSection", () => {
     expect(walk2.kind).toBe("action");
     if (walk2.kind !== "action") throw new Error("expected action");
     expect(walk2.entry.kind).toBe("button");
+  });
+
+  it("calculates the number of needed actions to meet requirements", () => {
+    const config: SystemConfig = {
+      version: 1,
+      areas: [{ id: "area1", name: "Area 1", minScore: 0, maxScore: 10, baseScore: 0, dailyDecay: 0}],
+      groups: [{ id: "g1", name: "Group 1" }],
+      actions: [
+        { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, groupIds: ["g1"] },
+      ],
+      records: [],
+      requiredActions: {
+        area1: [
+          { action: "walk", req: 2 },
+        ],
+      },
+    };
+
+    const dayLog: DailyLog = {
+      previousScore: {},
+      startingScore: {},
+      updatedScore: {},
+      actions: { walk: 1},
+      records: {},
+    };
+
+    const model = translateActivitiesSection({
+      date: "2026-03-16" as IsoDate,
+      config,
+      dayLog,
+    });
+
+    expect(model.kind).toBe("activitiesTabs");
+    if (model.kind !== "activitiesTabs") throw new Error("expected activitiesTabs");
+
+    const g1 = model.groups.find((g) => g.id === "g1")!;
+    expect(g1).toBeTruthy();
+    expect(g1.numActionsStillRequired).toBe(1);
+
+    const walk = g1.rows.find((r) => r.kind === "action" && r.actionId === "walk")! as ActivityRowModelAction;
+    expect(walk.kind).toBe("action");
+    expect(walk.requiredLeft).toBe(1); // Require 2, and have 1
+  });
+
+  it("calculates the number of needed actions to meet requirements for multiple areas", () => {
+    const config: SystemConfig = {
+      version: 1,
+      areas: [
+        { id: "area1", name: "Area 1", minScore: 0, maxScore: 10, baseScore: 0, dailyDecay: 0},
+        { id: "area2", name: "Area 2", minScore: 0, maxScore: 10, baseScore: 0, dailyDecay: 0}
+      ],
+      groups: [{ id: "g1", name: "Group 1" }],
+      actions: [
+        { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, groupIds: ["g1"] },
+      ],
+      records: [],
+      requiredActions: {
+        area1: [
+          { action: "walk", req: 4 },
+        ],
+        area2: [
+          { action: "walk", req: 2 },
+        ],
+      },
+    };
+
+    const dayLog: DailyLog = {
+      previousScore: {},
+      startingScore: {},
+      updatedScore: {},
+      actions: { walk: 1},
+      records: {},
+    };
+
+    const model = translateActivitiesSection({
+      date: "2026-03-16" as IsoDate,
+      config,
+      dayLog,
+    });
+
+    expect(model.kind).toBe("activitiesTabs");
+    if (model.kind !== "activitiesTabs") throw new Error("expected activitiesTabs");
+
+    const g1 = model.groups.find((g) => g.id === "g1")!;
+    expect(g1).toBeTruthy();
+    expect(g1.numActionsStillRequired).toBe(1);
+
+    const walk = g1.rows.find((r) => r.kind === "action" && r.actionId === "walk")! as ActivityRowModelAction;
+    expect(walk.kind).toBe("action");
+    expect(walk.requiredLeft).toBe(3); // Have 1, and groups require either 4 or 2
   });
 });
