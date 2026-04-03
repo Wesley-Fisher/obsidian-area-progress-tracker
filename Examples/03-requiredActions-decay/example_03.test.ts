@@ -7,7 +7,7 @@ import fs from "node:fs/promises";
 import { SystemConfig } from "../../src/core/types";
 import { checkConfiguration } from "../../src/core/checkConfiguration";
 
-describe("Examples/01-minimal", () => {
+describe("Examples/03-requiredActions-decay", () => {
   it("has a valid config.json", async () => {
     const exampleFolderPath = path.dirname(fileURLToPath(import.meta.url));
 
