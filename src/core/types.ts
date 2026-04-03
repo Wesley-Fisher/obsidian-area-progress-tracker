@@ -56,8 +56,6 @@ export interface RecordConfig {
 
 export interface SystemConfig {
   version: number;
-  timezone?: string;
-  weekStart?: "monday" | "sunday";
   areas: AreaConfig[];
   /**
    * Optional per-area requirements that, when met for a day, suppress daily decay for that area.
