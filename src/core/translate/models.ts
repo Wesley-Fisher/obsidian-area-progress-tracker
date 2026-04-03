@@ -137,8 +137,17 @@ export type PlanEntryModel =
     };
 
 export type PlanSectionModel =
-  | { kind: "planNoActions"; scope: "day" | "week"; message: string }
-  | { kind: "planTabs"; scope: "day" | "week"; groups: PlanGroupModel[] };
+  | { kind: "planNoActions"; scope: "day"; message: string }
+  | { kind: "planTabs"; scope: "day"; groups: PlanGroupModel[] }
+  | { kind: "planNoActions"; scope: "week"; weekStartDate: WeekStartDateModel; message: string }
+  | { kind: "planTabs"; scope: "week"; weekStartDate: WeekStartDateModel; groups: PlanGroupModel[] };
+
+export type WeekStartDateModel = {
+  kind: "weekStartDate";
+  label: string;
+  value: string;
+  eventBase: { kind: "setWeeklyPlanStartDate" };
+};
 
 export type PlanGroupModel = {
   id: string;

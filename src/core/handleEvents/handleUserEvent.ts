@@ -4,12 +4,14 @@ import { recomputeForwardChain } from "../recomputeChain";
 
 import { handleSetPlanTarget } from "./inner/handleSetPlanTarget";
 import { handleAdjustActionTotal } from "./inner/handleAdjustActionTotal";
+import { handleSetWeeklyPlanStartDate } from "./inner/handleSetWeeklyPlanStartDate";
 
 export async function handleUserEvent(evt: UserEvent, repo: VaultRepo): Promise<void> {
     if (
         evt.kind !== "adjustActionTotal" &&
         evt.kind !== "setRecordValue" &&
-    evt.kind !== "setPlanTarget"
+    evt.kind !== "setPlanTarget" &&
+    evt.kind !== "setWeeklyPlanStartDate"
     ) {
         return;
     }
@@ -19,6 +21,11 @@ export async function handleUserEvent(evt: UserEvent, repo: VaultRepo): Promise<
 
     if (evt.kind === "setPlanTarget") {
       await handleSetPlanTarget(repo, evt);
+      return;
+    }
+
+    if (evt.kind === "setWeeklyPlanStartDate") {
+      await handleSetWeeklyPlanStartDate(repo, evt);
       return;
     }
 

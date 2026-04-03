@@ -13,7 +13,7 @@ describe("render/translate/translateActivitiesSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const model = translateActivitiesSection({
@@ -39,7 +39,7 @@ describe("render/translate/translateActivitiesSection", () => {
       records: [{ id: "mood", name: "Mood", input: { type: "text" }, groupIds: ["g1"] }],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -112,7 +112,7 @@ describe("render/translate/translateActivitiesSection", () => {
       records: [{ id: "mood", name: "Mood", input: { type: "text" }, groupIds: ["g1"] }],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -173,7 +173,7 @@ describe("render/translate/translateActivitiesSection", () => {
         ],
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -223,7 +223,7 @@ describe("render/translate/translateActivitiesSection", () => {
         ],
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog: DailyLog = {

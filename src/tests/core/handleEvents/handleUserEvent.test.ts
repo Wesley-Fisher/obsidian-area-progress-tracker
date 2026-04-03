@@ -78,7 +78,7 @@ describe("handleUserEvent", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
     await vault.write(staticPaths.configPath, JSON.stringify(config));
 

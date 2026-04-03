@@ -20,7 +20,7 @@ describe("handleAdjustActionTotal", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -51,7 +51,7 @@ describe("handleAdjustActionTotal", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -81,7 +81,7 @@ describe("handleAdjustActionTotal", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -113,7 +113,7 @@ describe("handleAdjustActionTotal", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -143,7 +143,7 @@ describe("handleAdjustActionTotal", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     

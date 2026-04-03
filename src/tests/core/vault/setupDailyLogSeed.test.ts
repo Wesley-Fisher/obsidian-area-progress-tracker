@@ -36,7 +36,7 @@ describe("core/vault/setup ensureDailyLogFile", () => {
       groups: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const prevDate = "2026-03-15" as IsoDate;

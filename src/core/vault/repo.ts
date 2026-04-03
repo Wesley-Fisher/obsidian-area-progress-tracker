@@ -12,7 +12,7 @@ function defaultDailyPlan(): DailyPlanConfig {
 }
 
 function defaultWeeklyPlan(): WeeklyPlanConfig {
-  return { actions: {} };
+  return { startDate: "", actions: {} };
 }
 
 function getPlansFromConfig(config: SystemConfig | Partial<SystemConfig>): { dailyPlan: DailyPlanConfig; weeklyPlan: WeeklyPlanConfig } {
@@ -21,7 +21,7 @@ function getPlansFromConfig(config: SystemConfig | Partial<SystemConfig>): { dai
   const weeklyPlan = (c.weeklyPlan && typeof c.weeklyPlan === "object") ? (c.weeklyPlan as WeeklyPlanConfig) : defaultWeeklyPlan();
   return {
     dailyPlan: { actions: dailyPlan.actions ?? {} },
-    weeklyPlan: { actions: weeklyPlan.actions ?? {} },
+    weeklyPlan: { startDate: typeof weeklyPlan.startDate === "string" ? weeklyPlan.startDate : "", actions: weeklyPlan.actions ?? {} },
   };
 }
 

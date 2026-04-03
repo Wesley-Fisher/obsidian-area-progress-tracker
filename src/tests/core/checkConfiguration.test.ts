@@ -14,7 +14,7 @@ describe("checkConfiguration", () => {
         health: [{ action: "walk", req: 2 }],
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     expect(checkConfiguration(config)).toEqual([]);
@@ -35,7 +35,7 @@ describe("checkConfiguration", () => {
         ],
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const issues = checkConfiguration(config);
@@ -60,7 +60,7 @@ describe("checkConfiguration", () => {
         health: [{ action: "walk", req: 2 }],
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const issues = checkConfiguration(config);
@@ -81,7 +81,7 @@ describe("checkConfiguration", () => {
         health: undefined, // Invalid type
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const issues = checkConfiguration(config);
@@ -102,7 +102,7 @@ describe("checkConfiguration", () => {
         health: [{ action: "", req: 2 }],
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const issues = checkConfiguration(config);
@@ -124,7 +124,7 @@ describe("checkConfiguration", () => {
         health: [null], // Invalid entry
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const issues = checkConfiguration(config);

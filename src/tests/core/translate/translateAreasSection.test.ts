@@ -13,14 +13,14 @@ describe("render/translate/translateAreasSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const model = translateAreasSection({
       config,
       dayLog: { updatedScore: {} } as DailyLog,
       dayPlan: { actions: {} },
-      weekPlan: { actions: {} },
+      weekPlan: { startDate: "", actions: {} },
     });
 
     expect(model.kind).toBe("areasEmpty");
@@ -36,7 +36,7 @@ describe("render/translate/translateAreasSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -48,7 +48,7 @@ describe("render/translate/translateAreasSection", () => {
     };
 
     const dayPlan: DailyPlanConfig = { actions: { walk: 3 } }; // remaining=2 => +20 => 60
-    const weekPlan: WeeklyPlanConfig = { actions: { walk: 3 } }; // no subtract => +30 => 70
+    const weekPlan: WeeklyPlanConfig = { startDate: "", actions: { walk: 3 } }; // baseScore=50, +30 => 80
 
     const model = translateAreasSection({
       config,
@@ -66,7 +66,7 @@ describe("render/translate/translateAreasSection", () => {
       daysSinceText: "2",
       updatedScoreText: "40",
       possibleDayText: "60",
-      possibleWeekText: "70",
+      possibleWeekText: "80",
     });
   });
 });

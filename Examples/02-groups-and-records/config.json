@@ -66,5 +66,5 @@
   ],
   "requiredActions": {},
   "dailyPlan": { "actions": {} },
-  "weeklyPlan": { "actions": {} }
+  "weeklyPlan": { "startDate": "", "actions": {} }
 }

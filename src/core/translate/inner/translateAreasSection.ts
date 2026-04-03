@@ -1,4 +1,4 @@
-import type { DailyLog, DailyPlanConfig, SystemConfig, WeeklyPlanConfig } from "../../types";
+import type { DailyLog, DailyPlanConfig, Scores, SystemConfig, WeeklyPlanConfig } from "../../types";
 import type { AreasSectionModel, AreaRowModel } from "../models";
 
 export function translateAreasSection(args: {
@@ -6,6 +6,7 @@ export function translateAreasSection(args: {
   dayLog: DailyLog | null;
   dayPlan: DailyPlanConfig | null;
   weekPlan: WeeklyPlanConfig | null;
+  weekStartScores?: Scores;
 }): AreasSectionModel {
   const scores = args.dayLog?.updatedScore;
   if (!scores || Object.keys(scores).length === 0) {
@@ -28,7 +29,7 @@ export function translateAreasSection(args: {
 
     const possibleWeek = computePossibleScoreForArea({
       areaId: area.id,
-      currentUpdatedScore: s.score,
+      currentUpdatedScore: args.weekStartScores?.[area.id]?.score ?? area.baseScore,
       config: args.config,
       dayLog: args.dayLog,
       plan: args.weekPlan,

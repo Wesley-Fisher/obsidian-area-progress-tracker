@@ -70,5 +70,5 @@
     "health": [{"action": "walk", "req": 1}]
   },
   "dailyPlan": { "actions": {} },
-  "weeklyPlan": { "actions": {} }
+  "weeklyPlan": { "startDate": "", "actions": {} }
 }

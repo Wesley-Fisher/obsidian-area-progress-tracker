@@ -11,6 +11,7 @@ import type {
   RenderErrorModel,
   ActivitiesSectionModelEmpty,
   ActivitiesSectionModelFilled,
+  WeekStartDateModel,
 } from "../translate/models";
 import { addThreeColRow, renderTabbedGroups, renderThreeColumnTable } from "./inner/commonTable";
 
@@ -362,6 +363,10 @@ function renderPlanTabs(container: HTMLElement, runtime: RenderRuntime, model: E
 }
 
 function renderPlanContent(container: HTMLElement, runtime: RenderRuntime, model: PlanSectionModel): void {
+  if (model.scope === "week") {
+    renderWeekStartDate(container, runtime, model.weekStartDate);
+  }
+
   if (model.kind === "planNoActions") {
     container.createEl("div", { text: model.message });
     return;
@@ -395,6 +400,23 @@ function renderPlanContent(container: HTMLElement, runtime: RenderRuntime, model
       },
     }
   );
+}
+
+function renderWeekStartDate(container: HTMLElement, runtime: RenderRuntime, model: WeekStartDateModel): void {
+  const row = container.createDiv();
+  row.createEl("div", { text: model.label });
+
+  const uiRoot = runtime.uiRoot ?? container;
+  const ds = ensureDataset(uiRoot);
+  const instanceId = runtime.instanceId ?? ds.aptInstanceId ?? "apt";
+
+  const input = row.createEl("input") as HTMLInputElement;
+  input.type = "text";
+  input.value = model.value;
+  setFocusKey(input, `${instanceId}:plan:weekStartDate:input`);
+  input.onchange = () => {
+    void runtime.onUserAction({ ...model.eventBase, value: input.value });
+  };
 }
 
 function renderPlanEntry(

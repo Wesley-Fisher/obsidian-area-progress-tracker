@@ -57,6 +57,8 @@ export interface DailyPlanConfig {
 }
 
 export interface WeeklyPlanConfig {
+  /** Base date used when computing possible outcomes for weekly planning. May be invalid/unset; callers must fall back safely. */
+  startDate: string;
   /** Planned per-week action targets. Required to exist; may be empty. */
   actions: Partial<Record<ActionId, number>>;
 }

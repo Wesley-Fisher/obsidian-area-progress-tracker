@@ -138,6 +138,12 @@ describe("core/render/renderFromModel", () => {
       planWeek: {
         kind: "planNoActions",
         scope: "week",
+        weekStartDate: {
+          kind: "weekStartDate",
+          label: "Week start date",
+          value: "",
+          eventBase: { kind: "setWeeklyPlanStartDate" },
+        },
         message: "No actions",
       },
     };
@@ -158,7 +164,7 @@ describe("core/render/renderFromModel", () => {
     const number = inputs.find((i) => i.type === "number")!;
     number.change("100");
 
-    const text = inputs.find((i) => i.type === "text")!;
+    const text = inputs.find((i) => i.type === "text" && i.value === "ok")!;
     text.change("great");
 
     expect(calls.some((c) => c.kind === "adjustActionTotal" && c.actionId === "walk" && c.delta === 1)).toBe(true);
@@ -214,6 +220,12 @@ describe("core/render/renderFromModel", () => {
       planWeek: {
         kind: "planNoActions",
         scope: "week",
+        weekStartDate: {
+          kind: "weekStartDate",
+          label: "Week start date",
+          value: "",
+          eventBase: { kind: "setWeeklyPlanStartDate" },
+        },
         message: "No actions",
       },
     };
@@ -221,9 +233,9 @@ describe("core/render/renderFromModel", () => {
     renderProgressTrackerBody(asHTMLElement(root), runtime as RenderRuntime, model);
 
     const inputs = root.findAllByTag("input") as unknown as FakeInput[];
-    expect(inputs.length).toBe(1);
-    inputs[0].change("-5");
-    inputs[0].change("not-a-number");
+    const number = inputs.find((i) => i.type === "number")!;
+    number.change("-5");
+    number.change("not-a-number");
 
     expect(calls.some((c) => c.kind === "setPlanTarget" && c.actionId === "walk" && c.value === 0)).toBe(true);
   });

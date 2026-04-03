@@ -45,7 +45,7 @@ describe("render/translate/translateRenderBlock", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
     await vault.write(paths.configPath, JSON.stringify(config));
 
@@ -74,7 +74,7 @@ describe("render/translate/translateRenderBlock", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
 
     };
 
@@ -105,7 +105,7 @@ describe("render/translate/translateRenderBlock", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog: DailyLog = {

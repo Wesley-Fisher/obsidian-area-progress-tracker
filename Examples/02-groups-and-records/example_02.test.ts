@@ -83,7 +83,7 @@ describe("Examples/02-groups-and-records", () => {
       ],
       "requiredActions": {},
       "dailyPlan": { "actions": {} },
-      "weeklyPlan": { "actions": {} },
+      "weeklyPlan": { "startDate": "", "actions": {} },
     };
 
     expect(conf).toMatchObject(expected);

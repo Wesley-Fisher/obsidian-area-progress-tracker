@@ -17,7 +17,7 @@
     ]
   },
   "dailyPlan": { "actions": {} },
-  "weeklyPlan": { "actions": {} },
+  "weeklyPlan": { "startDate": "", "actions": {} },
   "actions": [
     {
       "id": "walk",

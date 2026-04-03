@@ -19,7 +19,7 @@ function mkArgs(partial: Partial<RenderDayModeArgs>): RenderDayModeArgs {
       groups: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     },
     dayLog: null,
     dayPlan: null,
@@ -42,7 +42,7 @@ describe("render/common grouping helpers", () => {
         records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: ["g1"] }],
         requiredActions: {},
         dailyPlan: { actions: {} },
-        weeklyPlan: { actions: {} },
+        weeklyPlan: { startDate: "", actions: {} },
       },
     });
 
@@ -64,7 +64,7 @@ describe("render/common grouping helpers", () => {
         records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: [] }],
         requiredActions: {},
         dailyPlan: { actions: {} },
-        weeklyPlan: { actions: {} },
+        weeklyPlan: { startDate: "", actions: {} },
       },
     });
 
@@ -87,7 +87,7 @@ describe("render/common grouping helpers", () => {
         records: [],
         requiredActions: {},
         dailyPlan: { actions: {} },
-        weeklyPlan: { actions: {} },
+        weeklyPlan: { startDate: "", actions: {} },
       },
     });
 

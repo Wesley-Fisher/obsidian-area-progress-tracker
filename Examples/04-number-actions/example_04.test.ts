@@ -51,7 +51,7 @@ describe("Examples/04-number-actions", () => {
       "records": [],
       "requiredActions": {},
       "dailyPlan": { "actions": {} },
-      "weeklyPlan": { "actions": {} },
+      "weeklyPlan": { "startDate": "", "actions": {} },
     };
 
     expect(conf).toMatchObject(expected);

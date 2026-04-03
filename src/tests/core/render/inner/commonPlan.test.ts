@@ -20,7 +20,7 @@ describe("core/render/commonPlan", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const args: RenderDayModeArgs = {

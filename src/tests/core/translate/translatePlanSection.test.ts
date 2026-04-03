@@ -12,7 +12,7 @@ describe("render/translate/translatePlanSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
     const model = translatePlanSection({
       scope: "week",
@@ -38,7 +38,7 @@ describe("render/translate/translatePlanSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     // Next line tests incorrect types to ensure robustness

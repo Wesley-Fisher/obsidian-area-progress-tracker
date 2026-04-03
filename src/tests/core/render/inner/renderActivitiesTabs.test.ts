@@ -16,7 +16,7 @@ function mkArgs(overrides: Partial<any> = {}): any {
     records: [],
     requiredActions: {},
     dailyPlan: { actions: {} },
-    weeklyPlan: { actions: {} },
+    weeklyPlan: { startDate: "", actions: {} },
   };
 
   const dayLog: DailyLog = {
