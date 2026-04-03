@@ -18,6 +18,7 @@ describe("handleSetDayUIFlag", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
+      groups: [],
       actions: [],
       records: [],
     };

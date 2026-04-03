@@ -7,6 +7,7 @@ describe("render/translate/translatePlanSection", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
+      groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
     };
@@ -36,7 +37,7 @@ describe("render/translate/translatePlanSection", () => {
   });
 
   it("returns planNoActions when actions are empty", () => {
-    const config: SystemConfig = { version: 1, areas: [], actions: [], records: [] };
+    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [] };
     const dayLog: DailyLog = {
       previousScore: {},
       startingScore: {},
@@ -63,6 +64,7 @@ describe("render/translate/translatePlanSection", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
+      groups: [],
       actions: [
         { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0  },
         { id: "done", name: "Done", input: { type: "checkbox" }, effects: {}, groupIds: [], max: 0  },

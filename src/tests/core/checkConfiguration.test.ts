@@ -7,6 +7,7 @@ describe("checkConfiguration", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
+      groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       requiredActions: {
         health: [{ action: "walk", req: 2 }],
@@ -20,6 +21,7 @@ describe("checkConfiguration", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
+      groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       requiredActions: {
         career: [{ action: "walk", req: 2 }],
@@ -45,6 +47,7 @@ describe("checkConfiguration", () => {
               { id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }
 
       ],
+      groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       requiredActions: {
         health: [{ action: "walk", req: 2 }],
@@ -62,6 +65,7 @@ describe("checkConfiguration", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }
       ],
+      groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       requiredActions: {
         health: undefined, // Invalid type
@@ -79,6 +83,7 @@ describe("checkConfiguration", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }
       ],
+      groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       requiredActions: {
         health: [{ action: "", req: 2 }],

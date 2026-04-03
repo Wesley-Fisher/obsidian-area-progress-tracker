@@ -11,6 +11,7 @@ function mkArgs(overrides: Partial<any> = {}): any {
   const config: SystemConfig = {
     version: 1,
     areas: [],
+    groups: [],
     actions: [],
     records: [],
   };

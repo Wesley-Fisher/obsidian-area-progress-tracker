@@ -5,7 +5,7 @@ import { ActivitiesSectionModel, ActivitiesSectionModelEmpty, ActivityRowModelAc
 
 describe("render/translate/translateActivitiesSection", () => {
   it("returns activitiesEmpty when no actions or records are configured", () => {
-    const config: SystemConfig = { version: 1, areas: [], actions: [], records: [] };
+    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [] };
 
     const model = translateActivitiesSection({
       date: "2026-03-16" as IsoDate,

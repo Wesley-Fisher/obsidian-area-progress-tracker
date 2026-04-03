@@ -236,6 +236,7 @@ describe("recomputeForwardChain", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
+      groups: [],
       actions: [
         { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, max: 2, groupIds: [] },
       ],

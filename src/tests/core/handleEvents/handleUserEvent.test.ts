@@ -97,6 +97,7 @@ describe("handleUserEvent", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
+      groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 1, groupIds: [] }],
       records: [],
     };

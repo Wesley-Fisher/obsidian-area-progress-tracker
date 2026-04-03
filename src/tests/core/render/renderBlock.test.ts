@@ -50,6 +50,7 @@ describe("onRenderProgressTrackerBlock", () => {
     const badConfig: SystemConfig = {
       version: 1,
       areas: [],
+      groups: [],
       actions: [
         { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
         { id: "walk", name: "Walk2", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
@@ -80,7 +81,7 @@ describe("onRenderProgressTrackerBlock", () => {
     const date = "2026-03-16";
     const paths = getDataPaths(dataFolder, date as IsoDate);
 
-    const config: SystemConfig = { version: 1, areas: [], actions: [], records: [] };
+    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [] };
     const dayLog: DailyLog = buildDailyLog(config, undefined, {}, {});
     const plan: PlanFile = { actions: {} };
 
@@ -108,6 +109,7 @@ describe("onRenderProgressTrackerBlock", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecay: 1 }],
+      groups: [],
       actions: [],
       records: [],
     };
@@ -141,6 +143,7 @@ describe("onRenderProgressTrackerBlock", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
+      groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
     };

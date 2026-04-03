@@ -48,20 +48,19 @@ export interface RecordConfig {
   id: RecordId;
   name: string;
   input: RecordInputConfig;
-  /** Optional UI grouping for columns/tabs (independent of Areas). */
   groupIds: ActivityGroupId[];
 }
 
 export interface SystemConfig {
   version: number;
   areas: AreaConfig[];
+  groups: ActivityGroupConfig[];
   /**
    * Optional per-area requirements that, when met for a day, suppress daily decay for that area.
    * Example: { "health": [{ "action": "walk", "req": 2 }] }
    */
   requiredActions?: Partial<Record<AreaId, RequiredAction[]>>;
   /** Optional UI groups for organizing actions/records (morning/work/admin, etc.). */
-  groups?: ActivityGroupConfig[];
   actions: ActionConfig[];
   records?: RecordConfig[];
 }
