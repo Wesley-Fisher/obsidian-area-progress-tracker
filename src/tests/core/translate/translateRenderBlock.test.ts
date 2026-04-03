@@ -155,10 +155,13 @@ describe("render/translate/translateRenderBlock", () => {
     const args = mkArgs({ vault, dataFolder, date, show: ["areas"] });
     const model = await translateRenderBlock(args);
 
-    expect(model.kind).toBe("day");
-    if (model.kind !== "day") throw new Error("expected day");
-
-    expect(model.sections).toHaveLength(1);
-    expect(model.sections[0].kind).toMatch(/areas/);
+    // UI now always renders Areas + fixed tabs (Actions / Plan Day / Plan Week).
+    // blockConfig.show is intentionally ignored.
+    expect(model.kind).toBe("dashboard");
+    if (model.kind !== "dashboard") throw new Error("expected dashboard");
+    expect(model.areas.kind).toMatch(/areas/);
+    expect(model.actions.kind).toMatch(/activities/);
+    expect(model.planDay.scope).toBe("day");
+    expect(model.planWeek.scope).toBe("week");
   });
 });

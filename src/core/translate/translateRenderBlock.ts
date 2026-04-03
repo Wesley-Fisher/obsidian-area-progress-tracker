@@ -1,6 +1,6 @@
 import { checkConfiguration } from "../checkConfiguration";
 import type { RenderBlockArgs } from "../render/renderTypes";
-import type { DaySectionModel, RenderBodyModel } from "./models";
+import type { RenderBodyModel } from "./models";
 import { translateAreasSection } from "./inner/translateAreasSection";
 import { translateActivitiesSection } from "./inner/translateActivitiesSection";
 import { translatePlanSection } from "./inner/translatePlanSection";
@@ -55,26 +55,11 @@ export async function translateRenderBlock(args: RenderBlockArgs): Promise<Rende
     return { kind: "errorText", message: `Unsupported mode: ${blockConfig.mode}` };
   }
 
-  const show = blockConfig.show ?? ["areas", "actions", "plan-day", "plan-week"];
-  const sections: DaySectionModel[] = [];
-  for (const part of show) {
-    switch (part){
-      case "areas":
-        sections.push(translateAreasSection({config,dayLog,dayPlan,weekPlan,}));
-        break;
-      case "actions":
-        sections.push(translateActivitiesSection({ date: blockConfig.date, config, dayLog }));
-        break;
-      case "plan-day":
-        sections.push(translatePlanSection({ scope: "day", date: blockConfig.date, config, dayLog, plan: dayPlan }));
-        break;
-      case "plan-week":
-        sections.push(translatePlanSection({ scope: "week", date: blockConfig.date, config, dayLog, plan: weekPlan }));
-        break;
-      default:
-        break;
-    }
-  }
-
-  return { kind: "day", sections };
+  return {
+    kind: "dashboard",
+    areas: translateAreasSection({ config, dayLog, dayPlan, weekPlan }),
+    actions: translateActivitiesSection({ date: blockConfig.date, config, dayLog }),
+    planDay: translatePlanSection({ scope: "day", date: blockConfig.date, config, dayLog, plan: dayPlan }),
+    planWeek: translatePlanSection({ scope: "week", date: blockConfig.date, config, dayLog, plan: weekPlan }),
+  };
 }

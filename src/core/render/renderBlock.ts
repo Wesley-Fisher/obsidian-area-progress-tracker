@@ -17,12 +17,8 @@ export async function onRenderProgressTrackerBlock(args: RenderBlockArgs): Promi
 
   el.empty();
 
-  const header = el.createEl("div", { text: "Area Progress Tracker" });
+  const header = el.createEl("div", { text: `Area Progress Tracker — Day ${blockConfig.date}` });
   header.addClass("apt-header");
-
-  const meta = el.createEl("div", { text: `mode=${blockConfig.mode} date=${blockConfig.date}` });
-  meta.addClass("apt-meta");
-
 
   const body = el.createEl("div");
   body.addClass("apt-body");

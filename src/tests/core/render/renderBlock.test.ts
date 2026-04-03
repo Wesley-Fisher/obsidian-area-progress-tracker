@@ -104,7 +104,7 @@ describe("onRenderProgressTrackerBlock", () => {
     expect(args.__root.textContent()).toContain("Unsupported mode: week");
   });
 
-  it("renders only requested sections via blockConfig.show", async () => {
+  it("always renders areas + fixed tabs (ignores blockConfig.show)", async () => {
     const vault = new MemoryVault();
     const dataFolder = "ProgressTracker";
     const date = "2026-03-16";
@@ -135,8 +135,9 @@ describe("onRenderProgressTrackerBlock", () => {
     const text = args.__root.textContent();
     expect(text).toContain("Area Progress Tracker");
     expect(text).toContain("Areas");
-    expect(text).not.toContain("Actions");
-    expect(text).not.toContain("Plan (day)");
+    expect(text).toContain("Actions");
+    expect(text).toContain("Planning (day)");
+    expect(text).toContain("Planning (week)");
   });
 
   it("renders actions + plan sections when show is omitted (default)", async () => {
@@ -170,7 +171,7 @@ describe("onRenderProgressTrackerBlock", () => {
 
     const text = args.__root.textContent();
     expect(text).toContain("Actions");
-    expect(text).toContain("Plan (day)");
-    expect(text).toContain("Plan (week)");
+    expect(text).toContain("Planning (day)");
+    expect(text).toContain("Planning (week)");
   });
 });
