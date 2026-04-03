@@ -11,6 +11,7 @@
     "resolveJsonModule": true,
     "types": ["vitest/globals"]
   },
-  "include": ["src/**/*.ts", "vitest.config.ts"]
+  "include": ["src/**/*.ts", "Examples/**/*.ts", "vitest.config.ts", "test-vault-area-progress-tracker/ProgressTrackerSource/test_repo_config.test.ts"],
+  "exclude": ["node_modules"]
 }
 

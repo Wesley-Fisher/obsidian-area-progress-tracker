@@ -40,6 +40,8 @@ export function renderTabbedGroups<TGroup extends TabbedGroup>(
     const ds: any = (btn as any).dataset ?? ((btn as any).dataset = {});
     if (options.tabGroupKey) ds.aptTabGroup = options.tabGroupKey;
     ds.aptGroupId = g.id;
+    const focusGroupKey = options.tabGroupKey ?? "tabs";
+    ds.aptFocusKey = `tabs:${focusGroupKey}:${g.id}`;
 
     buttons.push(btn);
     btn.onclick = () => setActive(idx);

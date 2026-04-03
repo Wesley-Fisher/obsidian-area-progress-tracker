@@ -14,7 +14,7 @@ export default [
   },
   ...tseslint.configs.recommended,
   {
-    files: ["src/**/*.ts"],
+    files: ["src/**/*.ts", "Examples/**/*.ts"],
     languageOptions: {
       parserOptions: {
         project: "./tsconfig.json",

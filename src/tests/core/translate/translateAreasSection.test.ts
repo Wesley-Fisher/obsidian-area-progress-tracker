@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, PlanFile, SystemConfig } from "../../../core/types";
+import type { DailyLog, DailyPlanConfig, SystemConfig, WeeklyPlanConfig } from "../../../core/types";
 import { translateAreasSection } from "../../../core/translate/inner/translateAreasSection";
 import { AreasSectionModelEmpty } from "../../../core/translate/models";
 
@@ -8,15 +8,19 @@ describe("render/translate/translateAreasSection", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecay: 1 }],
+      groups: [],
       actions: [],
       records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const model = translateAreasSection({
       config,
       dayLog: { updatedScore: {} } as DailyLog,
       dayPlan: { actions: {} },
-      weekPlan: { actions: {} },
+      weekPlan: { startDate: "", actions: {} },
     });
 
     expect(model.kind).toBe("areasEmpty");
@@ -27,8 +31,12 @@ describe("render/translate/translateAreasSection", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecay: 1 }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 10 }, groupIds: [] }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 10 }, groupIds: [], max: 0 }],
       records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -39,8 +47,8 @@ describe("render/translate/translateAreasSection", () => {
       records: {},
     };
 
-    const dayPlan: PlanFile = { actions: { walk: 3 } }; // remaining=2 => +20 => 60
-    const weekPlan: PlanFile = { actions: { walk: 3 } }; // no subtract => +30 => 70
+    const dayPlan: DailyPlanConfig = { actions: { walk: 3 } }; // startingScore=39, +30 => 69
+    const weekPlan: WeeklyPlanConfig = { startDate: "", actions: { walk: 3 } }; // same baseline => 69
 
     const model = translateAreasSection({
       config,
@@ -57,8 +65,39 @@ describe("render/translate/translateAreasSection", () => {
       areaName: "Health",
       daysSinceText: "2",
       updatedScoreText: "40",
-      possibleDayText: "60",
-      possibleWeekText: "70",
+      possibleDayText: "69",
+      possibleWeekText: "69",
     });
+  });
+
+  it("uses the same baseline for possible day/week when plans match (startingScore w/ decay)", () => {
+    const config: SystemConfig = {
+      version: 1,
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecay: 1 }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 10 }, groupIds: [], max: 0 }],
+      records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
+    };
+
+    const dayLog: DailyLog = {
+      previousScore: { health: { score: 50, daysSince: 1 } },
+      startingScore: { health: { score: 49, daysSince: 2 } },
+      updatedScore: { health: { score: 59, daysSince: 2 } },
+      actions: { walk: 1 },
+      records: {},
+    };
+
+    const dayPlan: DailyPlanConfig = { actions: { walk: 3 } };
+    const weekPlan: WeeklyPlanConfig = { startDate: "", actions: { walk: 3 } };
+
+    const model = translateAreasSection({ config, dayLog, dayPlan, weekPlan });
+    expect(model.kind).toBe("areasTable");
+    if (model.kind !== "areasTable") throw new Error("expected areasTable");
+
+    expect(model.rows).toHaveLength(1);
+    expect(model.rows[0]?.possibleDayText).toBe(model.rows[0]?.possibleWeekText);
   });
 });

@@ -11,8 +11,12 @@ function mkArgs(overrides: Partial<any> = {}): any {
   const config: SystemConfig = {
     version: 1,
     areas: [],
+    groups: [],
     actions: [],
     records: [],
+    requiredActions: {},
+    dailyPlan: { actions: {} },
+    weeklyPlan: { startDate: "", actions: {} },
   };
 
   const dayLog: DailyLog = {
@@ -161,7 +165,7 @@ describe("renderActivitiesTabs", () => {
     expect(calls.some((c) => c.kind === "setRecordValue" && c.recordId === "mood" && c.value === "great")).toBe(true);
   });
 
-  it("disables checkbox when max=0 and does not emit events", () => {
+  it("treats checkbox max=0 as unlimited (enabled) and emits events", () => {
     const calls: UserEvent[] = [];
     const args = mkArgs({
       config: {
@@ -180,10 +184,11 @@ describe("renderActivitiesTabs", () => {
 
     const inputs = args.__root.findAllByTag("input") as unknown as FakeInput[];
     expect(inputs).toHaveLength(1);
-    expect(inputs[0].disabled).toBe(true);
+    expect(inputs[0].disabled).toBe(false);
 
     inputs[0].checked = true;
     inputs[0].change();
-    expect(calls).toHaveLength(0);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]).toMatchObject({ kind: "adjustActionTotal", actionId: "meditate", delta: 1 });
   });
 });

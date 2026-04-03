@@ -1,32 +1,29 @@
 import type { ActionConfig, IsoDate, RecordConfig } from "../types";
 import type { UserEvent } from "../handleEvents/types";
 
-export type RenderBodyModel = RenderErrorModel | RenderDayBodyModel;
+export type RenderBodyModel = RenderErrorModel | RenderDashboardBodyModel;
 
 export type RenderErrorModel =
   | { kind: "errorText"; message: string }
   | { kind: "errorList"; message: string; items: string[] };
 
-export type RenderDayBodyModel = {
-  kind: "day";
-  sections: DaySectionModel[];
+export type RenderDashboardBodyModel = {
+  kind: "dashboard";
+  areas: AreasSectionModel;
+  actions: ActivitiesSectionModel;
+  planDay: PlanSectionModel;
+  planWeek: PlanSectionModel;
 };
-
-export type DaySectionModel =
-  | AreasSectionModel
-  | ActivitiesSectionModel
-  | PlanSectionModel;
-
 
 export type AreasSectionModelEmpty = {
   kind: "areasEmpty";
   message: string;
-}
+};
 
 export type AreasSectionModelFilled = {
   kind: "areasTable";
   rows: AreaRowModel[];
-}
+};
 
 export type AreasSectionModel =
   | AreasSectionModelEmpty
@@ -43,12 +40,12 @@ export type AreaRowModel = {
 export type ActivitiesSectionModelEmpty = {
   kind: "activitiesEmpty";
   message: string;
-}
+};
 
 export type ActivitiesSectionModelFilled = {
   kind: "activitiesTabs";
   groups: ActivitiesGroupModel[];
-}
+};
 
 export type ActivitiesSectionModel =
   | ActivitiesSectionModelEmpty
@@ -140,13 +137,16 @@ export type PlanEntryModel =
     };
 
 export type PlanSectionModel =
-  | { kind: "planHidden"; scope: "day" | "week"; toggle: ToggleModel; message: string }
-  | { kind: "planNoActions"; scope: "day" | "week"; toggle: ToggleModel; message: string }
-  | { kind: "planTabs"; scope: "day" | "week"; toggle: ToggleModel; groups: PlanGroupModel[] };
+  | { kind: "planNoActions"; scope: "day"; message: string }
+  | { kind: "planTabs"; scope: "day"; groups: PlanGroupModel[] }
+  | { kind: "planNoActions"; scope: "week"; weekStartDate: WeekStartDateModel; message: string }
+  | { kind: "planTabs"; scope: "week"; weekStartDate: WeekStartDateModel; groups: PlanGroupModel[] };
 
-export type ToggleModel = {
+export type WeekStartDateModel = {
+  kind: "weekStartDate";
   label: string;
-  event: UserEvent;
+  value: string;
+  eventBase: { kind: "setWeeklyPlanStartDate" };
 };
 
 export type PlanGroupModel = {

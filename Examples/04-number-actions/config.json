@@ -24,9 +24,13 @@
       "name": "Admin tasks (count)",
       "input": { "type": "button", "step": 1 },
       "effects": { "career": 1 },
-      "groupIds": ["career"]
+      "groupIds": ["career"],
+      "max": 0
     }
   ],
   "groups": [{ "id": "career", "name": "Career" }],
-  "records": []
+  "records": [],
+  "requiredActions": {},
+  "dailyPlan": { "actions": {} },
+  "weeklyPlan": { "startDate": "", "actions": {} }
 }

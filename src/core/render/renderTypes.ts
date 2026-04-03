@@ -1,8 +1,9 @@
 import {
   BlockConfig,
   DailyLog,
-  PlanFile,
+  DailyPlanConfig,
   SystemConfig,
+  WeeklyPlanConfig,
 } from "../types";
 import type { VaultRepo } from "../vault/repo";
 import { UserEvent } from "../handleEvents/types";
@@ -20,6 +21,6 @@ export interface RenderDayModeArgs extends RenderBlockArgs {
   container: HTMLElement;
   config: SystemConfig;
   dayLog: DailyLog | null;
-  dayPlan: PlanFile | null;
-  weekPlan: PlanFile | null;
+  dayPlan: DailyPlanConfig | null;
+  weekPlan: WeeklyPlanConfig | null;
 }

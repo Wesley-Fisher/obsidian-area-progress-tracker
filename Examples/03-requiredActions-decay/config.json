@@ -16,20 +16,24 @@
       { "action": "stretch", "req": 1 }
     ]
   },
+  "dailyPlan": { "actions": {} },
+  "weeklyPlan": { "startDate": "", "actions": {} },
   "actions": [
     {
       "id": "walk",
       "name": "Walk 20m",
       "input": { "type": "button", "step": 1 },
       "effects": { "health": 12 },
-      "groupIds": ["health"]
+      "groupIds": ["health"],
+      "max": 0
     },
     {
       "id": "stretch",
       "name": "Stretch",
       "input": { "type": "checkbox" },
       "effects": { "health": 3 },
-      "groupIds": ["health"]
+      "groupIds": ["health"],
+      "max": 0
     }
   ],
   "groups": [{ "id": "health", "name": "Health" }],

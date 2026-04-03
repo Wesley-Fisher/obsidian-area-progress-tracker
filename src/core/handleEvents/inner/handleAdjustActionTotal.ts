@@ -9,7 +9,7 @@ export async function handleAdjustActionTotal(repo: VaultRepo, dayLog: DailyLog,
 
     const action = config.actions.find((a) => a.id === evt.actionId);
     const max = action?.max;
-    if (typeof max === "number" && Number.isFinite(max) && max >= 0) {
+    if (typeof max === "number" && Number.isFinite(max) && max > 0) {
     next = Math.min(next, max);
     }
     const nextActions = { ...(dayLog.actions ?? {}), [evt.actionId]: next };

@@ -61,9 +61,9 @@ describe("plugin/plugin", () => {
     expect(args1.blockConfig).toMatchObject({ mode: "day", date: "2026-03-16" });
     expect(args2.blockConfig).toMatchObject({ mode: "day", date: "2026-03-16" });
 
-    await args1.onUserAction({ kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: true } as any);
+    await args1.onUserAction({ kind: "setPlanTarget", scope: "day", actionId: "walk", value: 1 } as any);
     expect(handleUserEvent).toHaveBeenCalledWith(
-      { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: true },
+      { kind: "setPlanTarget", scope: "day", actionId: "walk", value: 1 },
       repoMock
     );
 
@@ -111,7 +111,7 @@ describe("plugin/plugin", () => {
 
     // Trigger an action from block 1; only block 1 should refresh.
     const args1 = onRender.mock.calls[0][0];
-    await args1.onUserAction({ kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: true } as any);
+    await args1.onUserAction({ kind: "setPlanTarget", scope: "day", actionId: "walk", value: 1 } as any);
 
     expect(onRender).toHaveBeenCalledTimes(3);
     expect(onRender.mock.calls[2][0].el).toBe(el1);

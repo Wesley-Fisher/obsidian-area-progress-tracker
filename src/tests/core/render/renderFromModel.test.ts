@@ -34,75 +34,118 @@ describe("core/render/renderFromModel", () => {
     };
 
     const model: RenderBodyModel = {
-      kind: "day",
-      sections: [
-        {
-          kind: "activitiesTabs",
-          groups: [
-            {
-              id: "g1",
-              name: "Group",
-              numActionsStillRequired: 0,
-              rows: [
-                {
-                  kind: "action",
-                  actionId: "walk",
-                  name: "Walk",
-                  currentText: "1",
-                  entry: {
-                    kind: "button",
-                    plus: { label: "+", disabled: false, event: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "walk", delta: 1 } as UserEvent },
-                    minus: { label: "-", disabled: false, event: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "walk", delta: -1 } as UserEvent },
-                  },
-                  requiredLeft: 0,
-                },
-                {
-                  kind: "action",
-                  actionId: "meditate",
-                  name: "Meditate",
-                  currentText: "0",
-                  entry: {
-                    kind: "checkbox",
+      kind: "dashboard",
+      areas: { kind: "areasEmpty", message: "No areas" },
+      actions: {
+        kind: "activitiesTabs",
+        groups: [
+          {
+            id: "g1",
+            name: "Group",
+            numActionsStillRequired: 0,
+            rows: [
+              {
+                kind: "action",
+                actionId: "walk",
+                name: "Walk",
+                currentText: "1",
+                entry: {
+                  kind: "button",
+                  plus: {
+                    label: "+",
                     disabled: false,
-                    checked: false,
-                    eventOnCheck: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "meditate", delta: 1 } as UserEvent,
-                    eventOnUncheck: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "meditate", delta: -1 } as UserEvent,
+                    event: {
+                      kind: "adjustActionTotal",
+                      date: "2026-03-16",
+                      actionId: "walk",
+                      delta: 1,
+                    } as UserEvent,
                   },
-                  requiredLeft: 0,
-                },
-                {
-                  kind: "action",
-                  actionId: "pushups",
-                  name: "Pushups",
-                  currentText: "1",
-                  entry: {
-                    kind: "number",
-                    min: "0",
-                    max: "5",
-                    step: "1",
-                    value: "1",
-                    eventBase: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "pushups"},
-                    current: 1,
-                  },
-                  requiredLeft: 0,
-                },
-                {
-                  kind: "record",
-                  recordId: "mood",
-                  name: "Mood",
-                  currentText: "ok",
-                  entry: {
-                    kind: "recordInput",
-                    inputType: "text",
-                    value: "ok",
-                    eventBase: { kind: "setRecordValue", date: "2026-03-16", recordId: "mood" },
+                  minus: {
+                    label: "-",
+                    disabled: false,
+                    event: {
+                      kind: "adjustActionTotal",
+                      date: "2026-03-16",
+                      actionId: "walk",
+                      delta: -1,
+                    } as UserEvent,
                   },
                 },
-              ],
-            },
-          ],
+                requiredLeft: 0,
+              },
+              {
+                kind: "action",
+                actionId: "meditate",
+                name: "Meditate",
+                currentText: "0",
+                entry: {
+                  kind: "checkbox",
+                  disabled: false,
+                  checked: false,
+                  eventOnCheck: {
+                    kind: "adjustActionTotal",
+                    date: "2026-03-16",
+                    actionId: "meditate",
+                    delta: 1,
+                  } as UserEvent,
+                  eventOnUncheck: {
+                    kind: "adjustActionTotal",
+                    date: "2026-03-16",
+                    actionId: "meditate",
+                    delta: -1,
+                  } as UserEvent,
+                },
+                requiredLeft: 0,
+              },
+              {
+                kind: "action",
+                actionId: "pushups",
+                name: "Pushups",
+                currentText: "1",
+                entry: {
+                  kind: "number",
+                  min: "0",
+                  max: "5",
+                  step: "1",
+                  value: "1",
+                  eventBase: { kind: "adjustActionTotal", date: "2026-03-16", actionId: "pushups" },
+                  current: 1,
+                },
+                requiredLeft: 0,
+              },
+              {
+                kind: "record",
+                recordId: "mood",
+                name: "Mood",
+                currentText: "ok",
+                entry: {
+                  kind: "recordInput",
+                  inputType: "text",
+                  value: "ok",
+                  eventBase: { kind: "setRecordValue", date: "2026-03-16", recordId: "mood" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      planDay: {
+        kind: "planNoActions",
+        scope: "day",
+        message: "No actions",
+      },
+      planWeek: {
+        kind: "planNoActions",
+        scope: "week",
+        weekStartDate: {
+          kind: "weekStartDate",
+          label: "Week start date",
+          value: "",
+          eventBase: { kind: "setWeeklyPlanStartDate" },
         },
-      ],
+        message: "No actions",
+      },
     };
 
     renderProgressTrackerBody(asHTMLElement(root), runtime as RenderRuntime, model);
@@ -121,7 +164,7 @@ describe("core/render/renderFromModel", () => {
     const number = inputs.find((i) => i.type === "number")!;
     number.change("100");
 
-    const text = inputs.find((i) => i.type === "text")!;
+    const text = inputs.find((i) => i.type === "text" && i.value === "ok")!;
     text.change("great");
 
     expect(calls.some((c) => c.kind === "adjustActionTotal" && c.actionId === "walk" && c.delta === 1)).toBe(true);
@@ -143,66 +186,57 @@ describe("core/render/renderFromModel", () => {
     };
 
     const model: RenderBodyModel = {
-      kind: "day",
-      sections: [
-        {
-          kind: "planHidden",
-          scope: "day",
-          toggle: { label: "Show", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: false } as UserEvent },
-          message: "(Day plan hidden)",
-        },
-        {
-          kind: "planNoActions",
-          scope: "week",
-          toggle: { label: "Hide", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanWeek", value: true } as UserEvent },
-          message: "No actions",
-        },
-        {
-          kind: "planTabs",
-          scope: "day",
-          toggle: { label: "Hide", event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: true } as UserEvent },
-          groups: [
-            {
-              id: "g1",
-              name: "Group",
-              rows: [
-                {
-                  actionId: "walk",
-                  name: "Walk",
-                  plannedText: "2",
-                  scope: "day",
+      kind: "dashboard",
+      areas: { kind: "areasEmpty", message: "No areas" },
+      actions: { kind: "activitiesEmpty", message: "No actions" },
+      planDay: {
+        kind: "planTabs",
+        scope: "day",
+        groups: [
+          {
+            id: "g1",
+            name: "Group",
+            rows: [
+              {
+                actionId: "walk",
+                name: "Walk",
+                plannedText: "2",
+                scope: "day",
+                eventBase: { kind: "setPlanTarget", scope: "day", actionId: "walk" },
+                entry: {
+                  kind: "number",
+                  min: "0",
+                  max: undefined,
+                  step: "1",
+                  value: "2",
                   eventBase: { kind: "setPlanTarget", scope: "day", actionId: "walk" },
-                  entry: {
-                    kind: "number",
-                    min: "0",
-                    max: undefined,
-                    step: "1",
-                    value: "2",
-                    eventBase: { kind: "setPlanTarget", scope: "day", actionId: "walk" },
-                    current: 2,
-                  },
+                  current: 2,
                 },
-              ],
-            },
-          ],
+              },
+            ],
+          },
+        ],
+      },
+      planWeek: {
+        kind: "planNoActions",
+        scope: "week",
+        weekStartDate: {
+          kind: "weekStartDate",
+          label: "Week start date",
+          value: "",
+          eventBase: { kind: "setWeeklyPlanStartDate" },
         },
-      ],
+        message: "No actions",
+      },
     };
 
     renderProgressTrackerBody(asHTMLElement(root), runtime as RenderRuntime, model);
 
-    const btns = root.findAllByTag("button") as unknown as FakeButton[];
-    expect(btns.length).toBeGreaterThanOrEqual(3);
-    btns[0].click();
-    btns[1].click();
-
     const inputs = root.findAllByTag("input") as unknown as FakeInput[];
-    expect(inputs.length).toBe(1);
-    inputs[0].change("-5");
-    inputs[0].change("not-a-number");
+    const number = inputs.find((i) => i.type === "number")!;
+    number.change("-5");
+    number.change("not-a-number");
 
-    expect(calls.some((c) => c.kind === "setDayUiFlag" && c.flag === "hidePlanDay" && c.value === false)).toBe(true);
-    expect(calls.some((c) => c.kind === "setDayUiFlag" && c.flag === "hidePlanWeek" && c.value === true)).toBe(true);
     expect(calls.some((c) => c.kind === "setPlanTarget" && c.actionId === "walk" && c.value === 0)).toBe(true);
   });
 });

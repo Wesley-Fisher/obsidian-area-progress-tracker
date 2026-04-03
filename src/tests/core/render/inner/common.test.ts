@@ -10,8 +10,17 @@ function mkArgs(partial: Partial<RenderDayModeArgs>): RenderDayModeArgs {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     repo: {} as any, container: {} as any,
     onUserAction: async () => {},
-    blockConfig: { mode: "day", date: "2026-03-16" as IsoDate },
-    config: { version: 1, areas: [], actions: [], records: [], groups: [] },
+    blockConfig: { date: "2026-03-16" as IsoDate },
+    config: {
+      version: 1,
+      areas: [],
+      actions: [],
+      records: [],
+      groups: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
+    },
     dayLog: null,
     dayPlan: null,
     weekPlan: null,
@@ -27,10 +36,13 @@ describe("render/common grouping helpers", () => {
         areas: [],
         groups: [{ id: "g1", name: "Group 1" }],
         actions: [
-          { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: ["g1"] },
-          { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
+          { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: ["g1"], max: 0 },
+          { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
         ],
         records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: ["g1"] }],
+        requiredActions: {},
+        dailyPlan: { actions: {} },
+        weeklyPlan: { startDate: "", actions: {} },
       },
     });
 
@@ -48,8 +60,11 @@ describe("render/common grouping helpers", () => {
         version: 1,
         areas: [],
         groups: [],
-        actions: [{ id: "a1", name: "A1", input: { type: "checkbox" }, effects: {}, groupIds: [] }],
+        actions: [{ id: "a1", name: "A1", input: { type: "checkbox" }, effects: {}, groupIds: [], max: 0 }],
         records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: [] }],
+        requiredActions: {},
+        dailyPlan: { actions: {} },
+        weeklyPlan: { startDate: "", actions: {} },
       },
     });
 
@@ -66,10 +81,13 @@ describe("render/common grouping helpers", () => {
         areas: [],
         groups: [{ id: "g1", name: "Group 1" }],
         actions: [
-          { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
-          { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
+          { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
+          { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0},
         ],
         records: [],
+        requiredActions: {},
+        dailyPlan: { actions: {} },
+        weeklyPlan: { startDate: "", actions: {} },
       },
     });
 

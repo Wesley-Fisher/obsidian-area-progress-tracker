@@ -36,9 +36,7 @@ export interface ActionConfig {
   name: string;
   input: ActionInputConfig;
   effects: Record<AreaId, number>;
-  /** Optional per-day cap on how many times this action can be recorded. */
-  max?: number;
-  /** Optional UI grouping for columns/tabs (independent of Areas). */
+  max: number;
   groupIds: ActivityGroupId[];
 }
 
@@ -50,24 +48,32 @@ export interface RecordConfig {
   id: RecordId;
   name: string;
   input: RecordInputConfig;
-  /** Optional UI grouping for columns/tabs (independent of Areas). */
   groupIds: ActivityGroupId[];
+}
+
+export interface DailyPlanConfig {
+  /** Planned per-day action targets. Required to exist; may be empty. */
+  actions: Partial<Record<ActionId, number>>;
+}
+
+export interface WeeklyPlanConfig {
+  /** Base date used when computing possible outcomes for weekly planning. May be invalid/unset; callers must fall back safely. */
+  startDate: string;
+  /** Planned per-week action targets. Required to exist; may be empty. */
+  actions: Partial<Record<ActionId, number>>;
 }
 
 export interface SystemConfig {
   version: number;
-  timezone?: string;
-  weekStart?: "monday" | "sunday";
   areas: AreaConfig[];
-  /**
-   * Optional per-area requirements that, when met for a day, suppress daily decay for that area.
-   * Example: { "health": [{ "action": "walk", "req": 2 }] }
-   */
-  requiredActions?: Partial<Record<AreaId, RequiredAction[]>>;
-  /** Optional UI groups for organizing actions/records (morning/work/admin, etc.). */
-  groups?: ActivityGroupConfig[];
+  groups: ActivityGroupConfig[];
+  requiredActions: Partial<Record<AreaId, RequiredAction[]>>;
   actions: ActionConfig[];
-  records?: RecordConfig[];
+  records: RecordConfig[];
+
+  /** Planning targets are stored in config.json for easier future extension. */
+  dailyPlan: DailyPlanConfig;
+  weeklyPlan: WeeklyPlanConfig;
 }
 
 export interface AreaScore {
@@ -93,26 +99,8 @@ export interface DailyLog {
   actions: Partial<Record<ActionId, number>>;
   /** Per-day record values (text-entry fields), not used for scoring. */
   records?: Partial<Record<RecordId, string>>;
-  /** Per-day UI prefs (stored so they can differ per note/day). */
-  ui?: {
-    hidePlanDay?: boolean;
-    hidePlanWeek?: boolean;
-  };
 }
-
-export type ActivitiesLayout = "list" | "columns" | "tabs";
-
-export type PossibleModes = "day";
-
-export type ShowableAreas = "areas" | "actions" | "plan-day" | "plan-week";
 
 export interface BlockConfig {
-  mode: PossibleModes;
   date: IsoDate;
-  show?: Array<ShowableAreas>;
-  /** Controls how actions + records are visually grouped. Defaults to "list". */
-  activitiesLayout?: ActivitiesLayout;
 }
-
-
-export type PlanFile = { actions?: Partial<Record<string, number>> };

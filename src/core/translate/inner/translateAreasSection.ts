@@ -1,34 +1,42 @@
-import type { DailyLog, PlanFile, SystemConfig } from "../../types";
+import type { DailyLog, DailyPlanConfig, Scores, SystemConfig, WeeklyPlanConfig } from "../../types";
 import type { AreasSectionModel, AreaRowModel } from "../models";
 
 export function translateAreasSection(args: {
   config: SystemConfig;
   dayLog: DailyLog | null;
-  dayPlan: PlanFile | null;
-  weekPlan: PlanFile | null;
+  dayPlan: DailyPlanConfig | null;
+  weekPlan: WeeklyPlanConfig | null;
+  weekStartScores?: Scores;
 }): AreasSectionModel {
-  const scores = args.dayLog?.updatedScore;
-  if (!scores || Object.keys(scores).length === 0) {
+  const updatedScores = args.dayLog?.updatedScore;
+  if (!updatedScores || Object.keys(updatedScores).length === 0) {
     return { kind: "areasEmpty", message: "No scores yet (configure areas and/or create the day log)." };
   }
 
+  const startingScores = args.dayLog?.startingScore;
+
   const rows: AreaRowModel[] = [];
   for (const area of args.config.areas) {
-    const s = scores[area.id];
-    if (!s) continue;
+    const updated = updatedScores[area.id];
+    if (!updated) continue;
+
+    const start = startingScores?.[area.id];
+    // Baseline for "possible" calculations is the day's starting score (decay applied).
+    // Fall back to updated score if starting scores are missing for this area.
+    const dayStartScore = start?.score ?? updated.score;
 
     const possibleDay = computePossibleScoreForArea({
       areaId: area.id,
-      currentUpdatedScore: s.score,
+      currentUpdatedScore: dayStartScore,
       config: args.config,
       dayLog: args.dayLog,
       plan: args.dayPlan,
-      subtractCurrentDayTotals: true,
+      subtractCurrentDayTotals: false,
     });
 
     const possibleWeek = computePossibleScoreForArea({
       areaId: area.id,
-      currentUpdatedScore: s.score,
+      currentUpdatedScore: args.weekStartScores?.[area.id]?.score ?? dayStartScore,
       config: args.config,
       dayLog: args.dayLog,
       plan: args.weekPlan,
@@ -37,8 +45,8 @@ export function translateAreasSection(args: {
 
     rows.push({
       areaName: area.name,
-      daysSinceText: String(s.daysSince),
-      updatedScoreText: String(s.score),
+      daysSinceText: String(updated.daysSince),
+      updatedScoreText: String(updated.score),
       possibleDayText: possibleDay === null ? "—" : String(possibleDay),
       possibleWeekText: possibleWeek === null ? "—" : String(possibleWeek),
     });
@@ -56,7 +64,7 @@ function computePossibleScoreForArea(args: {
   currentUpdatedScore: number;
   config: SystemConfig;
   dayLog: DailyLog | null;
-  plan: PlanFile | null;
+  plan: DailyPlanConfig | WeeklyPlanConfig | null;
   subtractCurrentDayTotals: boolean;
 }): number | null {
   const planActions = args.plan?.actions;

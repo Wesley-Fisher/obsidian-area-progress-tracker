@@ -11,6 +11,7 @@ import type {
   RenderErrorModel,
   ActivitiesSectionModelEmpty,
   ActivitiesSectionModelFilled,
+  WeekStartDateModel,
 } from "../translate/models";
 import { addThreeColRow, renderTabbedGroups, renderThreeColumnTable } from "./inner/commonTable";
 
@@ -41,12 +42,55 @@ function setFocusKey(el: HTMLElement, focusKey: string): void {
 }
 
 export function renderProgressTrackerBody(container: HTMLElement, runtime: RenderRuntime, model: RenderBodyModel): void {
-  if (model.kind === "day") {
-    renderDayBody(container, runtime, model.sections);
-    return;
+  if (model.kind === "dashboard") {
+    renderDashboardBody(container, runtime, model);
+  } else {
+    renderError(container, model);
   }
+}
 
-  renderError(container, model);
+function renderDashboardBody(
+  container: HTMLElement,
+  runtime: RenderRuntime,
+  model: Extract<RenderBodyModel, { kind: "dashboard" }>
+): void {
+  renderAreasSectionModel(container, model.areas);
+
+  const uiRoot = runtime.uiRoot ?? container;
+  const ds = ensureDataset(uiRoot);
+
+  const mainTabStateKey = "aptMainActiveTabId";
+  const initialActiveTabId = ds[mainTabStateKey];
+
+  const mainTabs = [
+    { id: "actions", name: "Actions" },
+    { id: "plan-day", name: "Planning (day)" },
+    { id: "plan-week", name: "Planning (week)" },
+  ] as const;
+
+  const tabsContainer = container.createDiv({ cls: "apt-section" });
+  renderTabbedGroups(
+    tabsContainer,
+    [...mainTabs],
+    (panel, g) => {
+      if (g.id === "actions") {
+        renderActivitiesContent(panel, runtime, model.actions);
+        return;
+      }
+      if (g.id === "plan-day") {
+        renderPlanContent(panel, runtime, model.planDay);
+        return;
+      }
+      renderPlanContent(panel, runtime, model.planWeek);
+    },
+    {
+      tabGroupKey: "main",
+      initialActiveGroupId: initialActiveTabId,
+      onActiveGroupIdChange: (groupId) => {
+        ds[mainTabStateKey] = groupId;
+      },
+    }
+  );
 }
 
 export function renderAreasSectionModel(container: HTMLElement, model: AreasSectionModel): void {
@@ -60,8 +104,7 @@ export function renderActivitiesSectionModel(container: HTMLElement, runtime: Re
 }
 
 export function renderPlanSectionModel(container: HTMLElement, runtime: RenderRuntime, model: PlanSectionModel): void {
-  if (model.kind === "planHidden") renderPlanHidden(container, runtime, model);
-  else if (model.kind === "planNoActions") renderPlanNoActions(container, runtime, model);
+  if (model.kind === "planNoActions") renderPlanNoActions(container, model);
   else renderPlanTabs(container, runtime, model);
 }
 
@@ -76,18 +119,6 @@ function renderError(container: HTMLElement, model: RenderErrorModel): void {
   err.createEl("div", { text: model.message });
   const ul = err.createEl("ul");
   for (const item of model.items) ul.createEl("li", { text: item });
-}
-
-function renderDayBody(container: HTMLElement, runtime: RenderRuntime, sections: Array<AreasSectionModel | ActivitiesSectionModel | PlanSectionModel>): void {
-  for (const sec of sections) {
-    if (sec.kind === "areasEmpty") renderAreasEmpty(container, sec);
-    else if (sec.kind === "areasTable") renderAreasTable(container, sec);
-    else if (sec.kind === "activitiesEmpty") renderActivitiesEmpty(container, sec);
-    else if (sec.kind === "activitiesTabs") renderActivitiesTabs(container, runtime, sec);
-    else if (sec.kind === "planHidden") renderPlanHidden(container, runtime, sec);
-    else if (sec.kind === "planNoActions") renderPlanNoActions(container, runtime, sec);
-    else if (sec.kind === "planTabs") renderPlanTabs(container, runtime, sec);
-  }
 }
 
 function renderAreasEmpty(container: HTMLElement, model: Extract<AreasSectionModel, { kind: "areasEmpty" }>): void {
@@ -126,6 +157,55 @@ function renderActivitiesEmpty(container: HTMLElement, model: ActivitiesSectionM
   const sec = container.createDiv({ cls: "apt-section" });
   sec.createEl("h4", { text: "Actions" });
   sec.createEl("div", { text: model.message });
+}
+
+function renderActivitiesContent(container: HTMLElement, runtime: RenderRuntime, model: ActivitiesSectionModel): void {
+  if (model.kind === "activitiesEmpty") {
+    container.createEl("div", { text: model.message });
+    return;
+  }
+
+  const uiRoot = runtime.uiRoot ?? container;
+  const ds = ensureDataset(uiRoot);
+  const instanceId = runtime.instanceId ?? ds.aptInstanceId ?? "apt";
+
+  const tabStateKey = "aptActivitiesActiveGroupId";
+  const initialActiveGroupId = ds[tabStateKey];
+
+  renderTabbedGroups(
+    container,
+    model.groups,
+    (panel, g) => {
+      renderThreeColumnTable(panel, "apt-activities-table", (tbody) => {
+        for (const row of g.rows) {
+          if (row.kind === "action") {
+            const doUnderline = row.requiredLeft > 0;
+            const focusKeyBase = `${instanceId}:activities:${g.id}:action:${row.actionId}`;
+            addThreeColRow(tbody, row.name, row.currentText, doUnderline, (cell) =>
+              renderActionEntry(cell, runtime, row.entry, focusKeyBase)
+            );
+          } else {
+            const focusKey = `${instanceId}:activities:${g.id}:record:${row.recordId}`;
+            addThreeColRow(tbody, row.name, row.currentText, false, (cell) =>
+              renderRecordEntry(cell, runtime, row.entry, focusKey)
+            );
+          }
+        }
+      });
+    },
+    {
+      tabGroupKey: "activities",
+      initialActiveGroupId,
+      onActiveGroupIdChange: (groupId) => {
+        ds[tabStateKey] = groupId;
+      },
+      getButtonText: (g) => {
+        let buttonName = g.name;
+        if (g.numActionsStillRequired > 0) buttonName += ` (${g.numActionsStillRequired})`;
+        return buttonName;
+      },
+    }
+  );
 }
 
 function renderActivitiesTabs(
@@ -241,37 +321,18 @@ function renderRecordEntry(container: HTMLElement, runtime: RenderRuntime, model
   };
 }
 
-function renderPlanHidden(container: HTMLElement, runtime: RenderRuntime, model: Extract<PlanSectionModel, { kind: "planHidden" }>): void {
-  const sec = container.createDiv({ cls: "apt-section" });
-  sec.createEl("h4", { text: model.scope === "day" ? "Plan (day)" : "Plan (week)" });
-  const toggle = sec.createEl("button", { text: model.toggle.label });
-  toggle.onclick = () => {
-    void runtime.onUserAction(model.toggle.event);
-  };
-  sec.createEl("div", { text: model.message });
-}
-
 function renderPlanNoActions(
   container: HTMLElement,
-  runtime: RenderRuntime,
   model: Extract<PlanSectionModel, { kind: "planNoActions" }>
 ): void {
   const sec = container.createDiv({ cls: "apt-section" });
   sec.createEl("h4", { text: model.scope === "day" ? "Plan (day)" : "Plan (week)" });
-  const toggle = sec.createEl("button", { text: model.toggle.label });
-  toggle.onclick = () => {
-    void runtime.onUserAction(model.toggle.event);
-  };
   sec.createEl("div", { text: model.message });
 }
 
 function renderPlanTabs(container: HTMLElement, runtime: RenderRuntime, model: Extract<PlanSectionModel, { kind: "planTabs" }>): void {
   const sec = container.createDiv({ cls: "apt-section" });
   sec.createEl("h4", { text: model.scope === "day" ? "Plan (day)" : "Plan (week)" });
-  const toggle = sec.createEl("button", { text: model.toggle.label });
-  toggle.onclick = () => {
-    void runtime.onUserAction(model.toggle.event);
-  };
 
   const uiRoot = runtime.uiRoot ?? container;
   const ds = ensureDataset(uiRoot);
@@ -299,6 +360,63 @@ function renderPlanTabs(container: HTMLElement, runtime: RenderRuntime, model: E
       },
     }
   );
+}
+
+function renderPlanContent(container: HTMLElement, runtime: RenderRuntime, model: PlanSectionModel): void {
+  if (model.scope === "week") {
+    renderWeekStartDate(container, runtime, model.weekStartDate);
+  }
+
+  if (model.kind === "planNoActions") {
+    container.createEl("div", { text: model.message });
+    return;
+  }
+
+  const uiRoot = runtime.uiRoot ?? container;
+  const ds = ensureDataset(uiRoot);
+  const instanceId = runtime.instanceId ?? ds.aptInstanceId ?? "apt";
+
+  const tabStateKey = model.scope === "day" ? "aptPlanDayActiveGroupId" : "aptPlanWeekActiveGroupId";
+  const initialActiveGroupId = ds[tabStateKey];
+
+  renderTabbedGroups(
+    container,
+    model.groups,
+    (panel, g) => {
+      renderThreeColumnTable(panel, "apt-plan-table", (tbody) => {
+        for (const row of g.rows) {
+          const focusKeyBase = `${instanceId}:plan:${model.scope}:${g.id}:action:${row.actionId}`;
+          addThreeColRow(tbody, row.name, row.plannedText, false, (cell) =>
+            renderPlanEntry(cell, runtime, row.entry, focusKeyBase)
+          );
+        }
+      });
+    },
+    {
+      tabGroupKey: model.scope === "day" ? "plan-day" : "plan-week",
+      initialActiveGroupId,
+      onActiveGroupIdChange: (groupId) => {
+        ds[tabStateKey] = groupId;
+      },
+    }
+  );
+}
+
+function renderWeekStartDate(container: HTMLElement, runtime: RenderRuntime, model: WeekStartDateModel): void {
+  const row = container.createDiv();
+  row.createEl("div", { text: model.label });
+
+  const uiRoot = runtime.uiRoot ?? container;
+  const ds = ensureDataset(uiRoot);
+  const instanceId = runtime.instanceId ?? ds.aptInstanceId ?? "apt";
+
+  const input = row.createEl("input") as HTMLInputElement;
+  input.type = "text";
+  input.value = model.value;
+  setFocusKey(input, `${instanceId}:plan:weekStartDate:input`);
+  input.onchange = () => {
+    void runtime.onUserAction({ ...model.eventBase, value: input.value });
+  };
 }
 
 function renderPlanEntry(

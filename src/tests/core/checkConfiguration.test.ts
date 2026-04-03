@@ -7,10 +7,14 @@ describe("checkConfiguration", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      records: [],
       requiredActions: {
         health: [{ action: "walk", req: 2 }],
       },
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     expect(checkConfiguration(config)).toEqual([]);
@@ -20,7 +24,9 @@ describe("checkConfiguration", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      records: [],
       requiredActions: {
         career: [{ action: "walk", req: 2 }],
         health: [
@@ -28,6 +34,8 @@ describe("checkConfiguration", () => {
           { action: "walk", req: -1 },
         ],
       },
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const issues = checkConfiguration(config);
@@ -45,10 +53,14 @@ describe("checkConfiguration", () => {
               { id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }
 
       ],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      records: [],
       requiredActions: {
         health: [{ action: "walk", req: 2 }],
       },
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const issues = checkConfiguration(config);
@@ -62,10 +74,14 @@ describe("checkConfiguration", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }
       ],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      records: [],
       requiredActions: {
         health: undefined, // Invalid type
       },
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const issues = checkConfiguration(config);
@@ -79,10 +95,14 @@ describe("checkConfiguration", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }
       ],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      records: [],
       requiredActions: {
         health: [{ action: "", req: 2 }],
       },
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const issues = checkConfiguration(config);
@@ -96,11 +116,15 @@ describe("checkConfiguration", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }
       ],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      records: [],
       requiredActions: {
         // @ts-expect-error  // Allow testing invalid entry for robustness
         health: [null], // Invalid entry
       },
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const issues = checkConfiguration(config);

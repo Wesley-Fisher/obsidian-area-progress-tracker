@@ -32,6 +32,31 @@ function findDuplicates(values: string[]): string[] {
 export function checkConfiguration(config: SystemConfig): ConfigurationIssue[] {
   const issues: ConfigurationIssue[] = [];
 
+  // Planning config must exist (may be empty).
+  const dailyPlan = (config as Partial<SystemConfig>).dailyPlan as unknown;
+  if (!dailyPlan || typeof dailyPlan !== "object") {
+    issues.push({ message: "Missing dailyPlan (expected object)", path: "dailyPlan" });
+  } else {
+    const actions = (dailyPlan as Record<string, unknown>).actions;
+    if (!actions || typeof actions !== "object" || Array.isArray(actions)) {
+      issues.push({ message: "dailyPlan.actions must be an object", path: "dailyPlan.actions" });
+    }
+  }
+
+  const weeklyPlan = (config as Partial<SystemConfig>).weeklyPlan as unknown;
+  if (!weeklyPlan || typeof weeklyPlan !== "object") {
+    issues.push({ message: "Missing weeklyPlan (expected object)", path: "weeklyPlan" });
+  } else {
+    const obj = weeklyPlan as Record<string, unknown>;
+    if (typeof obj.startDate !== "string") {
+      issues.push({ message: "weeklyPlan.startDate must be a string", path: "weeklyPlan.startDate" });
+    }
+    const actions = obj.actions;
+    if (!actions || typeof actions !== "object" || Array.isArray(actions)) {
+      issues.push({ message: "weeklyPlan.actions must be an object", path: "weeklyPlan.actions" });
+    }
+  }
+
   const areaIds = config.areas.map((a) => a.id);
   const actionIds = config.actions.map((a) => a.id);
 

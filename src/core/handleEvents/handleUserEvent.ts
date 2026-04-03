@@ -3,33 +3,32 @@ import type { VaultRepo } from "../vault/repo";
 import { recomputeForwardChain } from "../recomputeChain";
 
 import { handleSetPlanTarget } from "./inner/handleSetPlanTarget";
-import { handleSetDayUIFlag } from "./inner/handleSetDayUIFlag";
 import { handleAdjustActionTotal } from "./inner/handleAdjustActionTotal";
+import { handleSetWeeklyPlanStartDate } from "./inner/handleSetWeeklyPlanStartDate";
 
 export async function handleUserEvent(evt: UserEvent, repo: VaultRepo): Promise<void> {
     if (
         evt.kind !== "adjustActionTotal" &&
         evt.kind !== "setRecordValue" &&
-        evt.kind !== "setPlanTarget" &&
-        evt.kind !== "setDayUiFlag"
+    evt.kind !== "setPlanTarget" &&
+    evt.kind !== "setWeeklyPlanStartDate"
     ) {
         return;
     }
 
     await repo.ensureDataFolders();
-    await repo.ensurePlanFiles();
+  await repo.ensureConfigFile();
 
     if (evt.kind === "setPlanTarget") {
       await handleSetPlanTarget(repo, evt);
       return;
     }
 
-    if (evt.kind === "setDayUiFlag") {
-      await handleSetDayUIFlag(repo, evt);
+    if (evt.kind === "setWeeklyPlanStartDate") {
+      await handleSetWeeklyPlanStartDate(repo, evt);
       return;
     }
 
-    await repo.ensureConfigFile();
     await repo.ensureDailyLogFile(evt.date);
 
     const dayLog = await repo.readDailyLog(evt.date);

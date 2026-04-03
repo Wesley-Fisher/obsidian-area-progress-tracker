@@ -15,8 +15,12 @@ describe("handleAdjustActionTotal", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -42,8 +46,12 @@ describe("handleAdjustActionTotal", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -68,8 +76,12 @@ describe("handleAdjustActionTotal", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
+      groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 2, groupIds: [] }],
       records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -94,10 +106,14 @@ describe("handleAdjustActionTotal", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
+      groups: [],
       actions: [
         { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: Number.NaN, groupIds: [] },
       ],
       records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -122,8 +138,12 @@ describe("handleAdjustActionTotal", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     

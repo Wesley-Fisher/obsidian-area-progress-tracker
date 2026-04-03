@@ -15,8 +15,6 @@ This note is a **manual test script** for the Obsidian test vault.
 - Plugin setting **Data folder** is set to `ProgressTrackerCopied`
 - The test data folder exists with:
   - `ProgressTrackerCopied/config.json`
-  - `ProgressTrackerCopied/plans.day.json`
-  - `ProgressTrackerCopied/plans.week.json`
   - `ProgressTrackerCopied/logs/2026-03-01.json`, `2026-03-02.json`, `2026-03-03.json`
 
 Notes:
@@ -37,8 +35,15 @@ Notes:
 - Areas table shows:
   - Health: `daysSince=0`, `updatedScore=502`
   - Career: `daysSince=1`, `updatedScore=495`
-- Actions show (at least): Walk 20m, Deep work (45m), Junk food
-- Plan (day) and Plan (week) sections are visible
+- Actions show (at least):
+	- Morning
+		- Walk 20m
+	- Work
+		- Deep work (45m)
+	- Evening
+		- Walk 20m
+		- Junk food
+- Planning tabs are visible for the day and week, with no entries
 - Actions and Plan areas have current tab highlighted
 
 ```progress-tracker
@@ -68,7 +73,7 @@ Notes:
 - Deep work is already `2` for this day.
 - Areas table shows:
   - Health: `daysSince=2`, `updatedScore=482`
-  - Career: `daysSince=0`, `updatedScore=495` (decay then +10)
+  - Career: `daysSince=0`, `updatedScore=500` (decay then +2x10)
 
 ```progress-tracker
 { "date": "2026-03-03" }
@@ -81,10 +86,10 @@ Notes:
 Use **Day 2026-03-01** block below.
 
 **Actions to take**
-- In **Plan (day)**, set:
+- In **Planning (day)**, set:
   - Walk 20m = `3`
   - Deep work (45m) = `4`
-- In **Plan (week)**, set:
+- In **Planning (week)**, set:
   - Walk 20m = `10`
   - Deep work (45m) = `10`
 
@@ -96,10 +101,10 @@ Use **Day 2026-03-01** block below.
 - In the **Areas** table below, the “Possible” columns update immediately:
   - Possible (day plan):
     - Health becomes `526` (current 502 + remaining(3-1)*12 = 24)
-    - Career becomes `515` (current 495 + remaining(4-0)*5 = 20)
+    - Career becomes `515` (current 495 + remaining(4-0)x5 = 20)
   - Possible (week plan):
-    - Health becomes `622` (current 502 + 10*12 = 120)
-    - Career becomes `545` (current 495 + 10*5 = 50)
+    - Health becomes `610` (starting 490 + 10x12 = 120)
+    - Career becomes `545` (starting 495 + 10x5 = 50)
 
 ```progress-tracker
 { "date": "2026-03-01", "show": ["areas"] }
@@ -107,29 +112,8 @@ Use **Day 2026-03-01** block below.
 
 ---
 
-## 3) Hiding planning sections
 
-Use **Day 2026-03-01** block below.
-
-**Actions to take**
-- Click **Hide day plan**.
-- Click **Hide week plan**.
-
-**Expect**
-- Both plan sections collapse and show a message:
-  - “(Day plan hidden for this date)”
-  - “(Week plan hidden for this date)”
-- Each section’s button label flips to **Show day plan** / **Show week plan**.
-
-```progress-tracker
-{ "date": "2026-03-01", "show": ["plan-day", "plan-week"] }
-```
-
-**Repeat for showing each planning section**
-
----
-
-## 4) Updating an item (and forward recompute)
+## 3) Updating an item (and forward recompute)
 
 This verifies that changing one day recomputes that day and **all following existing day files**.
 
@@ -169,7 +153,7 @@ Use **Day 2026-03-01**, **2026-03-02**, and **2026-03-03** blocks below.
 
 ---
 
-## 5) Adding a new day that does not yet have a file
+## 4) Adding a new day that does not yet have a file
 
 This verifies that opening a new date creates its `logs/YYYY-MM-DD.json` file (seeded from the previous day when available).
 
@@ -192,32 +176,7 @@ This verifies that opening a new date creates its `logs/YYYY-MM-DD.json` file (s
 
 ---
 
-## 6) Allowing decay to happen (explicit check)
-
-This is already demonstrated by the existing chain:
-- 2026-03-02 has no actions, so decay applies.
-- 2026-03-03 has no Health actions, so Health continues to decay.
-
-**Actions to take**
-- Compare Health updated score for consecutive days.
-
-**Expect**
-- Health decreases by `10` on any day with no Health-touching actions.
-- Career decreases by `5` on any day with no Career-touching actions.
-
-```progress-tracker
-{ "date": "2026-03-01", "show": ["areas"] }
-```
-
-```progress-tracker
-{ "date": "2026-03-02", "show": ["areas"] }
-```
-
-```progress-tracker
-{ "date": "2026-03-03", "show": ["areas"] }
-```
-
-## 6) Showing Actions and Records in Multiple Groups
+## 5) Showing Actions and Records in Multiple Groups
 
 **Actions to take**
 - Confirm there is a "Walk 20min" action under both "morning" and "evening".
@@ -238,11 +197,3 @@ This is already demonstrated by the existing chain:
 ```
 
 ---
-
-## Cleanup / Restore
-- Plans are stored in:
-  - `ProgressTrackerCopied/plans.day.json`
-  - `ProgressTrackerCopied/plans.week.json`
-- Per-day UI hide flags are stored in:
-  - `ProgressTrackerCopied/logs/YYYY-MM-DD.json` under `ui`
-- Restore by reverting those JSON files back to the repo state.

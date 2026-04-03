@@ -44,7 +44,7 @@ export function translateActivitiesSection(args: {
       }
 
       const configMax =
-        typeof action.max === "number" && Number.isFinite(action.max) && action.max >= 0 ? action.max : undefined;
+        typeof action.max === "number" && Number.isFinite(action.max) && action.max > 0 ? action.max : undefined;
 
       const entry: ActionEntryModel = (() => {
         if (action.input.type === "button") {
@@ -65,8 +65,8 @@ export function translateActivitiesSection(args: {
         }
 
         if (action.input.type === "checkbox") {
-          const disabledByMax = configMax === 0;
-          const checked = !disabledByMax && current > 0;
+          const disabledByMax = false;
+          const checked = current > 0;
           return {
             kind: "checkbox",
             disabled: disabledByMax,
@@ -76,10 +76,11 @@ export function translateActivitiesSection(args: {
           };
         }
 
-        const effectiveMax =
-          action.input.max !== undefined && configMax !== undefined
-            ? Math.min(action.input.max, configMax)
-            : (action.input.max ?? configMax);
+        const inputMax =
+          typeof action.input.max === "number" && Number.isFinite(action.input.max) && action.input.max > 0
+            ? action.input.max
+            : undefined;
+        const effectiveMax = inputMax !== undefined && configMax !== undefined ? Math.min(inputMax, configMax) : (inputMax ?? configMax);
 
         return {
           kind: "number",

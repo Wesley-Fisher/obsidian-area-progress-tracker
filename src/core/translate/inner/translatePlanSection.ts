@@ -1,5 +1,5 @@
-import type { ActionConfig, DailyLog, IsoDate, PlanFile, SystemConfig } from "../../types";
-import type { PlanGroupModel, PlanSectionModel } from "../models";
+import type { ActionConfig, DailyPlanConfig, SystemConfig, WeeklyPlanConfig } from "../../types";
+import type { PlanGroupModel, PlanSectionModel, WeekStartDateModel } from "../models";
 import { buildActionOnlyGroupsFromConfig } from "./grouping";
 
 function finiteNonNegativeNumber(value: unknown): number {
@@ -9,11 +9,11 @@ function finiteNonNegativeNumber(value: unknown): number {
 
 function parseEffectiveMax(action: ActionConfig): number | undefined {
   const configMax =
-    typeof action.max === "number" && Number.isFinite(action.max) && action.max >= 0 ? action.max : undefined;
+    typeof action.max === "number" && Number.isFinite(action.max) && action.max > 0 ? action.max : undefined;
 
   const inputMaxRaw = action.input?.type === "number" ? action.input.max : undefined;
   const inputMax =
-    typeof inputMaxRaw === "number" && Number.isFinite(inputMaxRaw) && inputMaxRaw >= 0 ? inputMaxRaw : undefined;
+    typeof inputMaxRaw === "number" && Number.isFinite(inputMaxRaw) && inputMaxRaw > 0 ? inputMaxRaw : undefined;
 
   if (configMax !== undefined && inputMax !== undefined) return Math.min(configMax, inputMax);
   return inputMax ?? configMax;
@@ -21,36 +21,30 @@ function parseEffectiveMax(action: ActionConfig): number | undefined {
 
 export function translatePlanSection(args: {
   scope: "day" | "week";
-  date: IsoDate;
   config: SystemConfig;
-  dayLog: DailyLog | null;
-  plan: PlanFile | null;
+  plan: DailyPlanConfig | WeeklyPlanConfig | null;
 }): PlanSectionModel {
-  const isDay = args.scope === "day";
-  const hidden = isDay ? args.dayLog?.ui?.hidePlanDay === true : args.dayLog?.ui?.hidePlanWeek === true;
-  const flag = isDay ? "hidePlanDay" : "hidePlanWeek";
-
-  const toggle = {
-    label: hidden ? `Show ${args.scope} plan` : `Hide ${args.scope} plan`,
-    event: { kind: "setDayUiFlag", date: args.date, flag, value: !hidden } as const,
-  };
-
-  if (hidden) {
-    return {
-      kind: "planHidden",
-      scope: args.scope,
-      toggle,
-      message: isDay ? "(Day plan hidden for this date)" : "(Week plan hidden for this date)",
-    };
-  }
+  const weekStartDate: WeekStartDateModel | undefined =
+    args.scope === "week"
+      ? {
+          kind: "weekStartDate",
+          label: "Week start date",
+          value: (args.plan && "startDate" in args.plan && typeof args.plan.startDate === "string") ? args.plan.startDate : "",
+          eventBase: { kind: "setWeeklyPlanStartDate" },
+        }
+      : undefined;
 
   if (args.config.actions.length === 0) {
-    return {
-      kind: "planNoActions",
-      scope: args.scope,
-      toggle,
-      message: "No actions configured.",
-    };
+    if (args.scope === "week" && weekStartDate) {
+      return {
+        kind: "planNoActions",
+        scope: "week",
+        weekStartDate,
+        message: "No actions configured.",
+      };
+    }
+
+    return { kind: "planNoActions", scope: "day", message: "No actions configured." };
   }
 
   const planActions = args.plan?.actions ?? {};
@@ -96,7 +90,7 @@ export function translatePlanSection(args: {
         }
 
         if (action.input.type === "checkbox") {
-          const disabledByMax = effectiveMax === 0;
+          const disabledByMax = effectiveMax !== undefined && effectiveMax <= 0;
           const checked = !disabledByMax && planned > 0;
           const planned01 = checked ? 1 : 0;
           planned = planned01;
@@ -110,7 +104,11 @@ export function translatePlanSection(args: {
         }
 
         const min = action.input.min !== undefined ? String(action.input.min) : undefined;
-        const max = effectiveMax !== undefined ? String(effectiveMax) : (action.input.max !== undefined ? String(action.input.max) : undefined);
+        const inputMaxStr =
+          typeof action.input.max === "number" && Number.isFinite(action.input.max) && action.input.max > 0
+            ? String(action.input.max)
+            : undefined;
+        const max = effectiveMax !== undefined ? String(effectiveMax) : inputMaxStr;
         const step = action.input.step !== undefined ? String(action.input.step) : undefined;
         return {
           kind: "number" as const,
@@ -135,5 +133,9 @@ export function translatePlanSection(args: {
     outGroups.push({ id: g.id, name: g.name, rows });
   }
 
-  return { kind: "planTabs", scope: args.scope, toggle, groups: outGroups };
+  if (args.scope === "week" && weekStartDate) {
+    return { kind: "planTabs", scope: "week", weekStartDate, groups: outGroups };
+  }
+
+  return { kind: "planTabs", scope: "day", groups: outGroups };
 }

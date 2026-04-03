@@ -13,13 +13,15 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["src/tests/**/*.test.ts"],
+    include: ["src/tests/**/*.test.ts", "Examples/**/*.test.ts", "test-vault-area-progress-tracker/ProgressTrackerSource/**/*.test.ts"],
     coverage: {
       exclude: [
         ...coverageConfigDefaults.exclude,
         'esbuild.config.mjs',
         // Unit test sources/helpers shouldn't affect production coverage
         'src/tests/**',
+        // Example folders are documentation + unit-test scaffolding
+        'Examples/**',
         // Type-only modules (no runtime JS to execute)
         'src/core/handleEvents/types.ts',
         'src/core/render/renderTypes.ts',

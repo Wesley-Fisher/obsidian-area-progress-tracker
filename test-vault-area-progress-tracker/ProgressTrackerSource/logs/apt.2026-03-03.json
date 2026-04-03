@@ -13,19 +13,19 @@
   },
   "startingScore": {
     "health": {
-      "score": 492,
+      "score": 482,
       "daysSince": 2,
       "decayActive": false
     },
     "career": {
-      "score": 490,
+      "score": 485,
       "daysSince": 3,
       "decayActive": false
     }
   },
   "updatedScore": {
     "health": {
-      "score": 492,
+      "score": 482,
       "daysSince": 2,
       "decayActive": true
     },

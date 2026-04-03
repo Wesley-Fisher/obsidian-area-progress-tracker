@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, PlanFile, SystemConfig } from "../../../../core/types";
+import type { DailyLog, DailyPlanConfig, SystemConfig, WeeklyPlanConfig } from "../../../../core/types";
 import { renderPlanTabs } from "../../../../core/render/inner/commonPlan";
 import { FakeElement, FakeInput, asHTMLElement } from "../fakeDom";
 import { UserEvent } from "../../../../core/handleEvents/types";
@@ -14,21 +14,24 @@ describe("core/render/commonPlan", () => {
       areas: [],
       groups: [],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
-        { id: "run", name: "Run", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
+        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
+        { id: "run", name: "Run", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
       ],
       records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
 
     const args: RenderDayModeArgs = {
       // All 'any' to provide blank objects for test
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       container: {} as any, el: {} as any, repo: {} as any,
-      blockConfig: { mode: "day", date: "2026-03-16" },
+      blockConfig: { date: "2026-03-16" },
       config,
       dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: {}, ui: {} } as DailyLog,
-      dayPlan: { actions: {} } as PlanFile,
-      weekPlan: { actions: {} } as PlanFile,
+      dayPlan: { actions: {} } as DailyPlanConfig,
+      weekPlan: { actions: {} } as WeeklyPlanConfig,
       onUserAction: async (evt: UserEvent) => {
         calls.push(evt);
       },

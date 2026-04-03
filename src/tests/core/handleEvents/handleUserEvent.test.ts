@@ -18,7 +18,6 @@ describe("handleUserEvent", () => {
 
     const staticPaths = getStaticDataPaths(dataFolder);
     expect(await vault.exists(staticPaths.configPath)).toBe(false);
-    expect(await vault.exists(staticPaths.dayPlanPath)).toBe(false);
   });
 
   it("handles setPlanTarget by writing the plan file", async () => {
@@ -41,29 +40,6 @@ describe("handleUserEvent", () => {
 
     expect(dayPlan.actions?.walk).toBe(2);
     expect(weekPlan.actions ?? {}).toBeDefined();
-  });
-
-  it("handles setDayUiFlag by creating and updating the daily log", async () => {
-    const vault = new MemoryVault();
-    const dataFolder = "ProgressTracker";
-    const repo = createVaultRepo(vault, dataFolder);
-    const date = "2026-03-16" as IsoDate;
-
-    await handleUserEvent(
-      {
-        kind: "setDayUiFlag",
-        date,
-        flag: "hidePlanDay",
-        value: true,
-      },
-      repo
-    );
-
-    const staticPaths = getStaticDataPaths(dataFolder);
-    expect(await vault.exists(staticPaths.configPath)).toBe(true);
-
-    const dayLog = await repo.readDailyLog(date);
-    expect(dayLog.ui?.hidePlanDay).toBe(true);
   });
 
   it("handles setRecordValue by writing records and preserving them after recompute", async () => {
@@ -97,8 +73,12 @@ describe("handleUserEvent", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
+      groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 1, groupIds: [] }],
       records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
     };
     await vault.write(staticPaths.configPath, JSON.stringify(config));
 

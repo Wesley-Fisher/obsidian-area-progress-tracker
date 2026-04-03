@@ -21,11 +21,9 @@ export interface UserPlanEvent {
   value: number;
 }
 
-export interface UserDayUiEvent {
-  kind: "setDayUiFlag";
-  date: IsoDate;
-  flag: "hidePlanDay" | "hidePlanWeek";
-  value: boolean;
+export interface UserWeeklyPlanStartDateEvent {
+  kind: "setWeeklyPlanStartDate";
+  value: string;
 }
 
-export type UserEvent = UserActionEvent | UserRecordEvent | UserPlanEvent | UserDayUiEvent;
+export type UserEvent = UserActionEvent | UserRecordEvent | UserPlanEvent | UserWeeklyPlanStartDateEvent;
