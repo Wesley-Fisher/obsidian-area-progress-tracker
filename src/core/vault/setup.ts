@@ -1,16 +1,26 @@
-import type { DailyLog, IsoDate, PlanFile, SystemConfig } from "../types";
+import type { DailyLog, IsoDate, SystemConfig } from "../types";
 import { addDays } from "../date";
 import { buildDailyLog } from "../scoring";
 import { getDataPaths, getStaticDataPaths } from "./paths";
 import type { VaultLike } from "./storage";
 import { ensureFolder, readJsonFile, writeJsonFile } from "./storage";
 
+const DEFAULT_CONFIG: SystemConfig = {
+  version: 1,
+  areas: [],
+  groups: [],
+  actions: [],
+  records: [],
+  requiredActions: {},
+  dailyPlan: { actions: {} },
+  weeklyPlan: { actions: {} },
+};
+
 export async function ensureVaultSetup(vault: VaultLike, dataFolder: string, date: IsoDate): Promise<void> {
   const paths = getDataPaths(dataFolder, date);
 
   await ensureDataFolders(vault, dataFolder);
   await ensureConfigFile(vault, paths.configPath);
-  await ensurePlanFiles(vault, dataFolder);
   await ensureDailyLogFile(vault, dataFolder, paths.configPath, date);
 }
 
@@ -20,30 +30,10 @@ export async function ensureDataFolders(vault: VaultLike, dataFolder: string): P
   await ensureFolder(vault, logsFolder);
 }
 
-export async function ensurePlanFiles(vault: VaultLike, dataFolder: string): Promise<void> {
-  const { dayPlanPath, weekPlanPath } = getStaticDataPaths(dataFolder);
-
-  if (!(await vault.exists(dayPlanPath))) {
-    await writeJsonFile(vault, dayPlanPath, { actions: {} } satisfies PlanFile);
-  }
-  if (!(await vault.exists(weekPlanPath))) {
-    await writeJsonFile(vault, weekPlanPath, { actions: {} } satisfies PlanFile);
-  }
-}
-
 export async function ensureConfigFile(vault: VaultLike, configPath: string): Promise<void> {
   if (await vault.exists(configPath)) return;
 
-  const template: SystemConfig = {
-    version: 1,
-    areas: [],
-    groups: [],
-    actions: [],
-    records: [],
-    requiredActions: {},
-  };
-
-  await writeJsonFile(vault, configPath, template);
+  await writeJsonFile(vault, configPath, DEFAULT_CONFIG);
 }
 
 export async function ensureDailyLogFile(
@@ -60,7 +50,7 @@ export async function ensureDailyLogFile(
   try {
     config = await readJsonFile<SystemConfig>(vault, configPath);
   } catch {
-    config = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
+    config = DEFAULT_CONFIG;
   }
 
   const prevDate = addDays(date, -1);

@@ -17,7 +17,7 @@ export async function handleUserEvent(evt: UserEvent, repo: VaultRepo): Promise<
     }
 
     await repo.ensureDataFolders();
-    await repo.ensurePlanFiles();
+  await repo.ensureConfigFile();
 
     if (evt.kind === "setPlanTarget") {
       await handleSetPlanTarget(repo, evt);
@@ -29,7 +29,6 @@ export async function handleUserEvent(evt: UserEvent, repo: VaultRepo): Promise<
       return;
     }
 
-    await repo.ensureConfigFile();
     await repo.ensureDailyLogFile(evt.date);
 
     const dayLog = await repo.readDailyLog(evt.date);

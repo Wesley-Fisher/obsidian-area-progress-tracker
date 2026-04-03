@@ -15,6 +15,8 @@ const config: SystemConfig = {
   ],
   records: [],
   requiredActions: {},
+  dailyPlan: { actions: {} },
+  weeklyPlan: { actions: {} },
 };
 
 describe("normalizePreviousScores", () => {

@@ -22,6 +22,8 @@ describe("handleSetDayUIFlag", () => {
       actions: [],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     // Pre-seed an existing daily log file.

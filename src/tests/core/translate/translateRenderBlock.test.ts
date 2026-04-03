@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, IsoDate, PlanFile, PossibleModes, ShowableAreas, SystemConfig } from "../../../core/types";
+import type { DailyLog, IsoDate, PossibleModes, ShowableAreas, SystemConfig } from "../../../core/types";
 import { translateRenderBlock } from "../../../core/translate/translateRenderBlock";
 import { getDataPaths } from "../../../core/vault/paths";
 import { createVaultRepo } from "../../../core/vault/repo";
@@ -39,10 +39,17 @@ describe("render/translate/translateRenderBlock", () => {
     const date = "2026-03-16" as IsoDate;
     const paths = getDataPaths(dataFolder, date);
 
-    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
+    const config: SystemConfig = {
+      version: 1,
+      areas: [],
+      groups: [],
+      actions: [],
+      records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
+    };
     await vault.write(paths.configPath, JSON.stringify(config));
-    await vault.write(paths.dayPlanPath, JSON.stringify({ actions: {} }));
-    await vault.write(paths.weekPlanPath, JSON.stringify({ actions: {} }));
 
     const args = mkArgs({ vault, dataFolder, date });
     const model = await translateRenderBlock(args);
@@ -50,46 +57,6 @@ describe("render/translate/translateRenderBlock", () => {
     expect(model.kind).toBe("errorText");
     if (model.kind !== "errorText") throw new Error("expected errorText");
     expect(model.message).toContain("Missing daily log:");
-  });
-
-  it("returns errorText when day plan is missing", async () => {
-    const vault = new MemoryVault();
-    const dataFolder = "ProgressTracker";
-    const date = "2026-03-16" as IsoDate;
-    const paths = getDataPaths(dataFolder, date);
-
-    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
-    const dayLog: DailyLog = buildDailyLog(config, undefined, {}, {});
-    await vault.write(paths.configPath, JSON.stringify(config));
-    await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
-    await vault.write(paths.weekPlanPath, JSON.stringify({ actions: {} }));
-
-    const args = mkArgs({ vault, dataFolder, date });
-    const model = await translateRenderBlock(args);
-
-    expect(model.kind).toBe("errorText");
-    if (model.kind !== "errorText") throw new Error("expected errorText");
-    expect(model.message).toContain("Missing daily plan:");
-  });
-
-  it("returns errorText when week plan is missing", async () => {
-    const vault = new MemoryVault();
-    const dataFolder = "ProgressTracker";
-    const date = "2026-03-16" as IsoDate;
-    const paths = getDataPaths(dataFolder, date);
-
-    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
-    const dayLog: DailyLog = buildDailyLog(config, undefined, {}, {});
-    await vault.write(paths.configPath, JSON.stringify(config));
-    await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
-    await vault.write(paths.dayPlanPath, JSON.stringify({ actions: {} }));
-
-    const args = mkArgs({ vault, dataFolder, date });
-    const model = await translateRenderBlock(args);
-
-    expect(model.kind).toBe("errorText");
-    if (model.kind !== "errorText") throw new Error("expected errorText");
-    expect(model.message).toContain("Missing weekly plan:");
   });
 
   it("returns errorList when config is invalid", async () => {
@@ -108,17 +75,14 @@ describe("render/translate/translateRenderBlock", () => {
       ],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
 
     };
 
     const dayLog: DailyLog = buildDailyLog({ ...badConfig, actions: [] }, undefined, {}, {});
-    const dayPlan: PlanFile = { actions: {} };
-    const weekPlan: PlanFile = { actions: {} };
-
     await vault.write(paths.configPath, JSON.stringify(badConfig));
     await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
-    await vault.write(paths.dayPlanPath, JSON.stringify(dayPlan));
-    await vault.write(paths.weekPlanPath, JSON.stringify(weekPlan));
 
     const args = mkArgs({ vault, dataFolder, date });
     const model = await translateRenderBlock(args);
@@ -135,14 +99,20 @@ describe("render/translate/translateRenderBlock", () => {
     const date = "2026-03-16" as IsoDate;
     const paths = getDataPaths(dataFolder, date);
 
-    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
+    const config: SystemConfig = {
+      version: 1,
+      areas: [],
+      groups: [],
+      actions: [],
+      records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
+    };
     const dayLog: DailyLog = buildDailyLog(config, undefined, {}, {});
-    const plan: PlanFile = { actions: {} };
 
     await vault.write(paths.configPath, JSON.stringify(config));
     await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
-    await vault.write(paths.dayPlanPath, JSON.stringify(plan));
-    await vault.write(paths.weekPlanPath, JSON.stringify(plan));
 
     const args = mkArgs({ vault, dataFolder, date, mode: "week" });
 
@@ -170,6 +140,8 @@ describe("render/translate/translateRenderBlock", () => {
       actions: [],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -179,8 +151,6 @@ describe("render/translate/translateRenderBlock", () => {
 
     await vault.write(paths.configPath, JSON.stringify(config));
     await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
-    await vault.write(paths.dayPlanPath, JSON.stringify({ actions: {} }));
-    await vault.write(paths.weekPlanPath, JSON.stringify({ actions: {} }));
 
     const args = mkArgs({ vault, dataFolder, date, show: ["areas"] });
     const model = await translateRenderBlock(args);

@@ -5,7 +5,16 @@ import { ActivitiesSectionModel, ActivitiesSectionModelEmpty, ActivityRowModelAc
 
 describe("render/translate/translateActivitiesSection", () => {
   it("returns activitiesEmpty when no actions or records are configured", () => {
-    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
+    const config: SystemConfig = {
+      version: 1,
+      areas: [],
+      groups: [],
+      actions: [],
+      records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
+    };
 
     const model = translateActivitiesSection({
       date: "2026-03-16" as IsoDate,
@@ -29,6 +38,8 @@ describe("render/translate/translateActivitiesSection", () => {
       ],
       records: [{ id: "mood", name: "Mood", input: { type: "text" }, groupIds: ["g1"] }],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -100,6 +111,8 @@ describe("render/translate/translateActivitiesSection", () => {
       ],
       records: [{ id: "mood", name: "Mood", input: { type: "text" }, groupIds: ["g1"] }],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -159,6 +172,8 @@ describe("render/translate/translateActivitiesSection", () => {
           { action: "walk", req: 2 },
         ],
       },
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -207,6 +222,8 @@ describe("render/translate/translateActivitiesSection", () => {
           { action: "walk", req: 2 },
         ],
       },
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog: DailyLog = {

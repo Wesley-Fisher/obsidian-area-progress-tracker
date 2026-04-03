@@ -13,6 +13,8 @@ function mkConfig(partial: Partial<SystemConfig>): SystemConfig {
     actions: [],
     records: [],
     requiredActions: {},
+    dailyPlan: { actions: {} },
+    weeklyPlan: { actions: {} },
     ...partial,
   };
 }

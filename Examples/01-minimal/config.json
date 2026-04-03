@@ -30,5 +30,7 @@
   ],
   "groups": [{"id": "health", "name": "Health" }],
   "records": [],
-  "requiredActions": {}
+  "requiredActions": {},
+  "dailyPlan": { "actions": {} },
+  "weeklyPlan": { "actions": {} }
 }

@@ -18,7 +18,6 @@ describe("handleUserEvent", () => {
 
     const staticPaths = getStaticDataPaths(dataFolder);
     expect(await vault.exists(staticPaths.configPath)).toBe(false);
-    expect(await vault.exists(staticPaths.dayPlanPath)).toBe(false);
   });
 
   it("handles setPlanTarget by writing the plan file", async () => {
@@ -101,6 +100,8 @@ describe("handleUserEvent", () => {
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 1, groupIds: [] }],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
     await vault.write(staticPaths.configPath, JSON.stringify(config));
 

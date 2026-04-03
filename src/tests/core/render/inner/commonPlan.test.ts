@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, PlanFile, SystemConfig } from "../../../../core/types";
+import type { DailyLog, DailyPlanConfig, SystemConfig, WeeklyPlanConfig } from "../../../../core/types";
 import { renderPlanTabs } from "../../../../core/render/inner/commonPlan";
 import { FakeElement, FakeInput, asHTMLElement } from "../fakeDom";
 import { UserEvent } from "../../../../core/handleEvents/types";
@@ -19,6 +19,8 @@ describe("core/render/commonPlan", () => {
       ],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const args: RenderDayModeArgs = {
@@ -28,8 +30,8 @@ describe("core/render/commonPlan", () => {
       blockConfig: { mode: "day", date: "2026-03-16" },
       config,
       dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: {}, ui: {} } as DailyLog,
-      dayPlan: { actions: {} } as PlanFile,
-      weekPlan: { actions: {} } as PlanFile,
+      dayPlan: { actions: {} } as DailyPlanConfig,
+      weekPlan: { actions: {} } as WeeklyPlanConfig,
       onUserAction: async (evt: UserEvent) => {
         calls.push(evt);
       },

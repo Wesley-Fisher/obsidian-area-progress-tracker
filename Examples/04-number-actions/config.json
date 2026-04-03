@@ -30,5 +30,7 @@
   ],
   "groups": [{ "id": "career", "name": "Career" }],
   "records": [],
-  "requiredActions": {}
+  "requiredActions": {},
+  "dailyPlan": { "actions": {} },
+  "weeklyPlan": { "actions": {} }
 }

@@ -82,6 +82,8 @@ describe("Examples/02-groups-and-records", () => {
         }
       ],
       "requiredActions": {},
+      "dailyPlan": { "actions": {} },
+      "weeklyPlan": { "actions": {} },
     };
 
     expect(conf).toMatchObject(expected);

@@ -1,4 +1,4 @@
-import type { ActionConfig, DailyLog, IsoDate, PlanFile, SystemConfig } from "../../types";
+import type { ActionConfig, DailyLog, DailyPlanConfig, IsoDate, SystemConfig, WeeklyPlanConfig } from "../../types";
 import type { PlanGroupModel, PlanSectionModel } from "../models";
 import { buildActionOnlyGroupsFromConfig } from "./grouping";
 
@@ -24,7 +24,7 @@ export function translatePlanSection(args: {
   date: IsoDate;
   config: SystemConfig;
   dayLog: DailyLog | null;
-  plan: PlanFile | null;
+  plan: DailyPlanConfig | WeeklyPlanConfig | null;
 }): PlanSectionModel {
   const isDay = args.scope === "day";
   const hidden = isDay ? args.dayLog?.ui?.hidePlanDay === true : args.dayLog?.ui?.hidePlanWeek === true;

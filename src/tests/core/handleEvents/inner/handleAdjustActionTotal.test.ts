@@ -19,6 +19,8 @@ describe("handleAdjustActionTotal", () => {
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -48,6 +50,8 @@ describe("handleAdjustActionTotal", () => {
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -76,6 +80,8 @@ describe("handleAdjustActionTotal", () => {
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 2, groupIds: [] }],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -106,6 +112,8 @@ describe("handleAdjustActionTotal", () => {
       ],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog = buildDailyLog(config, undefined, { walk: 1 }, {});
@@ -134,6 +142,8 @@ describe("handleAdjustActionTotal", () => {
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     

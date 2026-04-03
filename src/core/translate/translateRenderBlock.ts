@@ -4,16 +4,25 @@ import type { DaySectionModel, RenderBodyModel } from "./models";
 import { translateAreasSection } from "./inner/translateAreasSection";
 import { translateActivitiesSection } from "./inner/translateActivitiesSection";
 import { translatePlanSection } from "./inner/translatePlanSection";
+import type { DailyPlanConfig, SystemConfig, WeeklyPlanConfig } from "../types";
+
+function defaultDailyPlan(): DailyPlanConfig {
+  return { actions: {} };
+}
+
+function defaultWeeklyPlan(): WeeklyPlanConfig {
+  return { actions: {} };
+}
 
 export async function translateRenderBlock(args: RenderBlockArgs): Promise<RenderBodyModel> {
   const { blockConfig } = args;
   const paths = args.repo.getPaths(blockConfig.date);
 
   // Load minimal data needed for rendering.
-  let config;
+  let config: SystemConfig;
   let dayLog;
-  let dayPlan;
-  let weekPlan;
+  let dayPlan: DailyPlanConfig;
+  let weekPlan: WeeklyPlanConfig;
 
   try {
     config = await args.repo.readConfig();
@@ -21,22 +30,16 @@ export async function translateRenderBlock(args: RenderBlockArgs): Promise<Rende
     return { kind: "errorText", message: `Missing config: ${paths.configPath}` };
   }
 
+  // Backward-compatible defaults if older configs are missing these fields.
+  dayPlan = (config as Partial<SystemConfig>).dailyPlan ?? defaultDailyPlan();
+  weekPlan = (config as Partial<SystemConfig>).weeklyPlan ?? defaultWeeklyPlan();
+  dayPlan = { actions: dayPlan.actions ?? {} };
+  weekPlan = { actions: weekPlan.actions ?? {} };
+
   try {
     dayLog = await args.repo.readDailyLog(blockConfig.date);
   } catch {
     return { kind: "errorText", message: `Missing daily log: ${paths.dailyLogPath}` };
-  }
-
-  try {
-    dayPlan = await args.repo.readPlan("day");
-  } catch {
-    return { kind: "errorText", message: `Missing daily plan: ${paths.dayPlanPath}` };
-  }
-
-  try {
-    weekPlan = await args.repo.readPlan("week");
-  } catch {
-    return { kind: "errorText", message: `Missing weekly plan: ${paths.weekPlanPath}` };
   }
 
   const configIssues = checkConfiguration(config);

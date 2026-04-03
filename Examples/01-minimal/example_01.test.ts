@@ -50,6 +50,8 @@ describe("Examples/01-minimal", () => {
       "groups": [{"id": "health", "name": "Health" }],
       "records": [],
       "requiredActions": {},
+      "dailyPlan": { "actions": {} },
+      "weeklyPlan": { "actions": {} },
     };
 
     expect(conf).toMatchObject(expected);

@@ -16,6 +16,8 @@
       { "action": "stretch", "req": 1 }
     ]
   },
+  "dailyPlan": { "actions": {} },
+  "weeklyPlan": { "actions": {} },
   "actions": [
     {
       "id": "walk",

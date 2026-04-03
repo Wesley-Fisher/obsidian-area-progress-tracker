@@ -4,16 +4,12 @@ import { normalizeFolderPath } from "./normalize";
 export interface DataPaths {
   configPath: string;
   dailyLogPath: string;
-  dayPlanPath: string;
-  weekPlanPath: string;
 }
 
 export interface StaticDataPaths {
   baseFolder: string;
   logsFolder: string;
   configPath: string;
-  dayPlanPath: string;
-  weekPlanPath: string;
 }
 
 export function getStaticDataPaths(dataFolder: string): StaticDataPaths {
@@ -22,8 +18,6 @@ export function getStaticDataPaths(dataFolder: string): StaticDataPaths {
     baseFolder,
     logsFolder: `${baseFolder}/logs`,
     configPath: `${baseFolder}/config.json`,
-    dayPlanPath: `${baseFolder}/plans.day.json`,
-    weekPlanPath: `${baseFolder}/plans.week.json`,
   };
 }
 
@@ -34,11 +28,9 @@ export function getStaticDataPaths(dataFolder: string): StaticDataPaths {
  * the default folder name and let callers override later.
  */
 export function getDataPaths(dataFolder: string, date: IsoDate): DataPaths {
-  const { configPath, dayPlanPath, weekPlanPath, logsFolder } = getStaticDataPaths(dataFolder);
+  const { configPath, logsFolder } = getStaticDataPaths(dataFolder);
   return {
     configPath,
     dailyLogPath: `${logsFolder}/apt.${date}.json`,
-    dayPlanPath,
-    weekPlanPath,
   };
 }

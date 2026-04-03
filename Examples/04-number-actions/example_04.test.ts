@@ -50,6 +50,8 @@ describe("Examples/04-number-actions", () => {
       "groups": [{ "id": "career", "name": "Career" }],
       "records": [],
       "requiredActions": {},
+      "dailyPlan": { "actions": {} },
+      "weeklyPlan": { "actions": {} },
     };
 
     expect(conf).toMatchObject(expected);

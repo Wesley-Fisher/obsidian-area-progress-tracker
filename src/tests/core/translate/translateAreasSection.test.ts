@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, PlanFile, SystemConfig } from "../../../core/types";
+import type { DailyLog, DailyPlanConfig, SystemConfig, WeeklyPlanConfig } from "../../../core/types";
 import { translateAreasSection } from "../../../core/translate/inner/translateAreasSection";
 import { AreasSectionModelEmpty } from "../../../core/translate/models";
 
@@ -12,6 +12,8 @@ describe("render/translate/translateAreasSection", () => {
       actions: [],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const model = translateAreasSection({
@@ -33,6 +35,8 @@ describe("render/translate/translateAreasSection", () => {
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 10 }, groupIds: [], max: 0 }],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -43,8 +47,8 @@ describe("render/translate/translateAreasSection", () => {
       records: {},
     };
 
-    const dayPlan: PlanFile = { actions: { walk: 3 } }; // remaining=2 => +20 => 60
-    const weekPlan: PlanFile = { actions: { walk: 3 } }; // no subtract => +30 => 70
+    const dayPlan: DailyPlanConfig = { actions: { walk: 3 } }; // remaining=2 => +20 => 60
+    const weekPlan: WeeklyPlanConfig = { actions: { walk: 3 } }; // no subtract => +30 => 70
 
     const model = translateAreasSection({
       config,

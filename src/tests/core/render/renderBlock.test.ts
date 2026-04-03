@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, IsoDate, PlanFile, ShowableAreas, SystemConfig } from "../../../core/types";
+import type { DailyLog, IsoDate, ShowableAreas, SystemConfig } from "../../../core/types";
 import { onRenderProgressTrackerBlock } from "../../../core/render/renderBlock";
 import { getDataPaths } from "../../../core/vault/paths";
 import { buildDailyLog } from "../../../core/scoring";
@@ -57,16 +57,13 @@ describe("onRenderProgressTrackerBlock", () => {
       ],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog: DailyLog = buildDailyLog({ ...badConfig, actions: [] }, undefined, {}, {}) as DailyLog;
-    const dayPlan: PlanFile = { actions: {} };
-    const weekPlan: PlanFile = { actions: {} };
-
     await vault.write(paths.configPath, JSON.stringify(badConfig));
     await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
-    await vault.write(paths.dayPlanPath, JSON.stringify(dayPlan));
-    await vault.write(paths.weekPlanPath, JSON.stringify(weekPlan));
 
     const args = mkArgs({ vault, dataFolder, date });
     await onRenderProgressTrackerBlock(args);
@@ -82,14 +79,20 @@ describe("onRenderProgressTrackerBlock", () => {
     const date = "2026-03-16";
     const paths = getDataPaths(dataFolder, date as IsoDate);
 
-    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
+    const config: SystemConfig = {
+      version: 1,
+      areas: [],
+      groups: [],
+      actions: [],
+      records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
+    };
     const dayLog: DailyLog = buildDailyLog(config, undefined, {}, {});
-    const plan: PlanFile = { actions: {} };
 
     await vault.write(paths.configPath, JSON.stringify(config));
     await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
-    await vault.write(paths.dayPlanPath, JSON.stringify(plan));
-    await vault.write(paths.weekPlanPath, JSON.stringify(plan));
 
     const args = mkArgs({ vault, dataFolder, date, mode: "week" });
 
@@ -114,7 +117,8 @@ describe("onRenderProgressTrackerBlock", () => {
       actions: [],
       records: [],
       requiredActions: {},
-
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -124,8 +128,6 @@ describe("onRenderProgressTrackerBlock", () => {
 
     await vault.write(paths.configPath, JSON.stringify(config));
     await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
-    await vault.write(paths.dayPlanPath, JSON.stringify({ actions: {} }));
-    await vault.write(paths.weekPlanPath, JSON.stringify({ actions: {} }));
 
     const args = mkArgs({ vault, dataFolder, date, show: ["areas"] });
     await onRenderProgressTrackerBlock(args);
@@ -150,6 +152,8 @@ describe("onRenderProgressTrackerBlock", () => {
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: { walk: 0 } },
+      weeklyPlan: { actions: { walk: 0 } },
     };
 
     const dayLog: DailyLog = {
@@ -160,8 +164,6 @@ describe("onRenderProgressTrackerBlock", () => {
 
     await vault.write(paths.configPath, JSON.stringify(config));
     await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
-    await vault.write(paths.dayPlanPath, JSON.stringify({ actions: { walk: 0 } }));
-    await vault.write(paths.weekPlanPath, JSON.stringify({ actions: { walk: 0 } }));
 
     const args = mkArgs({ vault, dataFolder, date });
     await onRenderProgressTrackerBlock(args);

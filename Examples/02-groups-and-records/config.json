@@ -64,5 +64,7 @@
       "groupIds": ["evening"]
     }
   ],
-  "requiredActions": {}
+  "requiredActions": {},
+  "dailyPlan": { "actions": {} },
+  "weeklyPlan": { "actions": {} }
 }

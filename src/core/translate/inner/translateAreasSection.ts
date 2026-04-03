@@ -1,11 +1,11 @@
-import type { DailyLog, PlanFile, SystemConfig } from "../../types";
+import type { DailyLog, DailyPlanConfig, SystemConfig, WeeklyPlanConfig } from "../../types";
 import type { AreasSectionModel, AreaRowModel } from "../models";
 
 export function translateAreasSection(args: {
   config: SystemConfig;
   dayLog: DailyLog | null;
-  dayPlan: PlanFile | null;
-  weekPlan: PlanFile | null;
+  dayPlan: DailyPlanConfig | null;
+  weekPlan: WeeklyPlanConfig | null;
 }): AreasSectionModel {
   const scores = args.dayLog?.updatedScore;
   if (!scores || Object.keys(scores).length === 0) {
@@ -56,7 +56,7 @@ function computePossibleScoreForArea(args: {
   currentUpdatedScore: number;
   config: SystemConfig;
   dayLog: DailyLog | null;
-  plan: PlanFile | null;
+  plan: DailyPlanConfig | WeeklyPlanConfig | null;
   subtractCurrentDayTotals: boolean;
 }): number | null {
   const planActions = args.plan?.actions;

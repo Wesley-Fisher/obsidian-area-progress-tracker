@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, IsoDate, PlanFile, SystemConfig } from "../../../core/types";
+import type { DailyLog, DailyPlanConfig, IsoDate, SystemConfig } from "../../../core/types";
 import { translatePlanSection } from "../../../core/translate/inner/translatePlanSection";
 
 describe("render/translate/translatePlanSection", () => {
@@ -11,6 +11,8 @@ describe("render/translate/translatePlanSection", () => {
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -26,7 +28,7 @@ describe("render/translate/translatePlanSection", () => {
       date: "2026-03-16" as IsoDate,
       config,
       dayLog,
-      plan: { actions: { walk: 1 } } as PlanFile,
+      plan: { actions: { walk: 1 } } as DailyPlanConfig,
     });
 
     expect(model.kind).toBe("planHidden");
@@ -38,7 +40,16 @@ describe("render/translate/translatePlanSection", () => {
   });
 
   it("returns planNoActions when actions are empty", () => {
-    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
+    const config: SystemConfig = {
+      version: 1,
+      areas: [],
+      groups: [],
+      actions: [],
+      records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
+    };
     const dayLog: DailyLog = {
       previousScore: {},
       startingScore: {},
@@ -73,6 +84,8 @@ describe("render/translate/translatePlanSection", () => {
       ],
       records: [],
       requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
     };
 
     const dayLog: DailyLog = {
@@ -85,7 +98,7 @@ describe("render/translate/translatePlanSection", () => {
 
     // Next line tests incorrect types to ensure robustness
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const plan: PlanFile = { actions: { walk: Number.NaN as any, done: -3 as any, deep_work: "not-a-number" as any } };
+    const plan: DailyPlanConfig = { actions: { walk: Number.NaN as any, done: -3 as any, deep_work: "not-a-number" as any } };
 
     const model = translatePlanSection({
       scope: "day",

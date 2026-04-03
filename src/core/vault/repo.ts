@@ -1,8 +1,29 @@
-import type { DailyLog, IsoDate, PlanFile, SystemConfig } from "../types";
+import type { DailyLog, DailyPlanConfig, IsoDate, SystemConfig, WeeklyPlanConfig } from "../types";
 import { getDataPaths, getStaticDataPaths } from "./paths";
 import type { VaultLike } from "./storage";
 import { readJsonFile, writeJsonFile } from "./storage";
-import { ensureConfigFile, ensureDailyLogFile, ensureDataFolders, ensurePlanFiles, ensureVaultSetup } from "./setup";
+import { ensureConfigFile, ensureDailyLogFile, ensureDataFolders, ensureVaultSetup } from "./setup";
+
+type PlanScope = "day" | "week";
+type PlanConfig = DailyPlanConfig | WeeklyPlanConfig;
+
+function defaultDailyPlan(): DailyPlanConfig {
+  return { actions: {} };
+}
+
+function defaultWeeklyPlan(): WeeklyPlanConfig {
+  return { actions: {} };
+}
+
+function getPlansFromConfig(config: SystemConfig | Partial<SystemConfig>): { dailyPlan: DailyPlanConfig; weeklyPlan: WeeklyPlanConfig } {
+  const c = config as Partial<SystemConfig>;
+  const dailyPlan = (c.dailyPlan && typeof c.dailyPlan === "object") ? (c.dailyPlan as DailyPlanConfig) : defaultDailyPlan();
+  const weeklyPlan = (c.weeklyPlan && typeof c.weeklyPlan === "object") ? (c.weeklyPlan as WeeklyPlanConfig) : defaultWeeklyPlan();
+  return {
+    dailyPlan: { actions: dailyPlan.actions ?? {} },
+    weeklyPlan: { actions: weeklyPlan.actions ?? {} },
+  };
+}
 
 export interface VaultRepo {
   readonly vault: VaultLike;
@@ -13,7 +34,6 @@ export interface VaultRepo {
 
   ensureSetup(date: IsoDate): Promise<void>;
   ensureDataFolders(): Promise<void>;
-  ensurePlanFiles(): Promise<void>;
   ensureConfigFile(): Promise<void>;
   ensureDailyLogFile(date: IsoDate): Promise<void>;
 
@@ -24,8 +44,8 @@ export interface VaultRepo {
   writeDailyLog(date: IsoDate, log: unknown): Promise<void>;
   writeDailyLogRaw(date: IsoDate, log: unknown): Promise<void>;
 
-  readPlan(scope: "day" | "week"): Promise<PlanFile>;
-  writePlan(scope: "day" | "week", plan: PlanFile): Promise<void>;
+  readPlan(scope: PlanScope): Promise<PlanConfig>;
+  writePlan(scope: PlanScope, plan: PlanConfig): Promise<void>;
 }
 
 export function createVaultRepo(vault: VaultLike, dataFolder: string): VaultRepo {
@@ -49,10 +69,6 @@ export function createVaultRepo(vault: VaultLike, dataFolder: string): VaultRepo
 
     async ensureDataFolders(): Promise<void> {
       await ensureDataFolders(vault, dataFolder);
-    },
-
-    async ensurePlanFiles(): Promise<void> {
-      await ensurePlanFiles(vault, dataFolder);
     },
 
     async ensureConfigFile(): Promise<void> {
@@ -92,14 +108,23 @@ export function createVaultRepo(vault: VaultLike, dataFolder: string): VaultRepo
       await writeJsonFile(vault, dailyLogPath, log);
     },
 
-    async readPlan(scope: "day" | "week"): Promise<PlanFile> {
-      const planPath = scope === "day" ? staticPaths.dayPlanPath : staticPaths.weekPlanPath;
-      return readJsonFile<PlanFile>(vault, planPath);
+    async readPlan(scope: PlanScope): Promise<PlanConfig> {
+      const config = await readJsonFile<SystemConfig>(vault, staticPaths.configPath);
+      const plans = getPlansFromConfig(config);
+      return scope === "day" ? plans.dailyPlan : plans.weeklyPlan;
     },
 
-    async writePlan(scope: "day" | "week", plan: PlanFile): Promise<void> {
-      const planPath = scope === "day" ? staticPaths.dayPlanPath : staticPaths.weekPlanPath;
-      await writeJsonFile(vault, planPath, plan);
+    async writePlan(scope: PlanScope, plan: PlanConfig): Promise<void> {
+      const config = await readJsonFile<SystemConfig>(vault, staticPaths.configPath);
+      const plans = getPlansFromConfig(config);
+
+      const nextConfig: SystemConfig = {
+        ...config,
+        dailyPlan: scope === "day" ? (plan as DailyPlanConfig) : plans.dailyPlan,
+        weeklyPlan: scope === "week" ? (plan as WeeklyPlanConfig) : plans.weeklyPlan,
+      };
+
+      await writeJsonFile(vault, staticPaths.configPath, nextConfig);
     },
   };
 }
