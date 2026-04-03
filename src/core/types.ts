@@ -55,12 +55,7 @@ export interface SystemConfig {
   version: number;
   areas: AreaConfig[];
   groups: ActivityGroupConfig[];
-  /**
-   * Optional per-area requirements that, when met for a day, suppress daily decay for that area.
-   * Example: { "health": [{ "action": "walk", "req": 2 }] }
-   */
   requiredActions: Partial<Record<AreaId, RequiredAction[]>>;
-  /** Optional UI groups for organizing actions/records (morning/work/admin, etc.). */
   actions: ActionConfig[];
   records: RecordConfig[];
 }
