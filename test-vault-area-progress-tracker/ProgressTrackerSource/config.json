@@ -31,21 +31,24 @@
       "name": "Walk 20m",
       "input": { "type": "button", "step": 1 },
       "effects": { "health": 12 },
-      "groupIds": ["morning", "evening"]
+      "groupIds": ["morning", "evening"],
+      "max": 0
     },
     {
       "id": "deep_work",
       "name": "Deep work (45m)",
       "input": { "type": "number", "min": 0, "step": 1 },
       "effects": { "career": 5 },
-      "groupIds": ["work"]
+      "groupIds": ["work"],
+      "max": 0
     },
     {
       "id": "junk_food",
       "name": "Junk food",
       "input": { "type": "button", "step": 1 },
       "effects": { "health": -15 },
-      "groupIds": ["evening"]
+      "groupIds": ["evening"],
+      "max": 0
     }
   ],
   "records": [
@@ -65,5 +68,7 @@
   "requiredActions":
   {
     "health": [{"action": "walk", "req": 1}]
-  }
+  },
+  "dailyPlan": { "actions": {} },
+  "weeklyPlan": { "actions": {} }
 }

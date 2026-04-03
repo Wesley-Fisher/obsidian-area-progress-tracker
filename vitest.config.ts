@@ -13,7 +13,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["src/tests/**/*.test.ts", "Examples/**/*.test.ts"],
+    include: ["src/tests/**/*.test.ts", "Examples/**/*.test.ts", "test-vault-area-progress-tracker/ProgressTrackerSource/**/*.test.ts"],
     coverage: {
       exclude: [
         ...coverageConfigDefaults.exclude,
