@@ -17,7 +17,7 @@ describe("Examples/01-minimal", () => {
     const issues = checkConfiguration(conf);
     expect(issues).toEqual([]);
 
-    const expected = {
+    const expected: SystemConfig = {
       "version": 1,
       "areas": [
         {
@@ -55,7 +55,7 @@ describe("Examples/01-minimal", () => {
       ],
       "groups": [{ "id": "health", "name": "Health" }],
       "records": []
-    } as SystemConfig;
+    };
 
     expect(conf).toMatchObject(expected);
   });

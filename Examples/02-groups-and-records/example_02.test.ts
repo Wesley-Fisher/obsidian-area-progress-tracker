@@ -17,10 +17,8 @@ describe("Examples/01-minimal", () => {
     const issues = checkConfiguration(conf);
     expect(issues).toEqual([]);
 
-    const expected = {
+    const expected: SystemConfig = {
       "version": 1,
-      "timezone": "local",
-      "weekStart": "monday",
       "areas": [
         {
           "id": "health",
@@ -49,14 +47,16 @@ describe("Examples/01-minimal", () => {
           "name": "Walk 20m",
           "input": { "type": "button", "step": 1 },
           "effects": { "health": 12 },
-          "groupIds": ["morning"]
+          "groupIds": ["morning"],
+          "max": 0
         },
         {
           "id": "deep_work",
           "name": "Deep work (minutes)",
           "input": { "type": "number", "min": 0, "max": 180, "step": 15 },
           "effects": { "career": 0.2 },
-          "groupIds": ["morning"]
+          "groupIds": ["morning"],
+          "max": 0
         },
         {
           "id": "junk_food",
@@ -81,7 +81,7 @@ describe("Examples/01-minimal", () => {
           "groupIds": ["evening"]
         }
       ]
-    } as SystemConfig;
+    };
 
     expect(conf).toMatchObject(expected);
   });

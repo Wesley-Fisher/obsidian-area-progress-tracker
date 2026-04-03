@@ -17,7 +17,7 @@ describe("Examples/01-minimal", () => {
     const issues = checkConfiguration(conf);
     expect(issues).toEqual([]);
 
-    const expected = {
+    const expected: SystemConfig = {
       "version": 1,
       "areas": [
         {
@@ -43,12 +43,13 @@ describe("Examples/01-minimal", () => {
           "name": "Admin tasks (count)",
           "input": { "type": "button", "step": 1 },
           "effects": { "career": 1 },
-          "groupIds": ["career"]
+          "groupIds": ["career"],
+          "max": 0
         }
       ],
       "groups": [{ "id": "career", "name": "Career" }],
       "records": []
-    } as SystemConfig;
+    };
 
     expect(conf).toMatchObject(expected);
   });
