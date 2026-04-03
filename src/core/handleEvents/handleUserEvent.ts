@@ -3,15 +3,13 @@ import type { VaultRepo } from "../vault/repo";
 import { recomputeForwardChain } from "../recomputeChain";
 
 import { handleSetPlanTarget } from "./inner/handleSetPlanTarget";
-import { handleSetDayUIFlag } from "./inner/handleSetDayUIFlag";
 import { handleAdjustActionTotal } from "./inner/handleAdjustActionTotal";
 
 export async function handleUserEvent(evt: UserEvent, repo: VaultRepo): Promise<void> {
     if (
         evt.kind !== "adjustActionTotal" &&
         evt.kind !== "setRecordValue" &&
-        evt.kind !== "setPlanTarget" &&
-        evt.kind !== "setDayUiFlag"
+    evt.kind !== "setPlanTarget"
     ) {
         return;
     }
@@ -21,11 +19,6 @@ export async function handleUserEvent(evt: UserEvent, repo: VaultRepo): Promise<
 
     if (evt.kind === "setPlanTarget") {
       await handleSetPlanTarget(repo, evt);
-      return;
-    }
-
-    if (evt.kind === "setDayUiFlag") {
-      await handleSetDayUIFlag(repo, evt);
       return;
     }
 

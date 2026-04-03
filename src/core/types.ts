@@ -97,11 +97,6 @@ export interface DailyLog {
   actions: Partial<Record<ActionId, number>>;
   /** Per-day record values (text-entry fields), not used for scoring. */
   records?: Partial<Record<RecordId, string>>;
-  /** Per-day UI prefs (stored so they can differ per note/day). */
-  ui?: {
-    hidePlanDay?: boolean;
-    hidePlanWeek?: boolean;
-  };
 }
 
 export interface BlockConfig {

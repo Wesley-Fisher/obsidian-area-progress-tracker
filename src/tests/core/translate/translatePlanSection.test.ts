@@ -1,44 +1,8 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, DailyPlanConfig, IsoDate, SystemConfig } from "../../../core/types";
+import type { DailyPlanConfig, SystemConfig } from "../../../core/types";
 import { translatePlanSection } from "../../../core/translate/inner/translatePlanSection";
 
 describe("render/translate/translatePlanSection", () => {
-  it("returns planHidden and wires toggle event when hidden", () => {
-    const config: SystemConfig = {
-      version: 1,
-      areas: [],
-      groups: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
-      records: [],
-      requiredActions: {},
-      dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
-    };
-
-    const dayLog: DailyLog = {
-      previousScore: {},
-      startingScore: {},
-      updatedScore: {},
-      actions: {},
-      ui: { hidePlanDay: true },
-    } as DailyLog;
-
-    const model = translatePlanSection({
-      scope: "day",
-      date: "2026-03-16" as IsoDate,
-      config,
-      dayLog,
-      plan: { actions: { walk: 1 } } as DailyPlanConfig,
-    });
-
-    expect(model.kind).toBe("planHidden");
-    if (model.kind !== "planHidden") throw new Error("expected planHidden");
-
-    expect(model.toggle.label).toContain("Show day plan");
-    expect(model.toggle.event).toMatchObject({ kind: "setDayUiFlag", flag: "hidePlanDay", value: false });
-    expect(model.message).toContain("Day plan hidden");
-  });
-
   it("returns planNoActions when actions are empty", () => {
     const config: SystemConfig = {
       version: 1,
@@ -50,26 +14,15 @@ describe("render/translate/translatePlanSection", () => {
       dailyPlan: { actions: {} },
       weeklyPlan: { actions: {} },
     };
-    const dayLog: DailyLog = {
-      previousScore: {},
-      startingScore: {},
-      updatedScore: {},
-      actions: {},
-      ui: { hidePlanWeek: false },
-    } as DailyLog;
-
     const model = translatePlanSection({
       scope: "week",
-      date: "2026-03-16" as IsoDate,
       config,
-      dayLog,
       plan: { actions: {} },
     });
 
     expect(model.kind).toBe("planNoActions");
     if (model.kind !== "planNoActions") throw new Error("expected planNoActions");
     expect(model.message).toBe("No actions configured.");
-    expect(model.toggle.label).toContain("Hide week plan");
   });
 
   it("sanitizes plan values (NaN/-3/missing -> 0) and builds rows", () => {
@@ -88,23 +41,13 @@ describe("render/translate/translatePlanSection", () => {
       weeklyPlan: { actions: {} },
     };
 
-    const dayLog: DailyLog = {
-      previousScore: {},
-      startingScore: {},
-      updatedScore: {},
-      actions: {},
-      ui: { hidePlanDay: false },
-    } as DailyLog;
-
     // Next line tests incorrect types to ensure robustness
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const plan: DailyPlanConfig = { actions: { walk: Number.NaN as any, done: -3 as any, deep_work: "not-a-number" as any } };
 
     const model = translatePlanSection({
       scope: "day",
-      date: "2026-03-16" as IsoDate,
       config,
-      dayLog,
       plan,
     });
 

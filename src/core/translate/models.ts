@@ -137,14 +137,8 @@ export type PlanEntryModel =
     };
 
 export type PlanSectionModel =
-  | { kind: "planHidden"; scope: "day" | "week"; toggle: ToggleModel; message: string }
-  | { kind: "planNoActions"; scope: "day" | "week"; toggle: ToggleModel; message: string }
-  | { kind: "planTabs"; scope: "day" | "week"; toggle: ToggleModel; groups: PlanGroupModel[] };
-
-export type ToggleModel = {
-  label: string;
-  event: UserEvent;
-};
+  | { kind: "planNoActions"; scope: "day" | "week"; message: string }
+  | { kind: "planTabs"; scope: "day" | "week"; groups: PlanGroupModel[] };
 
 export type PlanGroupModel = {
   id: string;

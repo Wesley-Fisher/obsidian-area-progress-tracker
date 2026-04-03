@@ -55,7 +55,7 @@ export async function translateRenderBlock(args: RenderBlockArgs): Promise<Rende
     kind: "dashboard",
     areas: translateAreasSection({ config, dayLog, dayPlan, weekPlan }),
     actions: translateActivitiesSection({ date: blockConfig.date, config, dayLog }),
-    planDay: translatePlanSection({ scope: "day", date: blockConfig.date, config, dayLog, plan: dayPlan }),
-    planWeek: translatePlanSection({ scope: "week", date: blockConfig.date, config, dayLog, plan: weekPlan }),
+    planDay: translatePlanSection({ scope: "day", config, plan: dayPlan }),
+    planWeek: translatePlanSection({ scope: "week", config, plan: weekPlan }),
   };
 }

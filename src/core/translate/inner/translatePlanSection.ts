@@ -1,4 +1,4 @@
-import type { ActionConfig, DailyLog, DailyPlanConfig, IsoDate, SystemConfig, WeeklyPlanConfig } from "../../types";
+import type { ActionConfig, DailyPlanConfig, SystemConfig, WeeklyPlanConfig } from "../../types";
 import type { PlanGroupModel, PlanSectionModel } from "../models";
 import { buildActionOnlyGroupsFromConfig } from "./grouping";
 
@@ -21,34 +21,13 @@ function parseEffectiveMax(action: ActionConfig): number | undefined {
 
 export function translatePlanSection(args: {
   scope: "day" | "week";
-  date: IsoDate;
   config: SystemConfig;
-  dayLog: DailyLog | null;
   plan: DailyPlanConfig | WeeklyPlanConfig | null;
 }): PlanSectionModel {
-  const isDay = args.scope === "day";
-  const hidden = isDay ? args.dayLog?.ui?.hidePlanDay === true : args.dayLog?.ui?.hidePlanWeek === true;
-  const flag = isDay ? "hidePlanDay" : "hidePlanWeek";
-
-  const toggle = {
-    label: hidden ? `Show ${args.scope} plan` : `Hide ${args.scope} plan`,
-    event: { kind: "setDayUiFlag", date: args.date, flag, value: !hidden } as const,
-  };
-
-  if (hidden) {
-    return {
-      kind: "planHidden",
-      scope: args.scope,
-      toggle,
-      message: isDay ? "(Day plan hidden for this date)" : "(Week plan hidden for this date)",
-    };
-  }
-
   if (args.config.actions.length === 0) {
     return {
       kind: "planNoActions",
       scope: args.scope,
-      toggle,
       message: "No actions configured.",
     };
   }
@@ -135,5 +114,5 @@ export function translatePlanSection(args: {
     outGroups.push({ id: g.id, name: g.name, rows });
   }
 
-  return { kind: "planTabs", scope: args.scope, toggle, groups: outGroups };
+  return { kind: "planTabs", scope: args.scope, groups: outGroups };
 }

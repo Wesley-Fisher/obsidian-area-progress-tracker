@@ -42,29 +42,6 @@ describe("handleUserEvent", () => {
     expect(weekPlan.actions ?? {}).toBeDefined();
   });
 
-  it("handles setDayUiFlag by creating and updating the daily log", async () => {
-    const vault = new MemoryVault();
-    const dataFolder = "ProgressTracker";
-    const repo = createVaultRepo(vault, dataFolder);
-    const date = "2026-03-16" as IsoDate;
-
-    await handleUserEvent(
-      {
-        kind: "setDayUiFlag",
-        date,
-        flag: "hidePlanDay",
-        value: true,
-      },
-      repo
-    );
-
-    const staticPaths = getStaticDataPaths(dataFolder);
-    expect(await vault.exists(staticPaths.configPath)).toBe(true);
-
-    const dayLog = await repo.readDailyLog(date);
-    expect(dayLog.ui?.hidePlanDay).toBe(true);
-  });
-
   it("handles setRecordValue by writing records and preserving them after recompute", async () => {
     const vault = new MemoryVault();
     const dataFolder = "ProgressTracker";

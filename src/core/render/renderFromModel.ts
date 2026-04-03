@@ -103,8 +103,7 @@ export function renderActivitiesSectionModel(container: HTMLElement, runtime: Re
 }
 
 export function renderPlanSectionModel(container: HTMLElement, runtime: RenderRuntime, model: PlanSectionModel): void {
-  if (model.kind === "planHidden") renderPlanHidden(container, runtime, model);
-  else if (model.kind === "planNoActions") renderPlanNoActions(container, runtime, model);
+  if (model.kind === "planNoActions") renderPlanNoActions(container, model);
   else renderPlanTabs(container, runtime, model);
 }
 
@@ -321,37 +320,18 @@ function renderRecordEntry(container: HTMLElement, runtime: RenderRuntime, model
   };
 }
 
-function renderPlanHidden(container: HTMLElement, runtime: RenderRuntime, model: Extract<PlanSectionModel, { kind: "planHidden" }>): void {
-  const sec = container.createDiv({ cls: "apt-section" });
-  sec.createEl("h4", { text: model.scope === "day" ? "Plan (day)" : "Plan (week)" });
-  const toggle = sec.createEl("button", { text: model.toggle.label });
-  toggle.onclick = () => {
-    void runtime.onUserAction(model.toggle.event);
-  };
-  sec.createEl("div", { text: model.message });
-}
-
 function renderPlanNoActions(
   container: HTMLElement,
-  runtime: RenderRuntime,
   model: Extract<PlanSectionModel, { kind: "planNoActions" }>
 ): void {
   const sec = container.createDiv({ cls: "apt-section" });
   sec.createEl("h4", { text: model.scope === "day" ? "Plan (day)" : "Plan (week)" });
-  const toggle = sec.createEl("button", { text: model.toggle.label });
-  toggle.onclick = () => {
-    void runtime.onUserAction(model.toggle.event);
-  };
   sec.createEl("div", { text: model.message });
 }
 
 function renderPlanTabs(container: HTMLElement, runtime: RenderRuntime, model: Extract<PlanSectionModel, { kind: "planTabs" }>): void {
   const sec = container.createDiv({ cls: "apt-section" });
   sec.createEl("h4", { text: model.scope === "day" ? "Plan (day)" : "Plan (week)" });
-  const toggle = sec.createEl("button", { text: model.toggle.label });
-  toggle.onclick = () => {
-    void runtime.onUserAction(model.toggle.event);
-  };
 
   const uiRoot = runtime.uiRoot ?? container;
   const ds = ensureDataset(uiRoot);
@@ -382,19 +362,10 @@ function renderPlanTabs(container: HTMLElement, runtime: RenderRuntime, model: E
 }
 
 function renderPlanContent(container: HTMLElement, runtime: RenderRuntime, model: PlanSectionModel): void {
-  if (model.kind === "planHidden" || model.kind === "planNoActions") {
-    const toggle = container.createEl("button", { text: model.toggle.label });
-    toggle.onclick = () => {
-      void runtime.onUserAction(model.toggle.event);
-    };
+  if (model.kind === "planNoActions") {
     container.createEl("div", { text: model.message });
     return;
   }
-
-  const toggle = container.createEl("button", { text: model.toggle.label });
-  toggle.onclick = () => {
-    void runtime.onUserAction(model.toggle.event);
-  };
 
   const uiRoot = runtime.uiRoot ?? container;
   const ds = ensureDataset(uiRoot);

@@ -133,19 +133,11 @@ describe("core/render/renderFromModel", () => {
       planDay: {
         kind: "planNoActions",
         scope: "day",
-        toggle: {
-          label: "Hide",
-          event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: true } as UserEvent,
-        },
         message: "No actions",
       },
       planWeek: {
         kind: "planNoActions",
         scope: "week",
-        toggle: {
-          label: "Hide",
-          event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanWeek", value: true } as UserEvent,
-        },
         message: "No actions",
       },
     };
@@ -194,10 +186,6 @@ describe("core/render/renderFromModel", () => {
       planDay: {
         kind: "planTabs",
         scope: "day",
-        toggle: {
-          label: "Hide",
-          event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanDay", value: true } as UserEvent,
-        },
         groups: [
           {
             id: "g1",
@@ -224,32 +212,19 @@ describe("core/render/renderFromModel", () => {
         ],
       },
       planWeek: {
-        kind: "planHidden",
+        kind: "planNoActions",
         scope: "week",
-        toggle: {
-          label: "Show",
-          event: { kind: "setDayUiFlag", date: "2026-03-16", flag: "hidePlanWeek", value: false } as UserEvent,
-        },
-        message: "(Week plan hidden)",
+        message: "No actions",
       },
     };
 
     renderProgressTrackerBody(asHTMLElement(root), runtime as RenderRuntime, model);
-
-    const btns = root.findAllByTag("button") as unknown as FakeButton[];
-    expect(btns.length).toBeGreaterThanOrEqual(2);
-    const toggleButtons = btns.filter((b) => b.text === "Hide" || b.text === "Show");
-    expect(toggleButtons.length).toBeGreaterThanOrEqual(2);
-    toggleButtons[0].click();
-    toggleButtons[1].click();
 
     const inputs = root.findAllByTag("input") as unknown as FakeInput[];
     expect(inputs.length).toBe(1);
     inputs[0].change("-5");
     inputs[0].change("not-a-number");
 
-    expect(calls.some((c) => c.kind === "setDayUiFlag" && c.flag === "hidePlanDay" && c.value === true)).toBe(true);
-    expect(calls.some((c) => c.kind === "setDayUiFlag" && c.flag === "hidePlanWeek" && c.value === false)).toBe(true);
     expect(calls.some((c) => c.kind === "setPlanTarget" && c.actionId === "walk" && c.value === 0)).toBe(true);
   });
 });
