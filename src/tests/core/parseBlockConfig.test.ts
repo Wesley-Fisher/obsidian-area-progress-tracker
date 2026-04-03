@@ -3,8 +3,7 @@ import { parseBlockConfig } from "../../core/parseBlockConfig";
 
 describe("parseBlockConfig (JSON)", () => {
   it("parses required fields", () => {
-    const cfg = parseBlockConfig('{"mode":"day","date":"2026-03-14"}');
-    expect(cfg.mode).toBe("day");
+    const cfg = parseBlockConfig('{"date":"2026-03-14"}');
     expect(cfg.date).toBe("2026-03-14");
   });
 
@@ -41,13 +40,8 @@ describe("parseBlockConfig (JSON)", () => {
     expect(() => parseBlockConfig(input)).toThrow(/must be an object/i);
   });
 
-  it("rejects invalid mode", () => {
-    const input = '{"date":"2026/03/14", "mode" : "invalid"}';
-    expect(() => parseBlockConfig(input)).toThrow(/Unsupported mode/i);
-  });
-
   it("handles null activitiesLayout", () => {
-    const input = '{"date":"2026-03-14", "mode" : "day", "activitiesLayout": null}';
+    const input = '{"date":"2026-03-14", "activitiesLayout": null}';
     const out = parseBlockConfig(input);
     expect(out.activitiesLayout).toBeUndefined();
   });

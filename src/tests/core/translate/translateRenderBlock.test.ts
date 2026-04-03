@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, IsoDate, PossibleModes, ShowableAreas, SystemConfig } from "../../../core/types";
+import type { DailyLog, IsoDate, ShowableAreas, SystemConfig } from "../../../core/types";
 import { translateRenderBlock } from "../../../core/translate/translateRenderBlock";
 import { getDataPaths } from "../../../core/vault/paths";
 import { createVaultRepo } from "../../../core/vault/repo";
@@ -12,7 +12,6 @@ function mkArgs(opts: { vault: MemoryVault; dataFolder: string; date: string; mo
   return {
     el: {} as HTMLElement,
     blockConfig: {
-      mode: "day" as PossibleModes,
       date: opts.date as IsoDate,
       show: opts.show as Array<ShowableAreas>,
     },
@@ -91,40 +90,6 @@ describe("render/translate/translateRenderBlock", () => {
     if (model.kind !== "errorList") throw new Error("expected errorList");
     expect(model.message).toContain("Invalid config");
     expect(model.items.join("\n")).toContain("Duplicate action id: walk");
-  });
-
-  it("returns errorText for unsupported mode", async () => {
-    const vault = new MemoryVault();
-    const dataFolder = "ProgressTracker";
-    const date = "2026-03-16" as IsoDate;
-    const paths = getDataPaths(dataFolder, date);
-
-    const config: SystemConfig = {
-      version: 1,
-      areas: [],
-      groups: [],
-      actions: [],
-      records: [],
-      requiredActions: {},
-      dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
-    };
-    const dayLog: DailyLog = buildDailyLog(config, undefined, {}, {});
-
-    await vault.write(paths.configPath, JSON.stringify(config));
-    await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
-
-    const args = mkArgs({ vault, dataFolder, date, mode: "week" });
-
-    // Allow testing an incorrect mode string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    args.blockConfig.mode = "wrong-mode" as any; // Test robustness against incorrect modes
-
-    const model = await translateRenderBlock(args);
-
-    expect(model.kind).toBe("errorText");
-    if (model.kind !== "errorText") throw new Error("expected errorText");
-    expect(model.message).toContain("Unsupported mode: wrong-mode");
   });
 
   it("honors blockConfig.show to select translated sections", async () => {

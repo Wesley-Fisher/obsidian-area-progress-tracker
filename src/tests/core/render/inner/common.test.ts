@@ -10,7 +10,7 @@ function mkArgs(partial: Partial<RenderDayModeArgs>): RenderDayModeArgs {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     repo: {} as any, container: {} as any,
     onUserAction: async () => {},
-    blockConfig: { mode: "day", date: "2026-03-16" as IsoDate },
+    blockConfig: { date: "2026-03-16" as IsoDate },
     config: {
       version: 1,
       areas: [],

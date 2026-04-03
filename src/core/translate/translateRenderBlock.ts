@@ -51,10 +51,6 @@ export async function translateRenderBlock(args: RenderBlockArgs): Promise<Rende
     };
   }
 
-  if (blockConfig.mode !== "day") {
-    return { kind: "errorText", message: `Unsupported mode: ${blockConfig.mode}` };
-  }
-
   return {
     kind: "dashboard",
     areas: translateAreasSection({ config, dayLog, dayPlan, weekPlan }),

@@ -73,37 +73,6 @@ describe("onRenderProgressTrackerBlock", () => {
     expect(text).toContain("Duplicate action id: walk");
   });
 
-  it("renders unsupported mode error", async () => {
-    const vault = new MemoryVault();
-    const dataFolder = "ProgressTracker";
-    const date = "2026-03-16";
-    const paths = getDataPaths(dataFolder, date as IsoDate);
-
-    const config: SystemConfig = {
-      version: 1,
-      areas: [],
-      groups: [],
-      actions: [],
-      records: [],
-      requiredActions: {},
-      dailyPlan: { actions: {} },
-      weeklyPlan: { actions: {} },
-    };
-    const dayLog: DailyLog = buildDailyLog(config, undefined, {}, {});
-
-    await vault.write(paths.configPath, JSON.stringify(config));
-    await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
-
-    const args = mkArgs({ vault, dataFolder, date, mode: "week" });
-
-    // Allow testing an incorrect mode string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    args.blockConfig.mode = "week" as any;
-    await onRenderProgressTrackerBlock(args);
-
-    expect(args.__root.textContent()).toContain("Unsupported mode: week");
-  });
-
   it("always renders areas + fixed tabs (ignores blockConfig.show)", async () => {
     const vault = new MemoryVault();
     const dataFolder = "ProgressTracker";

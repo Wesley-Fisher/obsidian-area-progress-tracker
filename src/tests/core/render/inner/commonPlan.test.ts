@@ -27,7 +27,7 @@ describe("core/render/commonPlan", () => {
       // All 'any' to provide blank objects for test
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       container: {} as any, el: {} as any, repo: {} as any,
-      blockConfig: { mode: "day", date: "2026-03-16" },
+      blockConfig: { date: "2026-03-16" },
       config,
       dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: {}, ui: {} } as DailyLog,
       dayPlan: { actions: {} } as DailyPlanConfig,

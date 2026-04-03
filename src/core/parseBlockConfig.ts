@@ -23,10 +23,6 @@ export function parseBlockConfig(source: string): BlockConfig {
   }
 
   const obj = parsed as Record<string, unknown>;
-  const modeRaw = obj.mode ?? "day";
-  if (modeRaw !== "day") {
-    throw new Error(`Unsupported mode: ${String(modeRaw)}`);
-  }
 
   const dateRaw = obj.date;
   if (typeof dateRaw !== "string" || !isIsoDate(dateRaw)) {
@@ -48,7 +44,7 @@ export function parseBlockConfig(source: string): BlockConfig {
         ? activitiesLayoutRaw
         : undefined;
 
-  return { mode: "day", date: dateRaw, show, activitiesLayout };
+  return { date: dateRaw, show, activitiesLayout };
 }
 
 function isActivitiesLayout(value: unknown): value is ActivitiesLayout {
