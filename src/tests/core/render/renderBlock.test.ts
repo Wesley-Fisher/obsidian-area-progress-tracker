@@ -56,6 +56,7 @@ describe("onRenderProgressTrackerBlock", () => {
         { id: "walk", name: "Walk2", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
       ],
       records: [],
+      requiredActions: {},
     };
 
     const dayLog: DailyLog = buildDailyLog({ ...badConfig, actions: [] }, undefined, {}, {}) as DailyLog;
@@ -81,7 +82,7 @@ describe("onRenderProgressTrackerBlock", () => {
     const date = "2026-03-16";
     const paths = getDataPaths(dataFolder, date as IsoDate);
 
-    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [] };
+    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
     const dayLog: DailyLog = buildDailyLog(config, undefined, {}, {});
     const plan: PlanFile = { actions: {} };
 
@@ -112,6 +113,8 @@ describe("onRenderProgressTrackerBlock", () => {
       groups: [],
       actions: [],
       records: [],
+      requiredActions: {},
+
     };
 
     const dayLog: DailyLog = {
@@ -146,6 +149,7 @@ describe("onRenderProgressTrackerBlock", () => {
       groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
+      requiredActions: {},
     };
 
     const dayLog: DailyLog = {

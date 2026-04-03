@@ -48,7 +48,8 @@ describe("Examples/01-minimal", () => {
         }
       ],
       "groups": [{ "id": "career", "name": "Career" }],
-      "records": []
+      "records": [],
+      "requiredActions": {},
     };
 
     expect(conf).toMatchObject(expected);

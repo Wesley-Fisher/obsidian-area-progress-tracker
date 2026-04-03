@@ -5,7 +5,7 @@ import { ActivitiesSectionModel, ActivitiesSectionModelEmpty, ActivityRowModelAc
 
 describe("render/translate/translateActivitiesSection", () => {
   it("returns activitiesEmpty when no actions or records are configured", () => {
-    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [] };
+    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
 
     const model = translateActivitiesSection({
       date: "2026-03-16" as IsoDate,
@@ -28,6 +28,7 @@ describe("render/translate/translateActivitiesSection", () => {
         { id: "pushups", name: "Pushups", input: { type: "number", max: 10, step: 1 }, effects: {}, max: 5, groupIds: [] },
       ],
       records: [{ id: "mood", name: "Mood", input: { type: "text" }, groupIds: ["g1"] }],
+      requiredActions: {},
     };
 
     const dayLog: DailyLog = {
@@ -98,6 +99,7 @@ describe("render/translate/translateActivitiesSection", () => {
         { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, groupIds: ["g1", "g2"] },
       ],
       records: [{ id: "mood", name: "Mood", input: { type: "text" }, groupIds: ["g1"] }],
+      requiredActions: {},
     };
 
     const dayLog: DailyLog = {

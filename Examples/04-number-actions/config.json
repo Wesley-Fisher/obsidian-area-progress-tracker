@@ -29,5 +29,6 @@
     }
   ],
   "groups": [{ "id": "career", "name": "Career" }],
-  "records": []
+  "records": [],
+  "requiredActions": {}
 }

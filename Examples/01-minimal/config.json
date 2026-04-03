@@ -29,5 +29,6 @@
     }
   ],
   "groups": [{"id": "health", "name": "Health" }],
-  "records": []
+  "records": [],
+  "requiredActions": {}
 }

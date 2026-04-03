@@ -40,6 +40,7 @@ export async function ensureConfigFile(vault: VaultLike, configPath: string): Pr
     groups: [],
     actions: [],
     records: [],
+    requiredActions: {},
   };
 
   await writeJsonFile(vault, configPath, template);
@@ -59,7 +60,7 @@ export async function ensureDailyLogFile(
   try {
     config = await readJsonFile<SystemConfig>(vault, configPath);
   } catch {
-    config = { version: 1, areas: [], groups: [], actions: [], records: [] };
+    config = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
   }
 
   const prevDate = addDays(date, -1);

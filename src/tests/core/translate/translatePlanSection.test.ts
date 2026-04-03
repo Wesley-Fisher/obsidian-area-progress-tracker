@@ -10,6 +10,7 @@ describe("render/translate/translatePlanSection", () => {
       groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
+      requiredActions: {},
     };
 
     const dayLog: DailyLog = {
@@ -37,7 +38,7 @@ describe("render/translate/translatePlanSection", () => {
   });
 
   it("returns planNoActions when actions are empty", () => {
-    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [] };
+    const config: SystemConfig = { version: 1, areas: [], groups: [], actions: [], records: [], requiredActions: {} };
     const dayLog: DailyLog = {
       previousScore: {},
       startingScore: {},
@@ -71,6 +72,7 @@ describe("render/translate/translatePlanSection", () => {
         { id: "deep_work", name: "Deep Work", input: { type: "number", min: 0, max: 10, step: 1 }, effects: {}, groupIds: [], max: 0 },
       ],
       records: [],
+      requiredActions: {},
     };
 
     const dayLog: DailyLog = {

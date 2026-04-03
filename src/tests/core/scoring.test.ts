@@ -14,6 +14,7 @@ const config: SystemConfig = {
     { id: "deep_work", name: "Deep Work", input: { type: "number", step: 45 }, effects: { career: 5 }, groupIds: [], max: 0 },
   ],
   records: [],
+  requiredActions: {},
 };
 
 describe("normalizePreviousScores", () => {
@@ -35,7 +36,7 @@ describe("requirementsMetForArea", () => {
   it("handles undefined requirements", () => {
     const configWithoutReqs: SystemConfig = {
       ...config,
-      requiredActions: undefined,
+      requiredActions: {},
     };
     expect(requirementsMetForArea(configWithoutReqs, "health", {})).toBe(true);
   }

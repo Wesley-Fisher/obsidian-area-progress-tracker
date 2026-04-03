@@ -18,6 +18,7 @@ describe("core/render/commonPlan", () => {
         { id: "run", name: "Run", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
       ],
       records: [],
+      requiredActions: {},
     };
 
     const args: RenderDayModeArgs = {

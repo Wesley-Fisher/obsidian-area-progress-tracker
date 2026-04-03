@@ -12,6 +12,7 @@ function mkConfig(partial: Partial<SystemConfig>): SystemConfig {
     groups: [],
     actions: [],
     records: [],
+    requiredActions: {},
     ...partial,
   };
 }

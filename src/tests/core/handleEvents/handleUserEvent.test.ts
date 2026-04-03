@@ -100,6 +100,7 @@ describe("handleUserEvent", () => {
       groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 1, groupIds: [] }],
       records: [],
+      requiredActions: {},
     };
     await vault.write(staticPaths.configPath, JSON.stringify(config));
 

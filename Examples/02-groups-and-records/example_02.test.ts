@@ -80,7 +80,8 @@ describe("Examples/01-minimal", () => {
           "input": { "type": "text" },
           "groupIds": ["evening"]
         }
-      ]
+      ],
+      "requiredActions": {},
     };
 
     expect(conf).toMatchObject(expected);

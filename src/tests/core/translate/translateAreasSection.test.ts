@@ -11,6 +11,7 @@ describe("render/translate/translateAreasSection", () => {
       groups: [],
       actions: [],
       records: [],
+      requiredActions: {},
     };
 
     const model = translateAreasSection({
@@ -31,6 +32,7 @@ describe("render/translate/translateAreasSection", () => {
       groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 10 }, groupIds: [], max: 0 }],
       records: [],
+      requiredActions: {},
     };
 
     const dayLog: DailyLog = {

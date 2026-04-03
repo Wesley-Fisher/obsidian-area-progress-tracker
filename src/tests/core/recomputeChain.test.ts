@@ -44,6 +44,7 @@ describe("seedFromPreviousDay", () => {
       groups: [{ id: "morning", name: "Morning" }],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
+      requiredActions: {},
     };
 
     const d1 = "2026-03-14" as IsoDate;
@@ -69,6 +70,7 @@ describe("seedFromPreviousDay", () => {
       groups: [{ id: "morning", name: "Morning" }],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
+      requiredActions: {},
     };
 
     const d1 = "2026-03-13" as IsoDate;
@@ -94,6 +96,7 @@ describe("seedFromPreviousDay", () => {
       groups: [{ id: "morning", name: "Morning" }],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
+      requiredActions: {},
     };
 
     const d1 = "2026-03-16" as IsoDate;
@@ -121,6 +124,7 @@ describe("mergePreviousIntoNextDay", () => {
       groups: [{ id: "morning", name: "Morning" }],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
+      requiredActions: {},
     };
 
     const d1 = "2026-03-16" as IsoDate;
@@ -157,6 +161,7 @@ describe("mergePreviousIntoNextDay", () => {
       groups: [{ id: "morning", name: "Morning" }],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
+      requiredActions: {},
     };
 
     const d1 = "2026-03-16" as IsoDate;
@@ -194,6 +199,7 @@ describe("recomputeForwardChain", () => {
       groups: [{ id: "morning", name: "Morning" }],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
+      requiredActions: {},
     };
 
     const d1 = "2026-03-14" as IsoDate;
@@ -241,6 +247,7 @@ describe("recomputeForwardChain", () => {
         { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, max: 2, groupIds: [] },
       ],
       records: [],
+      requiredActions: {},
     };
 
     const d1 = "2026-03-14" as IsoDate;

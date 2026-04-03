@@ -63,5 +63,6 @@
       "input": { "type": "text" },
       "groupIds": ["evening"]
     }
-  ]
+  ],
+  "requiredActions": {}
 }
