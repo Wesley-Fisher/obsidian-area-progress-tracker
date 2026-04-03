@@ -1,4 +1,4 @@
-import type { ActivitiesLayout, BlockConfig, IsoDate } from "./types";
+import type { BlockConfig, IsoDate } from "./types";
 
 function isIsoDate(value: string): value is IsoDate {
   return /^\d{4}-\d{2}-\d{2}$/.test(value);
@@ -36,17 +36,5 @@ export function parseBlockConfig(source: string): BlockConfig {
       ? (showRaw as Array<"areas" | "actions" | "plan-day" | "plan-week">)
       : undefined;
 
-  const activitiesLayoutRaw = obj.activitiesLayout;
-  const activitiesLayout =
-    activitiesLayoutRaw === undefined
-      ? undefined
-      : isActivitiesLayout(activitiesLayoutRaw)
-        ? activitiesLayoutRaw
-        : undefined;
-
-  return { date: dateRaw, show, activitiesLayout };
-}
-
-function isActivitiesLayout(value: unknown): value is ActivitiesLayout {
-  return value === "list" || value === "columns" || value === "tabs";
+  return { date: dateRaw, show};
 }

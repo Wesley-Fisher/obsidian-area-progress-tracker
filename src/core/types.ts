@@ -104,13 +104,9 @@ export interface DailyLog {
   };
 }
 
-export type ActivitiesLayout = "list" | "columns" | "tabs";
-
 export type ShowableAreas = "areas" | "actions" | "plan-day" | "plan-week";
 
 export interface BlockConfig {
   date: IsoDate;
   show?: Array<ShowableAreas>;
-  /** Controls how actions + records are visually grouped. Defaults to "list". */
-  activitiesLayout?: ActivitiesLayout;
 }

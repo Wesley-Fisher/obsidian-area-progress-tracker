@@ -12,11 +12,6 @@ describe("parseBlockConfig (JSON)", () => {
     expect(cfg.show).toEqual(["areas", "actions", "plan-day", "plan-week"]);
   });
 
-  it("parses activitiesLayout", () => {
-    const cfg = parseBlockConfig('{"date":"2026-03-14","activitiesLayout":"tabs"}');
-    expect(cfg.activitiesLayout).toBe("tabs");
-  });
-
   it("rejects invalid date", () => {
     expect(() => parseBlockConfig('{"date":"2026/03/14"}')).toThrow(/date/i);
   });
@@ -40,9 +35,4 @@ describe("parseBlockConfig (JSON)", () => {
     expect(() => parseBlockConfig(input)).toThrow(/must be an object/i);
   });
 
-  it("handles null activitiesLayout", () => {
-    const input = '{"date":"2026-03-14", "activitiesLayout": null}';
-    const out = parseBlockConfig(input);
-    expect(out.activitiesLayout).toBeUndefined();
-  });
 });
