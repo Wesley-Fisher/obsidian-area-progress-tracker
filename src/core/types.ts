@@ -62,7 +62,7 @@ export interface SystemConfig {
   requiredActions?: Partial<Record<AreaId, RequiredAction[]>>;
   /** Optional UI groups for organizing actions/records (morning/work/admin, etc.). */
   actions: ActionConfig[];
-  records?: RecordConfig[];
+  records: RecordConfig[];
 }
 
 export interface AreaScore {
