@@ -75,7 +75,7 @@ export function clampActionsToConfig(
     let next = Math.max(0, totalNum);
 
     const action = actionById.get(actionId);
-    if (action && isFiniteNonNegativeNumber(action.max)) {
+    if (action && isFiniteNonNegativeNumber(action.max) && action.max > 0) {
       next = Math.min(next, action.max);
     }
 
@@ -123,7 +123,7 @@ export function recomputeDayScores(args: RecomputeDayArgs): RecomputeDayResult {
 
     // Enforce non-negative totals + optional per-day max.
     let effectiveTotal = Math.max(0, total);
-    if (isFiniteNonNegativeNumber(action.max)) {
+    if (isFiniteNonNegativeNumber(action.max) && action.max > 0) {
       effectiveTotal = Math.min(effectiveTotal, action.max);
     }
     if (effectiveTotal === 0) continue;

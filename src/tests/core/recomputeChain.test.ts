@@ -42,7 +42,7 @@ describe("seedFromPreviousDay", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
       groups: [{ id: "morning", name: "Morning" }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
     };
 
@@ -67,7 +67,7 @@ describe("seedFromPreviousDay", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
       groups: [{ id: "morning", name: "Morning" }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
     };
 
@@ -92,7 +92,7 @@ describe("seedFromPreviousDay", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
       groups: [{ id: "morning", name: "Morning" }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
     };
 
@@ -119,7 +119,7 @@ describe("mergePreviousIntoNextDay", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
       groups: [{ id: "morning", name: "Morning" }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
     };
 
@@ -155,7 +155,7 @@ describe("mergePreviousIntoNextDay", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
       groups: [{ id: "morning", name: "Morning" }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
     };
 
@@ -192,7 +192,7 @@ describe("recomputeForwardChain", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
       groups: [{ id: "morning", name: "Morning" }],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: ["morning"] }],
     };
 

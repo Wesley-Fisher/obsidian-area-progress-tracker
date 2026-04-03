@@ -7,7 +7,7 @@ describe("render/translate/translatePlanSection", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
     };
 
@@ -64,9 +64,9 @@ describe("render/translate/translatePlanSection", () => {
       version: 1,
       areas: [],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: []  },
-        { id: "done", name: "Done", input: { type: "checkbox" }, effects: {}, groupIds: []  },
-        { id: "deep_work", name: "Deep Work", input: { type: "number", min: 0, max: 10, step: 1 }, effects: {}, groupIds: []  },
+        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0  },
+        { id: "done", name: "Done", input: { type: "checkbox" }, effects: {}, groupIds: [], max: 0  },
+        { id: "deep_work", name: "Deep Work", input: { type: "number", min: 0, max: 10, step: 1 }, effects: {}, groupIds: [], max: 0 },
       ],
       records: [],
     };

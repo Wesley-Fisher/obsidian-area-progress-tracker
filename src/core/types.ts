@@ -36,9 +36,7 @@ export interface ActionConfig {
   name: string;
   input: ActionInputConfig;
   effects: Record<AreaId, number>;
-  /** Optional per-day cap on how many times this action can be recorded. */
-  max?: number;
-  /** Optional UI grouping for columns/tabs (independent of Areas). */
+  max: number;
   groupIds: ActivityGroupId[];
 }
 

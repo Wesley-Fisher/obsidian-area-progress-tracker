@@ -9,8 +9,8 @@ const config: SystemConfig = {
     { id: "career", name: "Career", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 5 },
   ],
   actions: [
-    { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [] },
-    { id: "deep_work", name: "Deep Work", input: { type: "number", step: 45 }, effects: { career: 5 }, groupIds: [] },
+    { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 },
+    { id: "deep_work", name: "Deep Work", input: { type: "number", step: 45 }, effects: { career: 5 }, groupIds: [], max: 0 },
   ],
 };
 

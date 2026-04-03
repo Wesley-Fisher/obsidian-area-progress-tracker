@@ -27,8 +27,8 @@ describe("render/common grouping helpers", () => {
         areas: [],
         groups: [{ id: "g1", name: "Group 1" }],
         actions: [
-          { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: ["g1"] },
-          { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
+          { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: ["g1"], max: 0 },
+          { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
         ],
         records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: ["g1"] }],
       },
@@ -48,7 +48,7 @@ describe("render/common grouping helpers", () => {
         version: 1,
         areas: [],
         groups: [],
-        actions: [{ id: "a1", name: "A1", input: { type: "checkbox" }, effects: {}, groupIds: [] }],
+        actions: [{ id: "a1", name: "A1", input: { type: "checkbox" }, effects: {}, groupIds: [], max: 0 }],
         records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: [] }],
       },
     });
@@ -66,8 +66,8 @@ describe("render/common grouping helpers", () => {
         areas: [],
         groups: [{ id: "g1", name: "Group 1" }],
         actions: [
-          { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
-          { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
+          { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
+          { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0},
         ],
         records: [],
       },

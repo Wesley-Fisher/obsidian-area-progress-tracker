@@ -51,8 +51,8 @@ describe("onRenderProgressTrackerBlock", () => {
       version: 1,
       areas: [],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
-        { id: "walk", name: "Walk2", input: { type: "button", step: 1 }, effects: {}, groupIds: [] },
+        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
+        { id: "walk", name: "Walk2", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
       ],
       records: [],
     };
@@ -141,7 +141,7 @@ describe("onRenderProgressTrackerBlock", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [] }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [],
     };
 
