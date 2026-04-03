@@ -87,7 +87,7 @@ describe("test-repo-config", () => {
         "health": [{"action": "walk", "req": 1}]
       },
       "dailyPlan": { "actions": {} },
-      "weeklyPlan": { "actions": {} }
+      "weeklyPlan": { "startDate": "2026-03-01", "actions": {} }
     };
 
     expect(conf).toMatchObject(expected);
