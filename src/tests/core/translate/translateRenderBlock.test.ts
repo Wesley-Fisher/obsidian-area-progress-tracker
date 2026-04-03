@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, IsoDate, ShowableAreas, SystemConfig } from "../../../core/types";
+import type { DailyLog, IsoDate, SystemConfig } from "../../../core/types";
 import { translateRenderBlock } from "../../../core/translate/translateRenderBlock";
 import { getDataPaths } from "../../../core/vault/paths";
 import { createVaultRepo } from "../../../core/vault/repo";
@@ -13,7 +13,6 @@ function mkArgs(opts: { vault: MemoryVault; dataFolder: string; date: string; mo
     el: {} as HTMLElement,
     blockConfig: {
       date: opts.date as IsoDate,
-      show: opts.show as Array<ShowableAreas>,
     },
     repo,
     onUserAction: async () => {},

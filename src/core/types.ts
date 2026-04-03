@@ -104,9 +104,6 @@ export interface DailyLog {
   };
 }
 
-export type ShowableAreas = "areas" | "actions" | "plan-day" | "plan-week";
-
 export interface BlockConfig {
   date: IsoDate;
-  show?: Array<ShowableAreas>;
 }

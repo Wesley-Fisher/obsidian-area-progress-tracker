@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DailyLog, IsoDate, ShowableAreas, SystemConfig } from "../../../core/types";
+import type { DailyLog, IsoDate, SystemConfig } from "../../../core/types";
 import { onRenderProgressTrackerBlock } from "../../../core/render/renderBlock";
 import { getDataPaths } from "../../../core/vault/paths";
 import { buildDailyLog } from "../../../core/scoring";
@@ -12,17 +12,13 @@ function mkArgs(opts: {
   vault: MemoryVault;
   dataFolder: string;
   date: string;
-  mode?: string;
-  show?: ShowableAreas[];
 }): RenderBlockArgs  & { __root: FakeElement } {
   const el = new FakeElement("div");
   const repo = createVaultRepo(opts.vault, opts.dataFolder);
   return {
     el: asHTMLElement(el),
     blockConfig: {
-      mode: "day",
       date: opts.date as IsoDate,
-      show: opts.show,
     },
     repo,
     onUserAction: async () => {},
@@ -98,7 +94,7 @@ describe("onRenderProgressTrackerBlock", () => {
     await vault.write(paths.configPath, JSON.stringify(config));
     await vault.write(paths.dailyLogPath, JSON.stringify(dayLog));
 
-    const args = mkArgs({ vault, dataFolder, date, show: ["areas"] });
+    const args = mkArgs({ vault, dataFolder, date });
     await onRenderProgressTrackerBlock(args);
 
     const text = args.__root.textContent();

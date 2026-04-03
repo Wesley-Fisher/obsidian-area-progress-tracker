@@ -7,11 +7,6 @@ describe("parseBlockConfig (JSON)", () => {
     expect(cfg.date).toBe("2026-03-14");
   });
 
-  it("parses show list", () => {
-    const cfg = parseBlockConfig('{"date":"2026-03-14","show":["areas","actions","plan-day","plan-week"]}');
-    expect(cfg.show).toEqual(["areas", "actions", "plan-day", "plan-week"]);
-  });
-
   it("rejects invalid date", () => {
     expect(() => parseBlockConfig('{"date":"2026/03/14"}')).toThrow(/date/i);
   });

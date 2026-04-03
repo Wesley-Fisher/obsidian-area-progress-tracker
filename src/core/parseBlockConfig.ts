@@ -29,12 +29,5 @@ export function parseBlockConfig(source: string): BlockConfig {
     throw new Error("Missing or invalid 'date'. Expected YYYY-MM-DD.");
   }
 
-  const showRaw = obj.show;
-  const show =
-    Array.isArray(showRaw) &&
-    showRaw.every((s) => s === "areas" || s === "actions" || s === "plan-day" || s === "plan-week")
-      ? (showRaw as Array<"areas" | "actions" | "plan-day" | "plan-week">)
-      : undefined;
-
-  return { date: dateRaw, show};
+  return { date: dateRaw};
 }
