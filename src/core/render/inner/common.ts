@@ -50,7 +50,7 @@ function renderActionEntry(
   current: number
 ): void {
   const configMax =
-    typeof action.max === "number" && Number.isFinite(action.max) && action.max >= 0 ? action.max : undefined;
+    typeof action.max === "number" && Number.isFinite(action.max) && action.max > 0 ? action.max : undefined;
 
   if (action.input.type === "button") {
     const step = action.input.step;
@@ -81,9 +81,8 @@ function renderActionEntry(
   if (action.input.type === "checkbox") {
     const input = container.createEl("input") as HTMLInputElement;
     input.type = "checkbox";
-    const disabledByMax = configMax === 0;
-    input.disabled = disabledByMax;
-    input.checked = !disabledByMax && current > 0;
+    input.disabled = false;
+    input.checked = current > 0;
     input.onchange = () => {
       const next = input.checked ? 1 : 0;
       void args.onUserAction({
@@ -100,10 +99,11 @@ function renderActionEntry(
   const input = container.createEl("input") as HTMLInputElement;
   input.type = "number";
   if (action.input.min !== undefined) input.min = String(action.input.min);
-  const effectiveMax =
-    action.input.max !== undefined && configMax !== undefined
-      ? Math.min(action.input.max, configMax)
-      : (action.input.max ?? configMax);
+  const inputMax =
+    typeof action.input.max === "number" && Number.isFinite(action.input.max) && action.input.max > 0
+      ? action.input.max
+      : undefined;
+  const effectiveMax = inputMax !== undefined && configMax !== undefined ? Math.min(inputMax, configMax) : (inputMax ?? configMax);
   if (effectiveMax !== undefined) input.max = String(effectiveMax);
   if (action.input.step !== undefined) input.step = String(action.input.step);
   input.value = String(current);

@@ -33,6 +33,7 @@ describe("render/translate/translateActivitiesSection", () => {
       groups: [{ id: "g1", name: "Group 1" }],
       actions: [
         { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, groupIds: ["g1"] },
+        { id: "jump", name: "Jump", input: { type: "button", step: 1 }, effects: {}, max: 0, groupIds: [] },
         { id: "meditate", name: "Meditate", input: { type: "checkbox" }, effects: {}, max: 0, groupIds: [] },
         { id: "pushups", name: "Pushups", input: { type: "number", max: 10, step: 1 }, effects: {}, max: 5, groupIds: [] },
       ],
@@ -46,7 +47,7 @@ describe("render/translate/translateActivitiesSection", () => {
       previousScore: {},
       startingScore: {},
       updatedScore: {},
-      actions: { walk: 2, meditate: 0, pushups: 1 },
+      actions: { walk: 2, jump: 0, meditate: 0, pushups: 1 },
       records: { mood: "ok" },
     };
 
@@ -79,8 +80,18 @@ describe("render/translate/translateActivitiesSection", () => {
     if (meditate.kind !== "action") throw new Error("expected action");
     expect(meditate.entry.kind).toBe("checkbox");
     if (meditate.entry.kind === "checkbox") {
-      expect(meditate.entry.disabled).toBe(true); // max=0 disables
+      expect(meditate.entry.disabled).toBe(false); // max=0 is unlimited
       expect(meditate.entry.checked).toBe(false);
+    }
+
+    const jump = model.groups
+      .flatMap((g) => g.rows)
+      .find((r) => r.kind === "action" && r.actionId === "jump")!;
+    if (jump.kind !== "action") throw new Error("expected action");
+    expect(jump.entry.kind).toBe("button");
+    if (jump.entry.kind === "button") {
+      expect(jump.entry.plus.disabled).toBe(false); // max=0 is unlimited
+      expect(jump.entry.minus.disabled).toBe(true);
     }
 
     const pushups = model.groups
