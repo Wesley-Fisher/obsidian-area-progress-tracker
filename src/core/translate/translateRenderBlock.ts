@@ -61,8 +61,8 @@ export async function translateRenderBlock(args: RenderBlockArgs): Promise<Rende
   if (weekStartDate) {
     try {
       const weekStartLog = await args.repo.readDailyLog(weekStartDate);
-      if (weekStartLog?.updatedScore && Object.keys(weekStartLog.updatedScore).length > 0) {
-        weekStartScores = weekStartLog.updatedScore;
+      if (weekStartLog?.startingScore && Object.keys(weekStartLog.startingScore).length > 0) {
+        weekStartScores = weekStartLog.startingScore;
       }
     } catch {
       // Missing or unreadable daily log: fall back to area defaults.

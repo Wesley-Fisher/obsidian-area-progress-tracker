@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { DailyPlanConfig, SystemConfig } from "../../../core/types";
 import { translatePlanSection } from "../../../core/translate/inner/translatePlanSection";
+import { UserPlanEvent } from "../../../core/handleEvents/types";
 
 describe("render/translate/translatePlanSection", () => {
   it("returns planNoActions when actions are empty", () => {
@@ -94,7 +95,7 @@ describe("render/translate/translatePlanSection", () => {
     expect(walk?.entry.kind).toBe("button");
     if (!walk || walk.entry.kind !== "button") throw new Error("expected walk button entry");
     expect(walk.entry.plus.disabled).toBe(false);
-    expect(walk.entry.plus.event.value).toBe(1);
+    expect((walk.entry.plus.event as UserPlanEvent).value).toBe(1);
     expect(walk.entry.minus.disabled).toBe(true);
 
     const done = byId.get("done");
