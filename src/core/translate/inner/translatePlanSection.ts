@@ -9,11 +9,11 @@ function finiteNonNegativeNumber(value: unknown): number {
 
 function parseEffectiveMax(action: ActionConfig): number | undefined {
   const configMax =
-    typeof action.max === "number" && Number.isFinite(action.max) && action.max >= 0 ? action.max : undefined;
+    typeof action.max === "number" && Number.isFinite(action.max) && action.max > 0 ? action.max : undefined;
 
   const inputMaxRaw = action.input?.type === "number" ? action.input.max : undefined;
   const inputMax =
-    typeof inputMaxRaw === "number" && Number.isFinite(inputMaxRaw) && inputMaxRaw >= 0 ? inputMaxRaw : undefined;
+    typeof inputMaxRaw === "number" && Number.isFinite(inputMaxRaw) && inputMaxRaw > 0 ? inputMaxRaw : undefined;
 
   if (configMax !== undefined && inputMax !== undefined) return Math.min(configMax, inputMax);
   return inputMax ?? configMax;
@@ -90,7 +90,7 @@ export function translatePlanSection(args: {
         }
 
         if (action.input.type === "checkbox") {
-          const disabledByMax = effectiveMax === 0;
+          const disabledByMax = effectiveMax !== undefined && effectiveMax <= 0;
           const checked = !disabledByMax && planned > 0;
           const planned01 = checked ? 1 : 0;
           planned = planned01;
@@ -104,7 +104,11 @@ export function translatePlanSection(args: {
         }
 
         const min = action.input.min !== undefined ? String(action.input.min) : undefined;
-        const max = effectiveMax !== undefined ? String(effectiveMax) : (action.input.max !== undefined ? String(action.input.max) : undefined);
+        const inputMaxStr =
+          typeof action.input.max === "number" && Number.isFinite(action.input.max) && action.input.max > 0
+            ? String(action.input.max)
+            : undefined;
+        const max = effectiveMax !== undefined ? String(effectiveMax) : inputMaxStr;
         const step = action.input.step !== undefined ? String(action.input.step) : undefined;
         return {
           kind: "number" as const,
