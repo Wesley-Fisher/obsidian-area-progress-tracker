@@ -26,7 +26,7 @@ describe("test-repo-config", () => {
           "minScore": 0,
           "maxScore": 1000,
           "baseScore": 500,
-          "dailyDecayAlways": 0,
+          "dailyDecayAlways": 1,
           "dailyDecayUnattended": 10
         },
         {

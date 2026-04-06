@@ -4,7 +4,7 @@ This note is a **manual test script** for the Obsidian test vault.
 
 ## Expected use-case
 1. Build plugin distributable
-2. Copy into the test vault via `deployToTestRepo.ps1`
+2. Copy into the test vault via `prepareTestRepo.ps1`
 3. Open Obsidian using `test-vault-area-progress-tracker/`
 4. Open this note (`test.md`)
 5. Run through the sections below
@@ -12,16 +12,16 @@ This note is a **manual test script** for the Obsidian test vault.
 
 ## Preconditions
 - Plugin enabled: **Area Progress Tracker**
-- Plugin setting **Data folder** is set to `ProgressTrackerCopied`
+- Plugin setting **Data folder** is set to `ProgressTracker`
 - The test data folder exists with:
-  - `ProgressTrackerCopied/config.json`
-  - `ProgressTrackerCopied/logs/2026-03-01.json`, `2026-03-02.json`, `2026-03-03.json`
+  - `ProgressTracker/config.json`
+  - `ProgressTracker/logs/apt.2026-03-01.json`, `apt.2026-03-02.json`, `apt.2026-03-03.json`
 
 Notes:
 - The code block name is `progress-tracker`.
 - All score expectations below assume the shipped config:
-  - Health: base 500, decay 10/day, Walk +12, Junk food -15
-  - Career: base 500, decay 5/day, Deep work +5
+  - Health: base 500, `dailyDecayAlways=1`, `dailyDecayUnattended=10`, `requiredActions.health = walk >= 1`, Walk +12, Junk food -15
+  - Career: base 500, `dailyDecayAlways=0`, `dailyDecayUnattended=5`, no required-actions override, Deep work +5
 
 ---
 
@@ -33,7 +33,8 @@ Notes:
 
 **Expect**
 - Areas table shows:
-  - Health: `daysSince=0`, `updatedScore=502`
+  - Health: `daysSince=0`, `updatedScore=501`
+    - Health reached `501` because the day starts at `489` (`500 - dailyDecayAlways 1 - dailyDecayUnattended 10`), then `walk +12`
   - Career: `daysSince=1`, `updatedScore=495`
 - Actions show (at least):
 	- Morning
@@ -55,8 +56,10 @@ Notes:
 - Confirm the block renders.
 
 **Expect**
-- No actions recorded, so decay applies from the prior day:
-  - Health: `daysSince=1`, `updatedScore=492` (502 - 10)
+- No actions are recorded on this day.
+- Health shows only `dailyDecayAlways` here because 2026-03-01 met `requiredActions.health`.
+- Career shows unattended decay because it was not touched on the prior day.
+  - Health: `daysSince=1`, `updatedScore=500` (501 - 1 always decay)
   - Career: `daysSince=2`, `updatedScore=490` (495 - 5)
 - Morning and Evening tabs show `(1)` for 1 required action
 - `Walk 20m` is underlined under Morning and Evening
@@ -72,8 +75,8 @@ Notes:
 **Expect**
 - Deep work is already `2` for this day.
 - Areas table shows:
-  - Health: `daysSince=2`, `updatedScore=482`
-  - Career: `daysSince=0`, `updatedScore=500` (decay then +2x10)
+  - Health: `daysSince=2`, `updatedScore=489` (`500 - 1 always - 10 unattended`)
+  - Career: `daysSince=0`, `updatedScore=495` (starting `485`, then `+2x5`)
 
 ```progress-tracker
 { "date": "2026-03-03" }
@@ -100,11 +103,14 @@ Use **Day 2026-03-01** block below.
 **Expect**
 - In the **Areas** table below, the “Possible” columns update immediately:
   - Possible (day plan):
-    - Health becomes `526` (current 502 + remaining(3-1)*12 = 24)
-    - Career becomes `515` (current 495 + remaining(4-0)x5 = 20)
+    - Health becomes `525` (day starting score `489` + planned `3x12 = 36`)
+    - Career becomes `515` (day starting score `495` + planned `4x5 = 20`)
   - Possible (week plan):
-    - Health becomes `610` (starting 490 + 10x12 = 120)
-    - Career becomes `545` (starting 495 + 10x5 = 50)
+    - Health becomes `602` (week-start score `489` + `10x12 = 120` - `7 x dailyDecayAlways = 7`)
+    - Career becomes `545` (starting 495 + 10x5 = 50, and `7 x dailyDecayAlways = 0`)
+
+Additional check:
+- Weekly prediction does not subtract unattended decay here; it only applies the configured `dailyDecayAlways`, which is `1` for Health and `0` for Career in the shipped test config.
 
 ```progress-tracker
 { "date": "2026-03-01", "show": ["areas"] }
@@ -128,7 +134,7 @@ Use **Day 2026-03-01**, **2026-03-02**, and **2026-03-03** blocks below.
 
 **Expect**
 - The **same day** scores update:
-  - Day 2026-03-01 Health updated score becomes `514` (starting 490 + 2x12)
+  - Day 2026-03-01 Health updated score becomes `513` (starting 489 + 2x12)
 
 ```progress-tracker
 { "date": "2026-03-01", "show": ["areas"] }
@@ -136,7 +142,9 @@ Use **Day 2026-03-01**, **2026-03-02**, and **2026-03-03** blocks below.
 
 **Expect**
 - The **next day** scores update (forward recompute):
-  - Day 2026-03-02 Health updated score stays `514` (no decay)
+  - Day 2026-03-02 Health updated score becomes `512`
+  - Health has no decay because the updated 2026-03-01 state now meets `requiredActions.health`
+  - `dailyDecayAlways=1` still applies, so the next day loses 1 point even though unattended decay is suppressed
 
 ```progress-tracker
 { "date": "2026-03-02", "show": ["areas"] }
@@ -144,7 +152,7 @@ Use **Day 2026-03-01**, **2026-03-02**, and **2026-03-03** blocks below.
 
 **Expect**
 - Forward propagation continues while the next day file exists:
-  - Day 2026-03-03 Health updated score becomes `504` (514 - 10)
+  - Day 2026-03-03 Health updated score becomes `501` (`512 - 1 always - 10 unattended`)
   - Day 2026-03-03 Career remains `495` and `daysSince=0`
 
 ```progress-tracker
@@ -159,16 +167,21 @@ This verifies that opening a new date creates its `logs/YYYY-MM-DD.json` file (s
 
 ### Day 2026-03-04 (should be missing at first)
 **Actions to take**
-- Confirm there is no file at `ProgressTrackerCopied/logs/2026-03-04.json`.
+- Confirm there is no file at `ProgressTracker/logs/apt.2026-03-04.json`.
 - Scroll to the block below, edit the fence text, and confirm it renders.
-- Re-check the file list for `ProgressTrackerCopied/logs/2026-03-04.json`.
+- Re-check the file list for `ProgressTracker/logs/apt.2026-03-04.json`.
 
 **Expect**
 - The block renders (no “Missing daily log” error).
-- A new log file appears at `ProgressTrackerCopied/logs/2026-03-04.json`.
-- If you completed section (4) first, the expected seeded/decayed values are:
-  - Health: `daysSince=3`, `updatedScore=494` (from 2026-03-03 Health 504 - 10)
-  - Career: `daysSince=1`, `updatedScore=495` (no decay from last day yet)
+- A new log file appears at `ProgressTracker/logs/apt.2026-03-04.json`.
+- If you completed section (3) first, the expected seeded/decayed values are:
+  - Health: `daysSince=3`, `updatedScore=490` (from 2026-03-03 Health 501 - 1 always - 10 unattended)
+  - Career: `daysSince=1`, `updatedScore=495` (no unattended decay from the prior day state, and `dailyDecayAlways=0`)
+
+Additional check:
+- The newly created day should continue to respect the split decay config names in `ProgressTracker/config.json`:
+  - `dailyDecayAlways`
+  - `dailyDecayUnattended`
 
 ```progress-tracker
 { "date": "2026-03-04" }
@@ -179,18 +192,18 @@ This verifies that opening a new date creates its `logs/YYYY-MM-DD.json` file (s
 ## 5) Showing Actions and Records in Multiple Groups
 
 **Actions to take**
-- Confirm there is a "Walk 20min" action under both "morning" and "evening".
-- Add "+1" for "Walk 20 min" under "morning".
-- Add "-1" for "Walk 20 min" under "evening".
+- Confirm there is a "Walk 20m" action under both "morning" and "evening".
+- Add "+1" for "Walk 20m" under "morning".
+- Add "-1" for "Walk 20m" under "evening".
 - Repeat the "+1"/"-1" entries another time or two.
 - Enter a "Weight" under "morning", and confirm it is visible under "evening".
 - Change the "Weight" under "evening", and confirm it changes under "morning".
 
 **Expect**
-- The "Walk 20min" action appears under both tabs.
+- The "Walk 20m" action appears under both tabs.
 - Both "+1" and "-1" buttons from different tabs modify the day's score.
 - The "+1"/"-1" cycle always returns to the same values at the end.
-- Entering "Weight" in one tab makes it's value change when viewing the other tab.
+- Entering "Weight" in one tab makes its value change when viewing the other tab.
 
 ```progress-tracker
 { "date": "2026-03-03", "show": ["areas", "actions"] }
