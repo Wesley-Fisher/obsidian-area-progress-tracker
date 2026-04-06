@@ -26,7 +26,8 @@ describe("Examples/03-requiredActions-decay", () => {
           "minScore": 0,
           "maxScore": 1000,
           "baseScore": 500,
-          "dailyDecay": 10
+          "dailyDecayAlways": 2,
+          "dailyDecayUnattended": 10
         }
       ],
       "requiredActions": {

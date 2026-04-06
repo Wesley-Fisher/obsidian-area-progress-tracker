@@ -172,7 +172,7 @@ describe("render/translate/translateActivitiesSection", () => {
   it("calculates the number of needed actions to meet requirements", () => {
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "area1", name: "Area 1", minScore: 0, maxScore: 10, baseScore: 0, dailyDecay: 0}],
+      areas: [{ id: "area1", name: "Area 1", minScore: 0, maxScore: 10, baseScore: 0, dailyDecayAlways: 0, dailyDecayUnattended: 0}],
       groups: [{ id: "g1", name: "Group 1" }],
       actions: [
         { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, groupIds: ["g1"] },
@@ -217,8 +217,8 @@ describe("render/translate/translateActivitiesSection", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [
-        { id: "area1", name: "Area 1", minScore: 0, maxScore: 10, baseScore: 0, dailyDecay: 0},
-        { id: "area2", name: "Area 2", minScore: 0, maxScore: 10, baseScore: 0, dailyDecay: 0}
+        { id: "area1", name: "Area 1", minScore: 0, maxScore: 10, baseScore: 0, dailyDecayAlways: 0, dailyDecayUnattended: 0},
+        { id: "area2", name: "Area 2", minScore: 0, maxScore: 10, baseScore: 0, dailyDecayAlways: 0, dailyDecayUnattended: 0}
       ],
       groups: [{ id: "g1", name: "Group 1" }],
       actions: [

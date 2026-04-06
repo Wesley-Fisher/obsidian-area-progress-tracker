@@ -26,7 +26,8 @@ describe("Examples/01-minimal", () => {
           "minScore": 0,
           "maxScore": 1000,
           "baseScore": 500,
-          "dailyDecay": 10
+          "dailyDecayAlways": 0,
+          "dailyDecayUnattended": 10
         }
       ],
       "actions": [

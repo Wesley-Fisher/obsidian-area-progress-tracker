@@ -5,8 +5,8 @@ import { normalizePreviousScores, recomputeDayScores, requirementsMetForArea, bu
 const config: SystemConfig = {
   version: 1,
   areas: [
-    { id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 },
-    { id: "career", name: "Career", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 5 },
+    { id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 },
+    { id: "career", name: "Career", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 5 },
   ],
   groups: [],
   actions: [
@@ -146,7 +146,7 @@ describe("recomputeDayScores", () => {
     expect(res.updatedScore.health.score).toBe(500 + 12 * 1);
   });
 
-  it("suppresses daily decay for an area when requiredActions are met", () => {
+  it("suppresses unattended decay for an area when requiredActions are met", () => {
     const reqConfig: SystemConfig = {
       ...config,
       requiredActions: {
@@ -190,7 +190,7 @@ describe("recomputeDayScores", () => {
     expect(today.updatedScore.health.decayActive).toBe(false);
   });
 
-  it("re-activates decay when a follow-up day has no actions (default behavior)", () => {
+  it("re-activates unattended decay when a follow-up day has no actions (default behavior)", () => {
     // No requiredActions configured: default behavior is "decay into tomorrow unless you touched the area today".
     const d1 = recomputeDayScores({
       config,
@@ -220,6 +220,40 @@ describe("recomputeDayScores", () => {
     });
     expect(d3.startingScore.health.score).toBe(d2.updatedScore.health.score - 10);
     expect(d3.startingScore.career.score).toBe(d2.updatedScore.career.score - 5);
+  });
+
+  it("always applies dailyDecayAlways when rolling to the next day", () => {
+    const configWithAlwaysDecay: SystemConfig = {
+      ...config,
+      areas: [
+        { id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 3, dailyDecayUnattended: 10 },
+        { id: "career", name: "Career", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 2, dailyDecayUnattended: 5 },
+      ],
+    };
+
+    const noUnattendedDecay = recomputeDayScores({
+      config: configWithAlwaysDecay,
+      previousDayUpdatedScore: {
+        health: { score: 600, daysSince: 2, decayActive: false },
+        career: { score: 700, daysSince: 3, decayActive: false },
+      },
+      actions: {},
+    });
+
+    expect(noUnattendedDecay.startingScore.health.score).toBe(597);
+    expect(noUnattendedDecay.startingScore.career.score).toBe(698);
+
+    const withUnattendedDecay = recomputeDayScores({
+      config: configWithAlwaysDecay,
+      previousDayUpdatedScore: {
+        health: { score: 600, daysSince: 2, decayActive: true },
+        career: { score: 700, daysSince: 3, decayActive: true },
+      },
+      actions: {},
+    });
+
+    expect(withUnattendedDecay.startingScore.health.score).toBe(587);
+    expect(withUnattendedDecay.startingScore.career.score).toBe(693);
   });
 });
 

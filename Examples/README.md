@@ -31,7 +31,8 @@ Shows:
 
 Shows:
 - `requiredActions` for a specific area
-- how decay suppression is determined by meeting requirements
+- how `dailyDecayAlways` and `dailyDecayUnattended` combine
+- how only `dailyDecayUnattended` is suppressed by meeting requirements
 
 ### 03-number-actions
 

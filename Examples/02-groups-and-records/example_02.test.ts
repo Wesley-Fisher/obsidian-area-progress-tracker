@@ -26,7 +26,8 @@ describe("Examples/02-groups-and-records", () => {
           "minScore": 0,
           "maxScore": 1000,
           "baseScore": 500,
-          "dailyDecay": 8
+          "dailyDecayAlways": 0,
+          "dailyDecayUnattended": 8
         },
         {
           "id": "career",
@@ -34,7 +35,8 @@ describe("Examples/02-groups-and-records", () => {
           "minScore": 0,
           "maxScore": 1000,
           "baseScore": 500,
-          "dailyDecay": 5
+          "dailyDecayAlways": 0,
+          "dailyDecayUnattended": 5
         }
       ],
       "groups": [

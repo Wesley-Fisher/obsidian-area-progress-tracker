@@ -98,7 +98,8 @@ Areas are set up as a list of JSON objects such as below:
       "minScore": 0,
       "maxScore": 1000,
       "baseScore": 500,
-      "dailyDecay": 10
+      "dailyDecayAlways": 1,
+      "dailyDecayUnattended": 10
     },
     {
       "id": "career",
@@ -106,7 +107,8 @@ Areas are set up as a list of JSON objects such as below:
       "minScore": 0,
       "maxScore": 1000,
       "baseScore": 500,
-      "dailyDecay": 5
+      "dailyDecayAlways": 0,
+      "dailyDecayUnattended": 5
     }
     ...
   ],
@@ -119,7 +121,8 @@ The elements needed for each Area are:
 * `minScore`: a minimum score.
 * `maxScore`: a maximum score.
 * `baseScore`: the starting score for the first time an area is used in the system.
-* `dailyDecay`: see a separate section on Decay. This is how a score drops over time if the area does not receive attention.
+* `dailyDecayAlways`: a score loss that is applied every day when moving the area forward to the next day. This is required, and may be set to `0`.
+* `dailyDecayUnattended`: an additional score loss that applies when the area does not receive enough attention for the day.
 
 
 ### Groups Setup
@@ -222,7 +225,9 @@ The elements needed for each Record are:
 
 
 
-RequiredActions for an Area, defines Action totals that must be met to prevent that Area's score from decaying into the next day.
+RequiredActions for an Area, defines Action totals that must be met to prevent that Area's `dailyDecayUnattended` from applying into the next day.
+
+`dailyDecayAlways` still applies every day regardless of whether requirements were met.
 
 Example:
 

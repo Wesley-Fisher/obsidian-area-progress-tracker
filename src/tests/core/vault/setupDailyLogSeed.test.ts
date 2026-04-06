@@ -30,7 +30,7 @@ describe("core/vault/setup ensureDailyLogFile", () => {
 
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 10, dailyDecay: 0 }],
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 10, dailyDecayAlways: 0, dailyDecayUnattended: 0 }],
       actions: [],
       records: [],
       groups: [],

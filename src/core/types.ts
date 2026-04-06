@@ -18,7 +18,8 @@ export interface AreaConfig {
   minScore: number;
   maxScore: number;
   baseScore: number;
-  dailyDecay: number;
+  dailyDecayAlways: number;
+  dailyDecayUnattended: number;
 }
 
 export interface RequiredAction {
@@ -80,9 +81,9 @@ export interface AreaScore {
   score: number;
   daysSince: number;
   /**
-   * Whether daily decay should be applied when rolling this score forward to the next day.
+  * Whether unattended decay should be applied when rolling this score forward to the next day.
    *
-   * Semantics: this flag is determined by the day's actions (typically via `requiredActions`) and
+  * Semantics: this flag is determined by the day's actions (typically via `requiredActions`) and
    * then consumed by the next day's `startingScore` computation.
    *
    * If missing in stored data, callers should treat it as `false`.
