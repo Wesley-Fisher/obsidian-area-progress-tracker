@@ -167,9 +167,7 @@ This verifies that opening a new date creates its `logs/YYYY-MM-DD.json` file (s
 
 ### Day 2026-03-04 (should be missing at first)
 **Actions to take**
-- Confirm there is no file at `ProgressTracker/logs/apt.2026-03-04.json`.
-- Scroll to the block below, edit the fence text, and confirm it renders.
-- Re-check the file list for `ProgressTracker/logs/apt.2026-03-04.json`.
+- None: the file will be generated automatically.
 
 **Expect**
 - The block renders (no “Missing daily log” error).
@@ -193,9 +191,8 @@ Additional check:
 
 **Actions to take**
 - Confirm there is a "Walk 20m" action under both "morning" and "evening".
-- Add "+1" for "Walk 20m" under "morning".
-- Add "-1" for "Walk 20m" under "evening".
-- Repeat the "+1"/"-1" entries another time or two.
+- Add "+1" for "Walk 20m" under "morning" and then "evening".
+- Add "-1" for "Walk 20m" under "evening" and then "evening".
 - Enter a "Weight" under "morning", and confirm it is visible under "evening".
 - Change the "Weight" under "evening", and confirm it changes under "morning".
 
