@@ -64,18 +64,6 @@ export function translateActivitiesSection(args: {
           };
         }
 
-        if (action.input.type === "checkbox") {
-          const disabledByMax = false;
-          const checked = current > 0;
-          return {
-            kind: "checkbox",
-            disabled: disabledByMax,
-            checked,
-            eventOnCheck: { kind: "adjustActionTotal", date: args.date, actionId: action.id, delta: 1 - current },
-            eventOnUncheck: { kind: "adjustActionTotal", date: args.date, actionId: action.id, delta: 0 - current },
-          };
-        }
-
         const inputMax =
           typeof action.input.max === "number" && Number.isFinite(action.input.max) && action.input.max > 0
             ? action.input.max

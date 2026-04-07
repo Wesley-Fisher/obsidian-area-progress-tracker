@@ -26,7 +26,8 @@ describe("test-repo-config", () => {
           "minScore": 0,
           "maxScore": 1000,
           "baseScore": 500,
-          "dailyDecay": 10
+          "dailyDecayAlways": 1,
+          "dailyDecayUnattended": 10
         },
         {
           "id": "career",
@@ -34,7 +35,8 @@ describe("test-repo-config", () => {
           "minScore": 0,
           "maxScore": 1000,
           "baseScore": 500,
-          "dailyDecay": 5
+          "dailyDecayAlways": 0,
+          "dailyDecayUnattended": 5
         }
       ],
       "groups": [

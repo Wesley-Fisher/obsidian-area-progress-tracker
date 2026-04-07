@@ -1,36 +1,36 @@
 {
   "previousScore": {
     "health": {
-      "score": 492,
+      "score": 500,
       "daysSince": 1,
-      "decayActive": false
+      "decayActive": true
     },
     "career": {
       "score": 490,
       "daysSince": 2,
-      "decayActive": false
+      "decayActive": true
     }
   },
   "startingScore": {
     "health": {
-      "score": 482,
-      "daysSince": 2,
-      "decayActive": false
-    },
-    "career": {
-      "score": 485,
-      "daysSince": 3,
-      "decayActive": false
-    }
-  },
-  "updatedScore": {
-    "health": {
-      "score": 482,
+      "score": 489,
       "daysSince": 2,
       "decayActive": true
     },
     "career": {
-      "score": 500,
+      "score": 485,
+      "daysSince": 3,
+      "decayActive": true
+    }
+  },
+  "updatedScore": {
+    "health": {
+      "score": 489,
+      "daysSince": 2,
+      "decayActive": true
+    },
+    "career": {
+      "score": 495,
       "daysSince": 0,
       "decayActive": false
     }

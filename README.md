@@ -98,7 +98,8 @@ Areas are set up as a list of JSON objects such as below:
       "minScore": 0,
       "maxScore": 1000,
       "baseScore": 500,
-      "dailyDecay": 10
+      "dailyDecayAlways": 1,
+      "dailyDecayUnattended": 10
     },
     {
       "id": "career",
@@ -106,7 +107,8 @@ Areas are set up as a list of JSON objects such as below:
       "minScore": 0,
       "maxScore": 1000,
       "baseScore": 500,
-      "dailyDecay": 5
+      "dailyDecayAlways": 0,
+      "dailyDecayUnattended": 5
     }
     ...
   ],
@@ -119,7 +121,8 @@ The elements needed for each Area are:
 * `minScore`: a minimum score.
 * `maxScore`: a maximum score.
 * `baseScore`: the starting score for the first time an area is used in the system.
-* `dailyDecay`: see a separate section on Decay. This is how a score drops over time if the area does not receive attention.
+* `dailyDecayAlways`: a score loss that is applied every day when moving the area forward to the next day. This is required, and may be set to `0`.
+* `dailyDecayUnattended`: an additional score loss that applies when the area does not receive enough attention for the day.
 
 
 ### Groups Setup
@@ -178,7 +181,6 @@ The elements needed for each Action are:
 * `name`: the text that will be shown for the action
 * `input`: the type of input
   * `"button"` will show a "+" and a "-" button. Each one will apply the `"step"` value (usually 1) of the action each time it is clicked.
-  * `"checkbox"` will show a single checkbox that can be checked to apply the score for the action, and unchecked to clear it.
   * `"number"` will show a numeric input box (typing). This is useful for things like "minutes", "pages", or "reps".
 * `effects`: an object of effects the action will have on each Area. An action can affect multiple areas (Ex: a "Walking Meeting" action may be a +5 to Health, and a +2 to Work)
   * Within the `effects` object, there must be key/value pairs (see the "Junk Food" entry).
@@ -222,7 +224,9 @@ The elements needed for each Record are:
 
 
 
-RequiredActions for an Area, defines Action totals that must be met to prevent that Area's score from decaying into the next day.
+RequiredActions for an Area, defines Action totals that must be met to prevent that Area's `dailyDecayUnattended` from applying into the next day.
+
+`dailyDecayAlways` still applies every day regardless of whether requirements were met.
 
 Example:
 

@@ -6,7 +6,7 @@ describe("checkConfiguration", () => {
   it("returns no issues for a valid config", () => {
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }],
       groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [],
@@ -23,7 +23,7 @@ describe("checkConfiguration", () => {
   it("flags unknown area/action and invalid req values", () => {
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }],
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }],
       groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
       records: [],
@@ -49,8 +49,8 @@ describe("checkConfiguration", () => {
   it("flags a duplicate area ID", () => {
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 },
-              { id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }
+          areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 },
+            { id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }
 
       ],
       groups: [],
@@ -72,7 +72,7 @@ describe("checkConfiguration", () => {
   it("flags a bad requirement set", () => {
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }
       ],
       groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
@@ -93,7 +93,7 @@ describe("checkConfiguration", () => {
   it("flags an empty action ID", () => {
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }
       ],
       groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
@@ -114,7 +114,7 @@ describe("checkConfiguration", () => {
   it("flags an empty action ID", () => {
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecay: 10 }
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }
       ],
       groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
@@ -131,5 +131,24 @@ describe("checkConfiguration", () => {
     const messages = issues.map((i) => i.message).join("\n");
 
     expect(messages).toContain("requiredActions.health[0].action must be a non-empty string");
+  });
+
+  it("flags missing split decay fields", () => {
+    const config = {
+      version: 1,
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500 }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      records: [],
+      requiredActions: { health: [{ action: "walk", req: 2 }] },
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
+    } as unknown as SystemConfig;
+
+    const issues = checkConfiguration(config);
+    const messages = issues.map((i) => i.message).join("\n");
+
+    expect(messages).toContain("areas[0].dailyDecayAlways must be a finite non-negative number");
+    expect(messages).toContain("areas[0].dailyDecayUnattended must be a finite non-negative number");
   });
 });

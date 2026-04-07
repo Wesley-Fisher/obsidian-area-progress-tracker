@@ -26,7 +26,8 @@ describe("Examples/01-minimal", () => {
           "minScore": 0,
           "maxScore": 1000,
           "baseScore": 500,
-          "dailyDecay": 10
+          "dailyDecayAlways": 0,
+          "dailyDecayUnattended": 10
         }
       ],
       "actions": [
@@ -41,7 +42,7 @@ describe("Examples/01-minimal", () => {
         {
           "id": "stretch",
           "name": "Stretch",
-          "input": { "type": "checkbox" },
+          "input": { "type": "button", "step": 1 },
           "effects": { "health": 3 },
           "groupIds": ["health"],
           "max": 0

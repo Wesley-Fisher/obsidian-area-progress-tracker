@@ -1,15 +1,15 @@
 {
   "previousScore": {
-    "health": { "score": 502, "daysSince": 0 },
+    "health": { "score": 501, "daysSince": 0, "decayActive": false },
     "career": { "score": 495, "daysSince": 1 }
   },
   "startingScore": {
-    "health": { "score": 492, "daysSince": 1 },
+    "health": { "score": 500, "daysSince": 1 },
     "career": { "score": 490, "daysSince": 2 }
   },
   "updatedScore": {
-    "health": { "score": 492, "daysSince": 1 },
-    "career": { "score": 490, "daysSince": 2 }
+    "health": { "score": 500, "daysSince": 1, "decayActive": true },
+    "career": { "score": 490, "daysSince": 2, "decayActive": true }
   },
   "actions": {},
   "records": {}

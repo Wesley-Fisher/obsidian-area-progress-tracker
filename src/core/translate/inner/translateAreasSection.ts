@@ -41,6 +41,7 @@ export function translateAreasSection(args: {
       dayLog: args.dayLog,
       plan: args.weekPlan,
       subtractCurrentDayTotals: false,
+      alwaysDecayApplications: 7,
     });
 
     rows.push({
@@ -66,6 +67,7 @@ function computePossibleScoreForArea(args: {
   dayLog: DailyLog | null;
   plan: DailyPlanConfig | WeeklyPlanConfig | null;
   subtractCurrentDayTotals: boolean;
+  alwaysDecayApplications?: number;
 }): number | null {
   const planActions = args.plan?.actions;
   if (!planActions || Object.keys(planActions).length === 0) return null;
@@ -94,6 +96,10 @@ function computePossibleScoreForArea(args: {
     delta += effect * remaining;
   }
 
-  const possible = args.currentUpdatedScore + delta;
+  const alwaysDecayApplications = typeof args.alwaysDecayApplications === "number" ? args.alwaysDecayApplications : 0;
+  const alwaysDecay = typeof areaCfg.dailyDecayAlways === "number" && Number.isFinite(areaCfg.dailyDecayAlways)
+    ? areaCfg.dailyDecayAlways
+    : 0;
+  const possible = args.currentUpdatedScore + delta - alwaysDecay * alwaysDecayApplications;
   return Math.max(areaCfg.minScore, Math.min(areaCfg.maxScore, possible));
 }

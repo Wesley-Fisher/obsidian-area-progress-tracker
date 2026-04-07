@@ -40,7 +40,7 @@ describe("render/translate/grouping", () => {
 
   it("buildActivityGroupsFromConfig falls back to All when nothing is grouped", () => {
     const config = mkConfig({
-      actions: [{ id: "a1", name: "A1", input: { type: "checkbox" }, effects: {}, groupIds: [], max: 0 }],
+      actions: [{ id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
       records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: [] }],
     });
 
@@ -80,7 +80,7 @@ describe("render/translate/grouping", () => {
   it("buildActionOnlyGroupsFromConfig skips empty configured groups and falls back to All", () => {
     const config = mkConfig({
       groups: [{ id: "g1", name: "Group 1" }],
-      actions: [{ id: "a1", name: "A1", input: { type: "checkbox" }, effects: {}, groupIds: ["unknown"], max: 0 }],
+      actions: [{ id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: ["unknown"], max: 0 }],
     });
 
     const groups = buildActionOnlyGroupsFromConfig(config);

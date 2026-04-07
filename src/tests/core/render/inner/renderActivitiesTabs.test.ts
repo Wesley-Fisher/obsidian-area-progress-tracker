@@ -83,16 +83,16 @@ describe("renderActivitiesTabs", () => {
     });
   });
 
-  it("renders checkbox actions and emits delta based on checked state", () => {
+  it("renders single-step button actions and emits +/-1 deltas", () => {
     const calls: UserEvent[] = [];
     const args = mkArgs({
       config: {
         version: 1,
         areas: [],
-        actions: [{ id: "meditate", name: "Meditate", input: { type: "checkbox" }, effects: {} }],
+        actions: [{ id: "meditate", name: "Meditate", input: { type: "button", step: 1 }, effects: {} }],
         records: [],
       },
-      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { meditate: 0 } } as DailyLog,
+      dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { meditate: 1 } } as DailyLog,
       onUserAction: async (evt: UserEvent) => {
         calls.push(evt);
       },
@@ -100,13 +100,15 @@ describe("renderActivitiesTabs", () => {
 
     renderActivitiesTabs(asHTMLElement(args.__root), args, []);
 
-    const inputs = args.__root.findAllByTag("input") as unknown as FakeInput[];
-    expect(inputs).toHaveLength(1);
+    const btns = args.__root.findAllByTag("button") as unknown as FakeButton[];
+    const plus = btns.find((b) => b.text === "+")!;
+    const minus = btns.find((b) => b.text === "-")!;
 
-    inputs[0].checked = true;
-    inputs[0].change();
+    plus.click();
+    minus.click();
 
     expect(calls[0]).toMatchObject({ kind: "adjustActionTotal", actionId: "meditate", delta: 1 });
+    expect(calls[1]).toMatchObject({ kind: "adjustActionTotal", actionId: "meditate", delta: -1 });
   });
 
   it("renders number actions and clamps value to >=0 and <= effective max", () => {
@@ -165,13 +167,13 @@ describe("renderActivitiesTabs", () => {
     expect(calls.some((c) => c.kind === "setRecordValue" && c.recordId === "mood" && c.value === "great")).toBe(true);
   });
 
-  it("treats checkbox max=0 as unlimited (enabled) and emits events", () => {
+  it("treats button max=0 as unlimited (enabled) and emits events", () => {
     const calls: UserEvent[] = [];
     const args = mkArgs({
       config: {
         version: 1,
         areas: [],
-        actions: [{ id: "meditate", name: "Meditate", input: { type: "checkbox" }, effects: {}, max: 0 }],
+        actions: [{ id: "meditate", name: "Meditate", input: { type: "button", step: 1 }, effects: {}, max: 0 }],
         records: [],
       },
       dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { meditate: 0 } } as DailyLog,
@@ -182,12 +184,13 @@ describe("renderActivitiesTabs", () => {
 
     renderActivitiesTabs(asHTMLElement(args.__root), args, []);
 
-    const inputs = args.__root.findAllByTag("input") as unknown as FakeInput[];
-    expect(inputs).toHaveLength(1);
-    expect(inputs[0].disabled).toBe(false);
+    const btns = args.__root.findAllByTag("button") as unknown as FakeButton[];
+    const plus = btns.find((b) => b.text === "+")!;
+    const minus = btns.find((b) => b.text === "-")!;
+    expect(plus.disabled).toBe(false);
+    expect(minus.disabled).toBe(true);
 
-    inputs[0].checked = true;
-    inputs[0].change();
+    plus.click();
     expect(calls).toHaveLength(1);
     expect(calls[0]).toMatchObject({ kind: "adjustActionTotal", actionId: "meditate", delta: 1 });
   });

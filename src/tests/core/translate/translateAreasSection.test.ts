@@ -7,7 +7,7 @@ describe("render/translate/translateAreasSection", () => {
   it("returns areasEmpty when scores are missing", () => {
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecay: 1 }],
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecayAlways: 0, dailyDecayUnattended: 1 }],
       groups: [],
       actions: [],
       records: [],
@@ -30,7 +30,7 @@ describe("render/translate/translateAreasSection", () => {
   it("computes possible day/week score columns from plans", () => {
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecay: 1 }],
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecayAlways: 0, dailyDecayUnattended: 1 }],
       groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 10 }, groupIds: [], max: 0 }],
       records: [],
@@ -73,7 +73,7 @@ describe("render/translate/translateAreasSection", () => {
   it("uses the same baseline for possible day/week when plans match (startingScore w/ decay)", () => {
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecay: 1 }],
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecayAlways: 0, dailyDecayUnattended: 1 }],
       groups: [],
       actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 10 }, groupIds: [], max: 0 }],
       records: [],
@@ -99,5 +99,41 @@ describe("render/translate/translateAreasSection", () => {
 
     expect(model.rows).toHaveLength(1);
     expect(model.rows[0]?.possibleDayText).toBe(model.rows[0]?.possibleWeekText);
+  });
+
+  it("subtracts 7 applications of dailyDecayAlways from weekly possible score", () => {
+    const config: SystemConfig = {
+      version: 1,
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecayAlways: 2, dailyDecayUnattended: 1 }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 10 }, groupIds: [], max: 0 }],
+      records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
+    };
+
+    const dayLog: DailyLog = {
+      updatedScore: { health: { score: 40, daysSince: 2 } },
+      previousScore: { health: { score: 40, daysSince: 2 } },
+      startingScore: { health: { score: 39, daysSince: 3 } },
+      actions: { walk: 1 },
+      records: {},
+    };
+
+    const model = translateAreasSection({
+      config,
+      dayLog,
+      dayPlan: { actions: { walk: 3 } },
+      weekPlan: { startDate: "", actions: { walk: 3 } },
+    });
+
+    expect(model.kind).toBe("areasTable");
+    if (model.kind !== "areasTable") throw new Error("expected areasTable");
+
+    expect(model.rows[0]).toMatchObject({
+      possibleDayText: "69",
+      possibleWeekText: "55",
+    });
   });
 });

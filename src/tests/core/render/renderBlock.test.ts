@@ -77,7 +77,7 @@ describe("onRenderProgressTrackerBlock", () => {
 
     const config: SystemConfig = {
       version: 1,
-      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecay: 1 }],
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecayAlways: 0, dailyDecayUnattended: 1 }],
       groups: [],
       actions: [],
       records: [],

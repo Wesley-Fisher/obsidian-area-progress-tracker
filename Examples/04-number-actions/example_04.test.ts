@@ -26,7 +26,8 @@ describe("Examples/04-number-actions", () => {
           "minScore": 0,
           "maxScore": 1000,
           "baseScore": 500,
-          "dailyDecay": 6
+          "dailyDecayAlways": 0,
+          "dailyDecayUnattended": 6
         }
       ],
       "actions": [

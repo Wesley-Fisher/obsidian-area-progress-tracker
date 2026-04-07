@@ -278,18 +278,6 @@ function renderActionEntry(
     return;
   }
 
-  if (model.kind === "checkbox") {
-    const input = container.createEl("input") as HTMLInputElement;
-    input.type = "checkbox";
-    setFocusKey(input, `${focusKeyBase}:input`);
-    input.disabled = model.disabled;
-    input.checked = model.checked;
-    input.onchange = () => {
-      void runtime.onUserAction(input.checked ? model.eventOnCheck : model.eventOnUncheck);
-    };
-    return;
-  }
-
   const input = container.createEl("input") as HTMLInputElement;
   input.type = "number";
   setFocusKey(input, `${focusKeyBase}:input`);
@@ -425,36 +413,22 @@ function renderPlanEntry(
   model: PlanEntryModel,
   focusKeyBase: string
 ): void {
-  if (model.kind === "button") {
-    const plus = container.createEl("button", { text: model.plus.label }) as HTMLButtonElement;
-    setFocusKey(plus, `${focusKeyBase}:plus`);
-    plus.disabled = model.plus.disabled;
-    plus.onclick = () => {
-      void runtime.onUserAction(model.plus.event);
-    };
+  const controls = container.createDiv({ cls: "apt-plan-entry-controls" });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (controls.style as any).display = "flex";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (controls.style as any).alignItems = "center";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (controls.style as any).gap = "6px";
 
-    const minus = container.createEl("button", { text: model.minus.label }) as HTMLButtonElement;
-    setFocusKey(minus, `${focusKeyBase}:minus`);
-    minus.disabled = model.minus.disabled;
-    minus.onclick = () => {
-      void runtime.onUserAction(model.minus.event);
-    };
-    return;
-  }
+  const minus = controls.createEl("button", { text: model.minus.label }) as HTMLButtonElement;
+  setFocusKey(minus, `${focusKeyBase}:minus`);
+  minus.disabled = model.minus.disabled;
+  minus.onclick = () => {
+    void runtime.onUserAction(model.minus.event);
+  };
 
-  if (model.kind === "checkbox") {
-    const input = container.createEl("input") as HTMLInputElement;
-    input.type = "checkbox";
-    setFocusKey(input, `${focusKeyBase}:input`);
-    input.disabled = model.disabled;
-    input.checked = model.checked;
-    input.onchange = () => {
-      void runtime.onUserAction(input.checked ? model.eventOnCheck : model.eventOnUncheck);
-    };
-    return;
-  }
-
-  const input = container.createEl("input") as HTMLInputElement;
+  const input = controls.createEl("input") as HTMLInputElement;
   input.type = "number";
   setFocusKey(input, `${focusKeyBase}:input`);
   if (model.min !== undefined) input.min = model.min;
@@ -469,5 +443,12 @@ function renderPlanEntry(
       if (Number.isFinite(parsedMax)) next = Math.min(next, parsedMax);
     }
     void runtime.onUserAction({ ...model.eventBase, value: next });
+  };
+
+  const plus = controls.createEl("button", { text: model.plus.label }) as HTMLButtonElement;
+  setFocusKey(plus, `${focusKeyBase}:plus`);
+  plus.disabled = model.plus.disabled;
+  plus.onclick = () => {
+    void runtime.onUserAction(model.plus.event);
   };
 }

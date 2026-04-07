@@ -2,8 +2,9 @@
 
 Demonstrates `requiredActions`.
 
-- If `requiredActions.health` is configured and non-empty, the plugin uses it to decide whether the `health` area should decay into the next day.
-- In this example, `health` only avoids tomorrow’s decay if both:
+- `health.dailyDecayAlways` still applies every day when moving to the next day.
+- If `requiredActions.health` is configured and non-empty, the plugin uses it to decide whether `health.dailyDecayUnattended` also applies into the next day.
+- In this example, `health` only avoids the unattended decay if both:
   - `walk >= 1`
   - `stretch >= 1`
 

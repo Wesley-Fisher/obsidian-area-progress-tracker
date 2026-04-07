@@ -17,7 +17,7 @@ Note: If you already have an existing setup, you probably want to merge selectiv
 
 A tiny setup with:
 - 1 area
-- 2 actions (button + checkbox)
+- 2 actions (both button-based)
 - no groups, no records
 
 ### 01-groups-and-records
@@ -31,7 +31,8 @@ Shows:
 
 Shows:
 - `requiredActions` for a specific area
-- how decay suppression is determined by meeting requirements
+- how `dailyDecayAlways` and `dailyDecayUnattended` combine
+- how only `dailyDecayUnattended` is suppressed by meeting requirements
 
 ### 03-number-actions
 

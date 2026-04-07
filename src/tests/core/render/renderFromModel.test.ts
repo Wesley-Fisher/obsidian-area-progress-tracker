@@ -23,7 +23,8 @@ describe("core/render/renderFromModel", () => {
     expect(root.textContent()).toContain("b");
   });
 
-  it("wires activities: button/checkbox/number and record input events", () => {
+
+  it("wires activities: button/number and record input events", () => {
     const root = new FakeElement("div");
     const calls: UserEvent[] = [];
     const runtime = {
@@ -71,30 +72,6 @@ describe("core/render/renderFromModel", () => {
                       delta: -1,
                     } as UserEvent,
                   },
-                },
-                requiredLeft: 0,
-              },
-              {
-                kind: "action",
-                actionId: "meditate",
-                name: "Meditate",
-                currentText: "0",
-                entry: {
-                  kind: "checkbox",
-                  disabled: false,
-                  checked: false,
-                  eventOnCheck: {
-                    kind: "adjustActionTotal",
-                    date: "2026-03-16",
-                    actionId: "meditate",
-                    delta: 1,
-                  } as UserEvent,
-                  eventOnUncheck: {
-                    kind: "adjustActionTotal",
-                    date: "2026-03-16",
-                    actionId: "meditate",
-                    delta: -1,
-                  } as UserEvent,
                 },
                 requiredLeft: 0,
               },
@@ -157,10 +134,6 @@ describe("core/render/renderFromModel", () => {
     minus.click();
 
     const inputs = root.findAllByTag("input") as unknown as FakeInput[];
-    const checkbox = inputs.find((i) => i.type === "checkbox")!;
-    checkbox.checked = true;
-    checkbox.change();
-
     const number = inputs.find((i) => i.type === "number")!;
     number.change("100");
 
@@ -169,7 +142,6 @@ describe("core/render/renderFromModel", () => {
 
     expect(calls.some((c) => c.kind === "adjustActionTotal" && c.actionId === "walk" && c.delta === 1)).toBe(true);
     expect(calls.some((c) => c.kind === "adjustActionTotal" && c.actionId === "walk" && c.delta === -1)).toBe(true);
-    expect(calls.some((c) => c.kind === "adjustActionTotal" && c.actionId === "meditate" && c.delta === 1)).toBe(true);
     // max=5 clamp: current=1, next=5 => delta=4
     expect(calls.some((c) => c.kind === "adjustActionTotal" && c.actionId === "pushups" && c.delta === 4)).toBe(true);
     expect(calls.some((c) => c.kind === "setRecordValue" && c.recordId === "mood" && c.value === "great")).toBe(true);
@@ -204,7 +176,17 @@ describe("core/render/renderFromModel", () => {
                 scope: "day",
                 eventBase: { kind: "setPlanTarget", scope: "day", actionId: "walk" },
                 entry: {
-                  kind: "number",
+                  kind: "stepperNumber",
+                  plus: {
+                    label: "+1",
+                    disabled: false,
+                    event: { kind: "setPlanTarget", scope: "day", actionId: "walk", value: 3 },
+                  },
+                  minus: {
+                    label: "-1",
+                    disabled: false,
+                    event: { kind: "setPlanTarget", scope: "day", actionId: "walk", value: 1 },
+                  },
                   min: "0",
                   max: undefined,
                   step: "1",
@@ -232,11 +214,19 @@ describe("core/render/renderFromModel", () => {
 
     renderProgressTrackerBody(asHTMLElement(root), runtime as RenderRuntime, model);
 
+    const buttons = root.findAllByTag("button") as unknown as FakeButton[];
+    const plus = buttons.find((button) => button.text === "+1")!;
+    const minus = buttons.find((button) => button.text === "-1")!;
+    plus.click();
+    minus.click();
+
     const inputs = root.findAllByTag("input") as unknown as FakeInput[];
     const number = inputs.find((i) => i.type === "number")!;
     number.change("-5");
     number.change("not-a-number");
 
+    expect(calls.some((c) => c.kind === "setPlanTarget" && c.actionId === "walk" && c.value === 3)).toBe(true);
+    expect(calls.some((c) => c.kind === "setPlanTarget" && c.actionId === "walk" && c.value === 1)).toBe(true);
     expect(calls.some((c) => c.kind === "setPlanTarget" && c.actionId === "walk" && c.value === 0)).toBe(true);
   });
 });

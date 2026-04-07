@@ -60,6 +60,16 @@ export function checkConfiguration(config: SystemConfig): ConfigurationIssue[] {
   const areaIds = config.areas.map((a) => a.id);
   const actionIds = config.actions.map((a) => a.id);
 
+  for (let i = 0; i < config.areas.length; i++) {
+    const area = config.areas[i] as unknown as Record<string, unknown>;
+    if (!isFiniteNonNegativeNumber(area.dailyDecayAlways)) {
+      issues.push({ message: `areas[${i}].dailyDecayAlways must be a finite non-negative number`, path: `areas[${i}].dailyDecayAlways` });
+    }
+    if (!isFiniteNonNegativeNumber(area.dailyDecayUnattended)) {
+      issues.push({ message: `areas[${i}].dailyDecayUnattended must be a finite non-negative number`, path: `areas[${i}].dailyDecayUnattended` });
+    }
+  }
+
   for (const dup of findDuplicates(areaIds)) {
     issues.push({ message: `Duplicate area id: ${dup}`, path: `areas[id=${dup}]` });
   }

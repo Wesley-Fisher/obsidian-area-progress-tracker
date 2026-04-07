@@ -4,6 +4,14 @@ function clamp(n: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
 }
 
+function getAreaDailyDecayAlways(area: { dailyDecayAlways?: unknown }): number {
+  return isFiniteNonNegativeNumber(area.dailyDecayAlways) ? area.dailyDecayAlways : 0;
+}
+
+function getAreaDailyDecayUnattended(area: { dailyDecayUnattended?: unknown }): number {
+  return isFiniteNonNegativeNumber(area.dailyDecayUnattended) ? area.dailyDecayUnattended : 0;
+}
+
 function initScoresFromConfig(config: SystemConfig): Scores {
   const scores: Scores = {};
   for (const area of config.areas) {
@@ -102,7 +110,7 @@ export function recomputeDayScores(args: RecomputeDayArgs): RecomputeDayResult {
   for (const area of config.areas) {
     const prev = previousScore[area.id];
     const shouldDecay = prev.decayActive ?? false;
-    const decayed = prev.score - (shouldDecay ? area.dailyDecay : 0);
+    const decayed = prev.score - getAreaDailyDecayAlways(area) - (shouldDecay ? getAreaDailyDecayUnattended(area) : 0);
     startingScore[area.id] = {
       score: clamp(decayed, area.minScore, area.maxScore),
       daysSince: prev.daysSince + 1,
@@ -145,7 +153,7 @@ export function recomputeDayScores(args: RecomputeDayArgs): RecomputeDayResult {
     if (updatedScore[areaId]) updatedScore[areaId].daysSince = 0;
   }
 
-  // Determine whether decay should apply into the NEXT day.
+  // Determine whether unattended decay should apply into the NEXT day.
   // Important: today's actions must not affect whether decay was applied at the start of today.
   //
   // Rules:
