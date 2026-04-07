@@ -28,7 +28,6 @@ export interface RequiredAction {
 }
 
 export type ActionInputConfig =
-  | { type: "checkbox" }
   | { type: "button"; step: number }
   | { type: "number"; min?: number; max?: number; step?: number };
 

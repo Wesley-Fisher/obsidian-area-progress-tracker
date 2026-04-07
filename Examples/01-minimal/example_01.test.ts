@@ -42,7 +42,7 @@ describe("Examples/01-minimal", () => {
         {
           "id": "stretch",
           "name": "Stretch",
-          "input": { "type": "checkbox" },
+          "input": { "type": "button", "step": 1 },
           "effects": { "health": 3 },
           "groupIds": ["health"],
           "max": 0

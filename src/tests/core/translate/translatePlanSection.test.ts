@@ -33,7 +33,7 @@ describe("render/translate/translatePlanSection", () => {
       groups: [],
       actions: [
         { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0  },
-        { id: "done", name: "Done", input: { type: "checkbox" }, effects: {}, groupIds: [], max: 0  },
+        { id: "done", name: "Done", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0  },
         { id: "deep_work", name: "Deep Work", input: { type: "number", min: 0, max: 10, step: 1 }, effects: {}, groupIds: [], max: 0 },
       ],
       records: [],
@@ -64,19 +64,19 @@ describe("render/translate/translatePlanSection", () => {
 
     expect(byId.get("walk")?.eventBase).toMatchObject({ kind: "setPlanTarget", scope: "day", actionId: "walk" });
 
-    expect(byId.get("walk")?.entry.kind).toBe("button");
-    expect(byId.get("done")?.entry.kind).toBe("checkbox");
-    expect(byId.get("deep_work")?.entry.kind).toBe("number");
+    expect(byId.get("walk")?.entry.kind).toBe("stepperNumber");
+    expect(byId.get("done")?.entry.kind).toBe("stepperNumber");
+    expect(byId.get("deep_work")?.entry.kind).toBe("stepperNumber");
   });
 
-  it("treats action.max=0 as unlimited (button + enabled; checkbox enabled)", () => {
+  it("treats action.max=0 as unlimited in plan steppers", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
       groups: [],
       actions: [
         { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
-        { id: "done", name: "Done", input: { type: "checkbox" }, effects: {}, groupIds: [], max: 0 },
+        { id: "done", name: "Done", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
       ],
       records: [],
       requiredActions: {},
@@ -92,17 +92,17 @@ describe("render/translate/translatePlanSection", () => {
     const byId = new Map(rows.map((r) => [r.actionId, r] as const));
 
     const walk = byId.get("walk");
-    expect(walk?.entry.kind).toBe("button");
-    if (!walk || walk.entry.kind !== "button") throw new Error("expected walk button entry");
+    expect(walk?.entry.kind).toBe("stepperNumber");
+    if (!walk || walk.entry.kind !== "stepperNumber") throw new Error("expected walk stepperNumber entry");
     expect(walk.entry.plus.disabled).toBe(false);
     expect((walk.entry.plus.event as UserPlanEvent).value).toBe(1);
     expect(walk.entry.minus.disabled).toBe(true);
 
     const done = byId.get("done");
-    expect(done?.entry.kind).toBe("checkbox");
-    if (!done || done.entry.kind !== "checkbox") throw new Error("expected done checkbox entry");
-    expect(done.entry.disabled).toBe(false);
-    expect(done.entry.checked).toBe(false);
+    expect(done?.entry.kind).toBe("stepperNumber");
+    if (!done || done.entry.kind !== "stepperNumber") throw new Error("expected done stepperNumber entry");
+    expect(done.entry.plus.disabled).toBe(false);
+    expect(done.entry.minus.disabled).toBe(true);
   });
 
   it("applies a positive max to button actions", () => {
@@ -122,7 +122,7 @@ describe("render/translate/translatePlanSection", () => {
     if (model.kind !== "planTabs") throw new Error("expected planTabs");
 
     const row = model.groups.flatMap((g) => g.rows).find((r) => r.actionId === "walk");
-    if (!row || row.entry.kind !== "button") throw new Error("expected walk button entry");
+    if (!row || row.entry.kind !== "stepperNumber") throw new Error("expected walk stepperNumber entry");
     expect(row.entry.plus.disabled).toBe(true);
     expect(row.entry.minus.disabled).toBe(false);
   });

@@ -87,13 +87,6 @@ export type ActionEntryModel =
       minus: { label: string; disabled: boolean; event: UserEvent };
     }
   | {
-      kind: "checkbox";
-      disabled: boolean;
-      checked: boolean;
-      eventOnCheck: UserEvent;
-      eventOnUncheck: UserEvent;
-    }
-  | {
       kind: "number";
       min?: string;
       max?: string;
@@ -114,20 +107,10 @@ export type RecordEntryModel = {
 };
 
 export type PlanEntryModel =
-  | {
-      kind: "button";
+  {
+      kind: "stepperNumber";
       plus: { label: string; disabled: boolean; event: UserEvent };
       minus: { label: string; disabled: boolean; event: UserEvent };
-    }
-  | {
-      kind: "checkbox";
-      disabled: boolean;
-      checked: boolean;
-      eventOnCheck: UserEvent;
-      eventOnUncheck: UserEvent;
-    }
-  | {
-      kind: "number";
       min?: string;
       max?: string;
       step?: string;

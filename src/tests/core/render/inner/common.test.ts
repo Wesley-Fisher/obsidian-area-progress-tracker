@@ -60,7 +60,7 @@ describe("render/common grouping helpers", () => {
         version: 1,
         areas: [],
         groups: [],
-        actions: [{ id: "a1", name: "A1", input: { type: "checkbox" }, effects: {}, groupIds: [], max: 0 }],
+        actions: [{ id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
         records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: [] }],
         requiredActions: {},
         dailyPlan: { actions: {} },

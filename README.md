@@ -181,7 +181,6 @@ The elements needed for each Action are:
 * `name`: the text that will be shown for the action
 * `input`: the type of input
   * `"button"` will show a "+" and a "-" button. Each one will apply the `"step"` value (usually 1) of the action each time it is clicked.
-  * `"checkbox"` will show a single checkbox that can be checked to apply the score for the action, and unchecked to clear it.
   * `"number"` will show a numeric input box (typing). This is useful for things like "minutes", "pages", or "reps".
 * `effects`: an object of effects the action will have on each Area. An action can affect multiple areas (Ex: a "Walking Meeting" action may be a +5 to Health, and a +2 to Work)
   * Within the `effects` object, there must be key/value pairs (see the "Junk Food" entry).

@@ -48,7 +48,7 @@ describe("Examples/03-requiredActions-decay", () => {
         {
           "id": "stretch",
           "name": "Stretch",
-          "input": { "type": "checkbox" },
+          "input": { "type": "button", "step": 1 },
           "effects": { "health": 3 },
           "groupIds": ["health"],
           "max": 0

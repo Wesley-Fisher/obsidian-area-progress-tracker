@@ -78,23 +78,6 @@ function renderActionEntry(
     return;
   }
 
-  if (action.input.type === "checkbox") {
-    const input = container.createEl("input") as HTMLInputElement;
-    input.type = "checkbox";
-    input.disabled = false;
-    input.checked = current > 0;
-    input.onchange = () => {
-      const next = input.checked ? 1 : 0;
-      void args.onUserAction({
-        kind: "adjustActionTotal",
-        date: args.blockConfig.date,
-        actionId: action.id,
-        delta: next - current,
-      });
-    };
-    return;
-  }
-
   // number
   const input = container.createEl("input") as HTMLInputElement;
   input.type = "number";

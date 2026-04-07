@@ -19,6 +19,21 @@ function parseEffectiveMax(action: ActionConfig): number | undefined {
   return inputMax ?? configMax;
 }
 
+function parsePlanMin(action: ActionConfig): string {
+  const inputMinRaw = action.input.type === "number" ? action.input.min : undefined;
+  const inputMin = typeof inputMinRaw === "number" && Number.isFinite(inputMinRaw) ? inputMinRaw : 0;
+  return String(Math.max(0, inputMin));
+}
+
+function parsePlanStep(action: ActionConfig): string {
+  const inputStepRaw = action.input.type === "number" ? action.input.step : undefined;
+  const inputStep =
+    typeof inputStepRaw === "number" && Number.isFinite(inputStepRaw) && inputStepRaw > 0
+      ? inputStepRaw
+      : 1;
+  return String(inputStep);
+}
+
 export function translatePlanSection(args: {
   scope: "day" | "week";
   config: SystemConfig;
@@ -60,66 +75,35 @@ export function translatePlanSection(args: {
 
       const eventBase = { kind: "setPlanTarget", scope: args.scope, actionId: action.id } as const;
 
-      const entry = (() => {
-        if (action.input.type === "button") {
-          const stepRaw = action.input.step;
-          const step = finiteNonNegativeNumber(stepRaw) || 1;
-          return {
-            kind: "button" as const,
-            plus: {
-              label: "+",
-              disabled: effectiveMax !== undefined ? planned >= effectiveMax : false,
-              event: {
-                kind: "setPlanTarget",
-                scope: args.scope,
-                actionId: action.id,
-                value: effectiveMax !== undefined ? Math.min(planned + step, effectiveMax) : planned + step,
-              } as const,
-            },
-            minus: {
-              label: "-",
-              disabled: planned <= 0,
-              event: {
-                kind: "setPlanTarget",
-                scope: args.scope,
-                actionId: action.id,
-                value: Math.max(0, planned - step),
-              } as const,
-            },
-          };
-        }
-
-        if (action.input.type === "checkbox") {
-          const disabledByMax = effectiveMax !== undefined && effectiveMax <= 0;
-          const checked = !disabledByMax && planned > 0;
-          const planned01 = checked ? 1 : 0;
-          planned = planned01;
-          return {
-            kind: "checkbox" as const,
-            disabled: disabledByMax,
-            checked,
-            eventOnCheck: { kind: "setPlanTarget", scope: args.scope, actionId: action.id, value: 1 } as const,
-            eventOnUncheck: { kind: "setPlanTarget", scope: args.scope, actionId: action.id, value: 0 } as const,
-          };
-        }
-
-        const min = action.input.min !== undefined ? String(action.input.min) : undefined;
-        const inputMaxStr =
-          typeof action.input.max === "number" && Number.isFinite(action.input.max) && action.input.max > 0
-            ? String(action.input.max)
-            : undefined;
-        const max = effectiveMax !== undefined ? String(effectiveMax) : inputMaxStr;
-        const step = action.input.step !== undefined ? String(action.input.step) : undefined;
-        return {
-          kind: "number" as const,
-          min,
-          max,
-          step,
-          value: String(planned),
-          eventBase,
-          current: planned,
-        };
-      })();
+      const entry = {
+        kind: "stepperNumber" as const,
+        plus: {
+          label: "+1",
+          disabled: effectiveMax !== undefined ? planned >= effectiveMax : false,
+          event: {
+            kind: "setPlanTarget",
+            scope: args.scope,
+            actionId: action.id,
+            value: effectiveMax !== undefined ? Math.min(planned + 1, effectiveMax) : planned + 1,
+          } as const,
+        },
+        minus: {
+          label: "-1",
+          disabled: planned <= 0,
+          event: {
+            kind: "setPlanTarget",
+            scope: args.scope,
+            actionId: action.id,
+            value: Math.max(0, planned - 1),
+          } as const,
+        },
+        min: parsePlanMin(action),
+        max: effectiveMax !== undefined ? String(effectiveMax) : undefined,
+        step: parsePlanStep(action),
+        value: String(planned),
+        eventBase,
+        current: planned,
+      };
 
       return {
         actionId: action.id,
