@@ -14,6 +14,7 @@ describe("render/translate/translateAreasSection", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const model = translateAreasSection({
@@ -37,6 +38,7 @@ describe("render/translate/translateAreasSection", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const dayLog: DailyLog = {
@@ -80,6 +82,7 @@ describe("render/translate/translateAreasSection", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const dayLog: DailyLog = {
@@ -111,6 +114,7 @@ describe("render/translate/translateAreasSection", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const dayLog: DailyLog = {

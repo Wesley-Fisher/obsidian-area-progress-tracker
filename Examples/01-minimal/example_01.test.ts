@@ -53,6 +53,12 @@ describe("Examples/01-minimal", () => {
       "requiredActions": {},
       "dailyPlan": { "actions": {} },
       "weeklyPlan": { "startDate": "", "actions": {} },
+      "stats": {
+        "startDate": "2026-03-01",
+        "entries": [
+          { "id": "walk-total", "statName": "walk", "display": ["total", "count"] }
+        ]
+      },
     };
 
     expect(conf).toMatchObject(expected);

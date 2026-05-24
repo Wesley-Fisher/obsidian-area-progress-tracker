@@ -14,6 +14,7 @@ const DEFAULT_CONFIG: SystemConfig = {
   requiredActions: {},
   dailyPlan: { actions: {} },
   weeklyPlan: { startDate: "", actions: {} },
+  stats: { startDate: "", entries: [] },
 };
 
 export async function ensureVaultSetup(vault: VaultLike, dataFolder: string, date: IsoDate): Promise<void> {

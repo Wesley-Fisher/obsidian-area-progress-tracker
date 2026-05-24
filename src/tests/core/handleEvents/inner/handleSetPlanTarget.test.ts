@@ -22,6 +22,7 @@ describe("handleSetPlanTarget", () => {
       records: [],
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
     await vault.write(staticPaths.configPath, JSON.stringify(seed));
 
@@ -52,6 +53,7 @@ describe("handleSetPlanTarget", () => {
       records: [],
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: { run: 1 } },
+      stats: { startDate: "", entries: [] },
     };
     await vault.write(staticPaths.configPath, JSON.stringify(seed));
 

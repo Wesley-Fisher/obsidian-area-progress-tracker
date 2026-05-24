@@ -1,4 +1,4 @@
-import type { ActionConfig, IsoDate, RecordConfig } from "../types";
+import type { ActionConfig, IsoDate, RecordConfig, StatsDisplayConfig } from "../types";
 import type { UserEvent } from "../handleEvents/types";
 
 export type RenderBodyModel = RenderErrorModel | RenderDashboardBodyModel;
@@ -13,6 +13,7 @@ export type RenderDashboardBodyModel = {
   actions: ActivitiesSectionModel;
   planDay: PlanSectionModel;
   planWeek: PlanSectionModel;
+  stats: StatsSectionModel;
 };
 
 export type AreasSectionModelEmpty = {
@@ -131,6 +132,34 @@ export type WeekStartDateModel = {
   label: string;
   value: string;
   eventBase: { kind: "setWeeklyPlanStartDate" };
+};
+
+export type StatsStartDateModel = {
+  kind: "statsStartDate";
+  label: string;
+  value: string;
+  eventBase: { kind: "setStatsStartDate" };
+};
+
+export type StatsSectionModel = {
+  startDate: StatsStartDateModel;
+  entries: StatsEntryDefinitionModel[];
+};
+
+export type StatsEntryDefinitionModel = {
+  id: string;
+  statName: string;
+  display: StatsDisplayConfig[];
+};
+
+export type LoadedStatsSectionModel =
+  | { kind: "statsEmpty"; message: string }
+  | { kind: "statsError"; message: string }
+  | { kind: "statsTable"; rows: StatsRowModel[] };
+
+export type StatsRowModel = {
+  statName: string;
+  valueLines: string[];
 };
 
 export type PlanGroupModel = {

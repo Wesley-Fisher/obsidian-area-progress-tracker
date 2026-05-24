@@ -21,6 +21,7 @@ describe("core/render/commonPlan", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const args: RenderDayModeArgs = {

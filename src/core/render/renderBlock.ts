@@ -1,6 +1,6 @@
 import { RenderBlockArgs } from "./renderTypes";
 import { renderProgressTrackerBody } from "./renderFromModel";
-import { translateRenderBlock } from "../translate/translateRenderBlock";
+import { loadStatsSection, translateRenderBlock } from "../translate/translateRenderBlock";
 
 
 export async function onRenderProgressTrackerBlock(args: RenderBlockArgs): Promise<void> {
@@ -29,6 +29,7 @@ export async function onRenderProgressTrackerBlock(args: RenderBlockArgs): Promi
     {
       date: blockConfig.date,
       onUserAction: args.onUserAction,
+      loadStats: () => loadStatsSection({ repo: args.repo, endDate: blockConfig.date }),
       uiRoot: el,
       instanceId: ds.aptInstanceId,
     },

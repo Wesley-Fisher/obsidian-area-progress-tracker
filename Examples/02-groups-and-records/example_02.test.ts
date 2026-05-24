@@ -86,6 +86,13 @@ describe("Examples/02-groups-and-records", () => {
       "requiredActions": {},
       "dailyPlan": { "actions": {} },
       "weeklyPlan": { "startDate": "", "actions": {} },
+      "stats": {
+        "startDate": "2026-03-01",
+        "entries": [
+          { "id": "deep-work-total", "statName": "deep_work", "display": ["total", "average", "count"] },
+          { "id": "weight-total", "statName": "weight", "display": ["range", "count"] }
+        ]
+      },
     };
 
     expect(conf).toMatchObject(expected);

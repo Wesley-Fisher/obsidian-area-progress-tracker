@@ -14,6 +14,7 @@ describe("render/translate/translatePlanSection", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
     const model = translatePlanSection({
       scope: "week",
@@ -40,6 +41,7 @@ describe("render/translate/translatePlanSection", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     // Next line tests incorrect types to ensure robustness
@@ -82,6 +84,7 @@ describe("render/translate/translatePlanSection", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const model = translatePlanSection({ scope: "day", config, plan: { actions: {} } });
@@ -115,6 +118,7 @@ describe("render/translate/translatePlanSection", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const model = translatePlanSection({ scope: "day", config, plan: { actions: { walk: 1 } } });

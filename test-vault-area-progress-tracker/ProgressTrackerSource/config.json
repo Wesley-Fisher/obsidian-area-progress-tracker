@@ -72,5 +72,12 @@
     "health": [{"action": "walk", "req": 1}]
   },
   "dailyPlan": { "actions": {} },
-  "weeklyPlan": { "startDate": "2026-03-01", "actions": {} }
+  "weeklyPlan": { "startDate": "2026-03-01", "actions": {} },
+  "stats": {
+    "startDate": "2026-03-01",
+    "entries": [
+      { "id": "walk-total", "statName": "walk", "display": ["total", "average", "count", "range"] },
+      { "id": "weight-total", "statName": "weight", "display": ["total", "average", "count", "range"] }
+    ]
+  }
 }

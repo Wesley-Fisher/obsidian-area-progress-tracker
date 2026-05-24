@@ -55,7 +55,9 @@ describe("vault setup", () => {
     expect(config.version).toBe(1);
     expect(config.dailyPlan).toBeDefined();
     expect(config.weeklyPlan).toBeDefined();
+    expect(config.stats).toBeDefined();
     expect(config.dailyPlan.actions).toBeDefined();
     expect(config.weeklyPlan.actions).toBeDefined();
+    expect(config.stats.entries).toBeDefined();
   });
 });

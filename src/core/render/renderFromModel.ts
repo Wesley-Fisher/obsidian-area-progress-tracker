@@ -4,6 +4,7 @@ import type {
   ActivitiesSectionModel,
   ActionEntryModel,
   AreasSectionModel,
+  LoadedStatsSectionModel,
   PlanEntryModel,
   PlanSectionModel,
   RecordEntryModel,
@@ -11,6 +12,8 @@ import type {
   RenderErrorModel,
   ActivitiesSectionModelEmpty,
   ActivitiesSectionModelFilled,
+  StatsSectionModel,
+  StatsStartDateModel,
   WeekStartDateModel,
 } from "../translate/models";
 import { addThreeColRow, renderTabbedGroups, renderThreeColumnTable } from "./inner/commonTable";
@@ -18,6 +21,7 @@ import { addThreeColRow, renderTabbedGroups, renderThreeColumnTable } from "./in
 export type RenderRuntime = {
   date: IsoDate;
   onUserAction: (evt: UserEvent) => Promise<void>;
+  loadStats?: () => Promise<LoadedStatsSectionModel>;
   uiRoot?: HTMLElement;
   instanceId?: string;
 };
@@ -66,7 +70,10 @@ function renderDashboardBody(
     { id: "actions", name: "Actions" },
     { id: "plan-day", name: "Planning (day)" },
     { id: "plan-week", name: "Planning (week)" },
+    { id: "stats", name: "Stats" },
   ] as const;
+
+  const statsLoaders = new Map<string, () => Promise<void>>();
 
   const tabsContainer = container.createDiv({ cls: "apt-section" });
   renderTabbedGroups(
@@ -81,13 +88,19 @@ function renderDashboardBody(
         renderPlanContent(panel, runtime, model.planDay);
         return;
       }
-      renderPlanContent(panel, runtime, model.planWeek);
+      if (g.id === "plan-week") {
+        renderPlanContent(panel, runtime, model.planWeek);
+        return;
+      }
+
+      statsLoaders.set(g.id, renderStatsContent(panel, runtime, model.stats));
     },
     {
       tabGroupKey: "main",
       initialActiveGroupId: initialActiveTabId,
       onActiveGroupIdChange: (groupId) => {
         ds[mainTabStateKey] = groupId;
+        void statsLoaders.get(groupId)?.();
       },
     }
   );
@@ -393,20 +406,111 @@ function renderPlanContent(container: HTMLElement, runtime: RenderRuntime, model
 }
 
 function renderWeekStartDate(container: HTMLElement, runtime: RenderRuntime, model: WeekStartDateModel): void {
-  const row = container.createDiv();
-  row.createEl("div", { text: model.label });
-
   const uiRoot = runtime.uiRoot ?? container;
   const ds = ensureDataset(uiRoot);
   const instanceId = runtime.instanceId ?? ds.aptInstanceId ?? "apt";
 
+  renderConfigDateInput(container, runtime, model.label, model.value, `${instanceId}:plan:weekStartDate:input`, (value) => ({
+    ...model.eventBase,
+    value,
+  }));
+}
+
+function renderStatsStartDate(container: HTMLElement, runtime: RenderRuntime, model: StatsStartDateModel): void {
+  const uiRoot = runtime.uiRoot ?? container;
+  const ds = ensureDataset(uiRoot);
+  const instanceId = runtime.instanceId ?? ds.aptInstanceId ?? "apt";
+
+  renderConfigDateInput(container, runtime, model.label, model.value, `${instanceId}:stats:startDate:input`, (value) => ({
+    ...model.eventBase,
+    value,
+  }));
+}
+
+function renderConfigDateInput(
+  container: HTMLElement,
+  runtime: RenderRuntime,
+  label: string,
+  value: string,
+  focusKey: string,
+  createEvent: (value: string) => UserEvent
+): void {
+  const row = container.createDiv();
+  row.createEl("div", { text: label });
+
   const input = row.createEl("input") as HTMLInputElement;
   input.type = "text";
-  input.value = model.value;
-  setFocusKey(input, `${instanceId}:plan:weekStartDate:input`);
+  input.value = value;
+  setFocusKey(input, focusKey);
   input.onchange = () => {
-    void runtime.onUserAction({ ...model.eventBase, value: input.value });
+    void runtime.onUserAction(createEvent(input.value));
   };
+}
+
+function renderStatsContent(container: HTMLElement, runtime: RenderRuntime, model: StatsSectionModel): () => Promise<void> {
+  renderStatsStartDate(container, runtime, model.startDate);
+
+  const content = container.createDiv({ cls: "apt-section" });
+  content.createEl("div", { text: "Open this tab to load stats." });
+
+  let loaded = false;
+  let pending: Promise<void> | undefined;
+
+  return async (): Promise<void> => {
+    if (loaded || pending) return;
+
+    if (!runtime.loadStats) {
+      loaded = true;
+      content.empty();
+      content.createEl("div", { text: "Stats loader unavailable." });
+      return;
+    }
+
+    content.empty();
+    content.createEl("div", { text: "Loading stats..." });
+
+    pending = runtime.loadStats()
+      .then((loadedModel) => {
+        content.empty();
+        renderLoadedStats(content, loadedModel);
+        loaded = true;
+      })
+      .catch(() => {
+        content.empty();
+        content.createEl("div", { text: "Failed to load stats." });
+        loaded = true;
+      })
+      .finally(() => {
+        pending = undefined;
+      });
+
+    await pending;
+  };
+}
+
+function renderLoadedStats(container: HTMLElement, model: LoadedStatsSectionModel): void {
+  if (model.kind === "statsEmpty" || model.kind === "statsError") {
+    container.createEl("div", { text: model.message });
+    return;
+  }
+
+  const table = container.createEl("table");
+  table.addClass("apt-stats-table");
+
+  const thead = table.createEl("thead");
+  const hr = thead.createEl("tr");
+  hr.createEl("th", { text: "Stat" });
+  hr.createEl("th", { text: "Value" });
+
+  const tbody = table.createEl("tbody");
+  for (const row of model.rows) {
+    const tr = tbody.createEl("tr");
+    tr.createEl("td", { text: row.statName });
+    const valueCell = tr.createEl("td");
+    for (const line of row.valueLines) {
+      valueCell.createEl("div", { text: line });
+    }
+  }
 }
 
 function renderPlanEntry(

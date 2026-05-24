@@ -15,6 +15,7 @@ describe("checkConfiguration", () => {
       },
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "2026-03-01", entries: [{ id: "walk-total", statName: "walk", display: ["total", "count"] }] },
     };
 
     expect(checkConfiguration(config)).toEqual([]);
@@ -36,6 +37,7 @@ describe("checkConfiguration", () => {
       },
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const issues = checkConfiguration(config);
@@ -61,6 +63,7 @@ describe("checkConfiguration", () => {
       },
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const issues = checkConfiguration(config);
@@ -82,6 +85,7 @@ describe("checkConfiguration", () => {
       },
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const issues = checkConfiguration(config);
@@ -103,6 +107,7 @@ describe("checkConfiguration", () => {
       },
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const issues = checkConfiguration(config);
@@ -125,6 +130,7 @@ describe("checkConfiguration", () => {
       },
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const issues = checkConfiguration(config);
@@ -143,6 +149,7 @@ describe("checkConfiguration", () => {
       requiredActions: { health: [{ action: "walk", req: 2 }] },
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     } as unknown as SystemConfig;
 
     const issues = checkConfiguration(config);
@@ -150,5 +157,30 @@ describe("checkConfiguration", () => {
 
     expect(messages).toContain("areas[0].dailyDecayAlways must be a finite non-negative number");
     expect(messages).toContain("areas[0].dailyDecayUnattended must be a finite non-negative number");
+  });
+
+  it("flags invalid stats entries", () => {
+    const config = {
+      version: 1,
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
+      stats: {
+        startDate: 123,
+        entries: [{ id: "", statName: "missing", display: ["average", "bogus"] }],
+      },
+    } as unknown as SystemConfig;
+
+    const issues = checkConfiguration(config);
+    const messages = issues.map((i) => i.message).join("\n");
+
+    expect(messages).toContain("stats.startDate must be a string");
+    expect(messages).toContain("stats.entries[0].id must be a non-empty string");
+    expect(messages).toContain("stats.entries[0].statName references unknown action or record: missing");
+    expect(messages).toContain("stats.entries[0].display[1] must be one of: total, average, count, range");
   });
 });

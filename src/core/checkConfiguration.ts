@@ -1,4 +1,4 @@
-import type { SystemConfig } from "./types";
+import { STATS_DISPLAY_CONFIGS, type StatsDisplayConfig, type SystemConfig } from "./types";
 
 export interface ConfigurationIssue {
   message: string;
@@ -22,6 +22,8 @@ function findDuplicates(values: string[]): string[] {
   }
   return [...dups];
 }
+
+const validStatsDisplays = new Set<StatsDisplayConfig>(STATS_DISPLAY_CONFIGS);
 
 /**
  * Checks the overall configuration for validity.
@@ -59,6 +61,61 @@ export function checkConfiguration(config: SystemConfig): ConfigurationIssue[] {
 
   const areaIds = config.areas.map((a) => a.id);
   const actionIds = config.actions.map((a) => a.id);
+  const recordIds = config.records.map((r) => r.id);
+
+  const stats = (config as Partial<SystemConfig>).stats as unknown;
+  if (!stats || typeof stats !== "object" || Array.isArray(stats)) {
+    issues.push({ message: "Missing stats (expected object)", path: "stats" });
+  } else {
+    const statsObj = stats as Record<string, unknown>;
+    if (typeof statsObj.startDate !== "string") {
+      issues.push({ message: "stats.startDate must be a string", path: "stats.startDate" });
+    }
+
+    const entries = statsObj.entries;
+    if (!Array.isArray(entries)) {
+      issues.push({ message: "stats.entries must be an array", path: "stats.entries" });
+    } else {
+      const statsIds: string[] = [];
+      const statTargets = new Set<string>([...actionIds, ...recordIds]);
+
+      for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i] as unknown;
+        const basePath = `stats.entries[${i}]`;
+        const obj = typeof entry === "object" && entry !== null ? (entry as Record<string, unknown>) : {};
+
+        if (!isNonEmptyString(obj.id)) {
+          issues.push({ message: `${basePath}.id must be a non-empty string`, path: `${basePath}.id` });
+        } else {
+          statsIds.push(obj.id);
+        }
+
+        if (!isNonEmptyString(obj.statName)) {
+          issues.push({ message: `${basePath}.statName must be a non-empty string`, path: `${basePath}.statName` });
+        } else if (!statTargets.has(obj.statName)) {
+          issues.push({ message: `${basePath}.statName references unknown action or record: ${obj.statName}`, path: `${basePath}.statName` });
+        }
+
+        if (!Array.isArray(obj.display)) {
+          issues.push({ message: `${basePath}.display must be an array`, path: `${basePath}.display` });
+        } else {
+          for (let j = 0; j < obj.display.length; j++) {
+            const displayValue = obj.display[j];
+            if (typeof displayValue !== "string" || !validStatsDisplays.has(displayValue as StatsDisplayConfig)) {
+              issues.push({
+                message: `${basePath}.display[${j}] must be one of: ${STATS_DISPLAY_CONFIGS.join(", ")}`,
+                path: `${basePath}.display[${j}]`,
+              });
+            }
+          }
+        }
+      }
+
+      for (const dup of findDuplicates(statsIds)) {
+        issues.push({ message: `Duplicate stats entry id: ${dup}`, path: `stats.entries[id=${dup}]` });
+      }
+    }
+  }
 
   for (let i = 0; i < config.areas.length; i++) {
     const area = config.areas[i] as unknown as Record<string, unknown>;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DailyLog, IsoDate, SystemConfig } from "../../../core/types";
-import { translateRenderBlock } from "../../../core/translate/translateRenderBlock";
+import { loadStatsSection, translateRenderBlock } from "../../../core/translate/translateRenderBlock";
 import { getDataPaths } from "../../../core/vault/paths";
 import { createVaultRepo } from "../../../core/vault/repo";
 import { MemoryVault } from "../../memoryVault";
@@ -46,6 +46,7 @@ describe("render/translate/translateRenderBlock", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
     await vault.write(paths.configPath, JSON.stringify(config));
 
@@ -75,6 +76,7 @@ describe("render/translate/translateRenderBlock", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
 
     };
 
@@ -106,6 +108,7 @@ describe("render/translate/translateRenderBlock", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const dayLog: DailyLog = {
@@ -127,5 +130,65 @@ describe("render/translate/translateRenderBlock", () => {
     expect(model.actions.kind).toMatch(/activities/);
     expect(model.planDay.scope).toBe("day");
     expect(model.planWeek.scope).toBe("week");
+    expect(model.stats.startDate.kind).toBe("statsStartDate");
+  });
+
+  it("loads total stats across actions and numeric records only within the configured date range", async () => {
+    const vault = new MemoryVault();
+    const dataFolder = "ProgressTracker";
+    const startDate = "2026-03-14" as IsoDate;
+    const endDate = "2026-03-16" as IsoDate;
+    const repo = createVaultRepo(vault, dataFolder);
+
+    const config: SystemConfig = {
+      version: 1,
+      areas: [],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
+      records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: [] }],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
+      stats: {
+        startDate,
+        entries: [
+          { id: "walk-total", statName: "walk", display: ["total", "average", "count", "range"] },
+          { id: "weight-total", statName: "weight", display: ["total", "average", "count", "range"] },
+        ],
+      },
+    };
+
+    await vault.write(repo.getStaticPaths().configPath, JSON.stringify(config));
+    await repo.writeDailyLog(startDate, {
+      previousScore: {},
+      startingScore: {},
+      updatedScore: {},
+      actions: { walk: 2 },
+      records: { weight: "100.5" },
+    });
+    await repo.writeDailyLog("2026-03-15" as IsoDate, {
+      previousScore: {},
+      startingScore: {},
+      updatedScore: {},
+      actions: { walk: 3 },
+      records: { weight: "oops" },
+    });
+    await repo.writeDailyLog(endDate, {
+      previousScore: {},
+      startingScore: {},
+      updatedScore: {},
+      actions: { walk: 1 },
+      records: { weight: "101.25" },
+    });
+
+    const model = await loadStatsSection({ repo, endDate });
+
+    expect(model).toEqual({
+      kind: "statsTable",
+      rows: [
+        { statName: "walk", valueLines: ["Total=6", "Average=2", "Count=3", "Range=1-3"] },
+        { statName: "weight", valueLines: ["Total=201.75", "Average=100.875", "Count=2", "Range=100.5-101.25"] },
+      ],
+    });
   });
 });

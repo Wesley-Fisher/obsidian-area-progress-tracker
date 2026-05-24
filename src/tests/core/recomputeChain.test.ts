@@ -47,6 +47,7 @@ describe("seedFromPreviousDay", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const d1 = "2026-03-14" as IsoDate;
@@ -75,6 +76,7 @@ describe("seedFromPreviousDay", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const d1 = "2026-03-13" as IsoDate;
@@ -103,6 +105,7 @@ describe("seedFromPreviousDay", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const d1 = "2026-03-16" as IsoDate;
@@ -133,6 +136,7 @@ describe("mergePreviousIntoNextDay", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const d1 = "2026-03-16" as IsoDate;
@@ -172,6 +176,7 @@ describe("mergePreviousIntoNextDay", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const d1 = "2026-03-16" as IsoDate;
@@ -212,6 +217,7 @@ describe("recomputeForwardChain", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const d1 = "2026-03-14" as IsoDate;
@@ -262,6 +268,7 @@ describe("recomputeForwardChain", () => {
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
+      stats: { startDate: "", entries: [] },
     };
 
     const d1 = "2026-03-14" as IsoDate;

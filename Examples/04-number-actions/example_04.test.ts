@@ -53,6 +53,13 @@ describe("Examples/04-number-actions", () => {
       "requiredActions": {},
       "dailyPlan": { "actions": {} },
       "weeklyPlan": { "startDate": "", "actions": {} },
+      "stats": {
+        "startDate": "2026-03-01",
+        "entries": [
+          { "id": "deep-work-minutes-total", "statName": "deep_work_minutes", "display": ["total", "average", "range"] },
+          { "id": "admin-tasks-total", "statName": "admin_tasks", "display": ["total", "count"] }
+        ]
+      },
     };
 
     expect(conf).toMatchObject(expected);

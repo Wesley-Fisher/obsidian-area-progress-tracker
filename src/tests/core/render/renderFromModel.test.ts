@@ -123,6 +123,15 @@ describe("core/render/renderFromModel", () => {
         },
         message: "No actions",
       },
+      stats: {
+        startDate: {
+          kind: "statsStartDate",
+          label: "Stats start date",
+          value: "",
+          eventBase: { kind: "setStatsStartDate" },
+        },
+        entries: [],
+      },
     };
 
     renderProgressTrackerBody(asHTMLElement(root), runtime as RenderRuntime, model);
@@ -210,6 +219,15 @@ describe("core/render/renderFromModel", () => {
         },
         message: "No actions",
       },
+      stats: {
+        startDate: {
+          kind: "statsStartDate",
+          label: "Stats start date",
+          value: "",
+          eventBase: { kind: "setStatsStartDate" },
+        },
+        entries: [],
+      },
     };
 
     renderProgressTrackerBody(asHTMLElement(root), runtime as RenderRuntime, model);
@@ -228,5 +246,68 @@ describe("core/render/renderFromModel", () => {
     expect(calls.some((c) => c.kind === "setPlanTarget" && c.actionId === "walk" && c.value === 3)).toBe(true);
     expect(calls.some((c) => c.kind === "setPlanTarget" && c.actionId === "walk" && c.value === 1)).toBe(true);
     expect(calls.some((c) => c.kind === "setPlanTarget" && c.actionId === "walk" && c.value === 0)).toBe(true);
+  });
+
+  it("loads stats only when the stats tab is opened", async () => {
+    const root = new FakeElement("div");
+    const calls: UserEvent[] = [];
+    let numStatsLoads = 0;
+
+    const runtime: RenderRuntime = {
+      date: "2026-03-16",
+      onUserAction: async (evt: UserEvent) => {
+        calls.push(evt);
+      },
+      loadStats: async () => {
+        numStatsLoads += 1;
+        return {
+          kind: "statsTable",
+          rows: [{ statName: "walk", valueLines: ["Total=7", "Count=2"] }],
+        };
+      },
+    };
+
+    const model: RenderBodyModel = {
+      kind: "dashboard",
+      areas: { kind: "areasEmpty", message: "No areas" },
+      actions: { kind: "activitiesEmpty", message: "No actions" },
+      planDay: { kind: "planNoActions", scope: "day", message: "No actions" },
+      planWeek: {
+        kind: "planNoActions",
+        scope: "week",
+        weekStartDate: {
+          kind: "weekStartDate",
+          label: "Week start date",
+          value: "",
+          eventBase: { kind: "setWeeklyPlanStartDate" },
+        },
+        message: "No actions",
+      },
+      stats: {
+        startDate: {
+          kind: "statsStartDate",
+          label: "Stats start date",
+          value: "2026-03-01",
+          eventBase: { kind: "setStatsStartDate" },
+        },
+        entries: [{ id: "walk-total", statName: "walk", display: ["total", "count"] }],
+      },
+    };
+
+    renderProgressTrackerBody(asHTMLElement(root), runtime, model);
+    expect(numStatsLoads).toBe(0);
+
+    const buttons = root.findAllByTag("button") as unknown as FakeButton[];
+    const statsTab = buttons.find((button) => button.text === "Stats");
+    expect(statsTab).toBeDefined();
+    statsTab?.click();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(numStatsLoads).toBe(1);
+    expect(root.textContent()).toContain("walk");
+    expect(root.textContent()).toContain("Total=7");
+    expect(root.textContent()).toContain("Count=2");
+    expect(calls).toEqual([]);
   });
 });

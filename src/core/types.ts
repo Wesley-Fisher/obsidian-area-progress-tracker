@@ -63,6 +63,23 @@ export interface WeeklyPlanConfig {
   actions: Partial<Record<ActionId, number>>;
 }
 
+export const STATS_DISPLAY_CONFIGS = ["total", "average", "count", "range"] as const;
+
+export type StatsDisplayConfig = typeof STATS_DISPLAY_CONFIGS[number];
+
+export interface StatsEntryConfig {
+  id: string;
+  statName: string;
+  display: StatsDisplayConfig[];
+}
+
+export interface StatsConfig {
+  /** Base date used when computing stats across existing daily logs. May be invalid/unset. */
+  startDate: string;
+  /** Stats rows rendered in the Stats tab. */
+  entries: StatsEntryConfig[];
+}
+
 export interface SystemConfig {
   version: number;
   areas: AreaConfig[];
@@ -74,6 +91,7 @@ export interface SystemConfig {
   /** Planning targets are stored in config.json for easier future extension. */
   dailyPlan: DailyPlanConfig;
   weeklyPlan: WeeklyPlanConfig;
+  stats: StatsConfig;
 }
 
 export interface AreaScore {

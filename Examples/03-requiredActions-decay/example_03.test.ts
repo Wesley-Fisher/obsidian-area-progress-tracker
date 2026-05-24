@@ -57,7 +57,14 @@ describe("Examples/03-requiredActions-decay", () => {
       "groups": [{ "id": "health", "name": "Health" }],
       "records": [],
       "dailyPlan": { "actions": {} },
-      "weeklyPlan": { "startDate": "", "actions": {} }
+      "weeklyPlan": { "startDate": "", "actions": {} },
+      "stats": {
+        "startDate": "2026-03-01",
+        "entries": [
+          { "id": "walk-total", "statName": "walk", "display": ["total", "count"] },
+          { "id": "stretch-total", "statName": "stretch", "display": ["total", "count"] }
+        ]
+      }
     };
 
     expect(conf).toMatchObject(expected);
