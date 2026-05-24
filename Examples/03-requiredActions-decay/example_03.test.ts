@@ -61,8 +61,8 @@ describe("Examples/03-requiredActions-decay", () => {
       "stats": {
         "startDate": "2026-03-01",
         "entries": [
-          { "id": "walk-total", "statName": "walk", "display": ["total", "count"] },
-          { "id": "stretch-total", "statName": "stretch", "display": ["total", "count"] }
+          { "id": "walk-total", "name": "Walk", "statNames": ["walk"], "display": ["total", "count"] },
+          { "id": "stretch-total", "name": "Stretch", "statNames": ["stretch"], "display": ["total", "count"] }
         ]
       }
     };

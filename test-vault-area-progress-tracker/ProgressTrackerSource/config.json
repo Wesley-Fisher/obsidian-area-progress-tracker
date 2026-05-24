@@ -37,6 +37,14 @@
       "max": 0
     },
     {
+      "id": "stretch",
+      "name": "Stretch",
+      "input": { "type": "button", "step": 1 },
+      "effects": { "health": 0 },
+      "groupIds": ["morning", "evening"],
+      "max": 0
+    },
+    {
       "id": "deep_work",
       "name": "Deep work (45m)",
       "input": { "type": "number", "min": 0, "step": 1 },
@@ -76,8 +84,9 @@
   "stats": {
     "startDate": "2026-03-01",
     "entries": [
-      { "id": "walk-total", "statName": "walk", "display": ["total", "average", "count", "range"] },
-      { "id": "weight-total", "statName": "weight", "display": ["total", "average", "count", "range"] }
+      { "id": "walk-total", "name": "Walk", "statNames": ["walk"], "display": ["total", "average", "count", "range"] },
+      { "id": "exercise", "name": "Exercise", "statNames": ["walk", "stretch"], "display": ["total", "average", "count", "range"] },
+      { "id": "weight-total", "name": "Weight", "statNames": ["weight"], "display": ["total", "average", "count", "range"] }
     ]
   }
 }

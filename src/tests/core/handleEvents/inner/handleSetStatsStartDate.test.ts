@@ -21,7 +21,7 @@ describe("handleSetStatsStartDate", () => {
       records: [],
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [{ id: "weight-total", statName: "weight", display: ["total", "range"] }] },
+      stats: { startDate: "", entries: [{ id: "weight-total", name: "Weight", statNames: ["weight"], display: ["total", "range"] }] },
     };
     await vault.write(staticPaths.configPath, JSON.stringify(seed));
 
@@ -33,6 +33,6 @@ describe("handleSetStatsStartDate", () => {
     const raw = await vault.read(staticPaths.configPath);
     const next = JSON.parse(raw) as SystemConfig;
     expect(next.stats.startDate).toBe("2026-03-01");
-    expect(next.stats.entries).toEqual([{ id: "weight-total", statName: "weight", display: ["total", "range"] }]);
+    expect(next.stats.entries).toEqual([{ id: "weight-total", name: "Weight", statNames: ["weight"], display: ["total", "range"] }]);
   });
 });

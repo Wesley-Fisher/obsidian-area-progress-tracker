@@ -15,7 +15,7 @@ describe("checkConfiguration", () => {
       },
       dailyPlan: { actions: {} },
       weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "2026-03-01", entries: [{ id: "walk-total", statName: "walk", display: ["total", "count"] }] },
+      stats: { startDate: "2026-03-01", entries: [{ id: "walk-total", name: "Walk", statNames: ["walk"], display: ["total", "count"] }] },
     };
 
     expect(checkConfiguration(config)).toEqual([]);
@@ -171,7 +171,7 @@ describe("checkConfiguration", () => {
       weeklyPlan: { startDate: "", actions: {} },
       stats: {
         startDate: 123,
-        entries: [{ id: "", statName: "missing", display: ["average", "bogus"] }],
+        entries: [{ id: "", name: "", statNames: ["missing", ""], display: ["average", "bogus"] }],
       },
     } as unknown as SystemConfig;
 
@@ -180,7 +180,9 @@ describe("checkConfiguration", () => {
 
     expect(messages).toContain("stats.startDate must be a string");
     expect(messages).toContain("stats.entries[0].id must be a non-empty string");
-    expect(messages).toContain("stats.entries[0].statName references unknown action or record: missing");
+    expect(messages).toContain("stats.entries[0].name must be a non-empty string");
+    expect(messages).toContain("stats.entries[0].statNames[0] references unknown action or record: missing");
+    expect(messages).toContain("stats.entries[0].statNames[1] must be a non-empty string");
     expect(messages).toContain("stats.entries[0].display[1] must be one of: total, average, count, range");
   });
 });

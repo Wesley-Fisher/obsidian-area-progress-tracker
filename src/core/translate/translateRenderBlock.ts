@@ -46,7 +46,10 @@ function normalizeStatsConfig(stats: StatsConfig): StatsConfig {
           .filter((entry): entry is StatsConfig["entries"][number] => typeof entry === "object" && entry !== null)
           .map((entry) => ({
             id: typeof entry.id === "string" ? entry.id : "",
-            statName: typeof entry.statName === "string" ? entry.statName : "",
+            name: typeof entry.name === "string" ? entry.name : "",
+            statNames: Array.isArray(entry.statNames)
+              ? entry.statNames.filter((statName): statName is string => typeof statName === "string")
+              : [],
             display: Array.isArray(entry.display)
               ? entry.display.filter((display): display is StatsDisplayConfig =>
                   typeof display === "string" && validStatsDisplays.has(display as StatsDisplayConfig)
@@ -69,7 +72,8 @@ function translateStatsSection(config: SystemConfig): StatsSectionModel {
     },
     entries: stats.entries.map((entry) => ({
       id: entry.id,
-      statName: entry.statName,
+      name: entry.name,
+      statNames: entry.statNames,
       display: entry.display,
     })),
   };
@@ -132,6 +136,7 @@ export async function loadStatsSection(args: { repo: RenderBlockArgs["repo"]; en
   }
 
   const actionIds = new Set(config.actions.map((action) => action.id));
+  const recordIds = new Set(config.records.map((record) => record.id));
   const aggregateValues = new Map<string, StatsAggregateValues>(
     stats.entries.map((entry) => [entry.id, createEmptyStatsAggregateValues()])
   );
@@ -142,19 +147,33 @@ export async function loadStatsSection(args: { repo: RenderBlockArgs["repo"]; en
       const dayLog = await args.repo.readDailyLog(date);
 
       for (const entry of stats.entries) {
-        let nextValue: number | undefined;
+        let nextValuesTotal = 0;
+        let hasValue = false;
 
-        if (actionIds.has(entry.statName)) {
-          const raw = dayLog.actions?.[entry.statName];
-          nextValue = typeof raw === "number" && Number.isFinite(raw) ? raw : undefined;
-        } else {
-          const raw = dayLog.records?.[entry.statName];
+        for (const statName of entry.statNames) {
+          if (actionIds.has(statName)) {
+            const raw = dayLog.actions?.[statName];
+            if (typeof raw === "number" && Number.isFinite(raw)) {
+              nextValuesTotal += raw;
+              hasValue = true;
+            }
+            continue;
+          }
+
+          if (!recordIds.has(statName)) {
+            continue;
+          }
+
+          const raw = dayLog.records?.[statName];
           const parsed = raw === undefined ? Number.NaN : Number(raw);
-          nextValue = Number.isFinite(parsed) ? parsed : undefined;
+          if (Number.isFinite(parsed)) {
+            nextValuesTotal += parsed;
+            hasValue = true;
+          }
         }
 
-        if (nextValue !== undefined) {
-          aggregateValues.set(entry.id, addStatsValue(aggregateValues.get(entry.id) ?? createEmptyStatsAggregateValues(), nextValue));
+        if (hasValue) {
+          aggregateValues.set(entry.id, addStatsValue(aggregateValues.get(entry.id) ?? createEmptyStatsAggregateValues(), nextValuesTotal));
         }
       }
     }
@@ -165,7 +184,7 @@ export async function loadStatsSection(args: { repo: RenderBlockArgs["repo"]; en
   return {
     kind: "statsTable",
     rows: stats.entries.map((entry) => ({
-      statName: entry.statName,
+      name: entry.name,
       valueLines: entry.display.map((display) => formatStatsDisplayLine(display, aggregateValues.get(entry.id) ?? createEmptyStatsAggregateValues())),
     })),
   };

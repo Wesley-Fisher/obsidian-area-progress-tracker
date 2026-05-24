@@ -152,8 +152,8 @@ describe("render/translate/translateRenderBlock", () => {
       stats: {
         startDate,
         entries: [
-          { id: "walk-total", statName: "walk", display: ["total", "average", "count", "range"] },
-          { id: "weight-total", statName: "weight", display: ["total", "average", "count", "range"] },
+          { id: "walk-total", name: "Walk", statNames: ["walk"], display: ["total", "average", "count", "range"] },
+          { id: "weight-total", name: "Weight", statNames: ["weight"], display: ["total", "average", "count", "range"] },
         ],
       },
     };
@@ -186,8 +186,68 @@ describe("render/translate/translateRenderBlock", () => {
     expect(model).toEqual({
       kind: "statsTable",
       rows: [
-        { statName: "walk", valueLines: ["Total=6", "Average=2", "Count=3", "Range=1-3"] },
-        { statName: "weight", valueLines: ["Total=201.75", "Average=100.875", "Count=2", "Range=100.5-101.25"] },
+        { name: "Walk", valueLines: ["Total=6", "Average=2", "Count=3", "Range=1-3"] },
+        { name: "Weight", valueLines: ["Total=201.75", "Average=100.875", "Count=2", "Range=100.5-101.25"] },
+      ],
+    });
+  });
+
+  it("combines multiple statNames and skips missing daily entries without dropping the row", async () => {
+    const vault = new MemoryVault();
+    const dataFolder = "ProgressTracker";
+    const startDate = "2026-03-14" as IsoDate;
+    const endDate = "2026-03-16" as IsoDate;
+    const repo = createVaultRepo(vault, dataFolder);
+
+    const config: SystemConfig = {
+      version: 1,
+      areas: [],
+      groups: [],
+      actions: [
+        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
+        { id: "stretch", name: "Stretch", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
+      ],
+      records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { startDate: "", actions: {} },
+      stats: {
+        startDate,
+        entries: [
+          { id: "movement-total", name: "Movement", statNames: ["walk", "stretch"], display: ["total", "average", "count", "range"] },
+        ],
+      },
+    };
+
+    await vault.write(repo.getStaticPaths().configPath, JSON.stringify(config));
+    await repo.writeDailyLog(startDate, {
+      previousScore: {},
+      startingScore: {},
+      updatedScore: {},
+      actions: { walk: 2 },
+      records: {},
+    });
+    await repo.writeDailyLog("2026-03-15" as IsoDate, {
+      previousScore: {},
+      startingScore: {},
+      updatedScore: {},
+      actions: { stretch: 3 },
+      records: {},
+    });
+    await repo.writeDailyLog(endDate, {
+      previousScore: {},
+      startingScore: {},
+      updatedScore: {},
+      actions: {},
+      records: {},
+    });
+
+    const model = await loadStatsSection({ repo, endDate });
+
+    expect(model).toEqual({
+      kind: "statsTable",
+      rows: [
+        { name: "Movement", valueLines: ["Total=5", "Average=2.5", "Count=2", "Range=2-3"] },
       ],
     });
   });

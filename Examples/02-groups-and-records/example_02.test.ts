@@ -89,8 +89,8 @@ describe("Examples/02-groups-and-records", () => {
       "stats": {
         "startDate": "2026-03-01",
         "entries": [
-          { "id": "deep-work-total", "statName": "deep_work", "display": ["total", "average", "count"] },
-          { "id": "weight-total", "statName": "weight", "display": ["range", "count"] }
+          { "id": "deep-work-total", "name": "Deep work", "statNames": ["deep_work"], "display": ["total", "average", "count"] },
+          { "id": "weight-total", "name": "Weight", "statNames": ["weight"], "display": ["range", "count"] }
         ]
       },
     };

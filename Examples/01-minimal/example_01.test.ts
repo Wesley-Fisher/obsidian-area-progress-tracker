@@ -56,7 +56,7 @@ describe("Examples/01-minimal", () => {
       "stats": {
         "startDate": "2026-03-01",
         "entries": [
-          { "id": "walk-total", "statName": "walk", "display": ["total", "count"] }
+          { "id": "movement-total", "name": "Movement", "statNames": ["walk", "stretch"], "display": ["total", "count"] }
         ]
       },
     };

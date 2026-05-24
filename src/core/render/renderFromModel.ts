@@ -505,7 +505,7 @@ function renderLoadedStats(container: HTMLElement, model: LoadedStatsSectionMode
   const tbody = table.createEl("tbody");
   for (const row of model.rows) {
     const tr = tbody.createEl("tr");
-    tr.createEl("td", { text: row.statName });
+    tr.createEl("td", { text: row.name });
     const valueCell = tr.createEl("td");
     for (const line of row.valueLines) {
       valueCell.createEl("div", { text: line });

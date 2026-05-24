@@ -69,7 +69,8 @@ export type StatsDisplayConfig = typeof STATS_DISPLAY_CONFIGS[number];
 
 export interface StatsEntryConfig {
   id: string;
-  statName: string;
+  name: string;
+  statNames: string[];
   display: StatsDisplayConfig[];
 }
 

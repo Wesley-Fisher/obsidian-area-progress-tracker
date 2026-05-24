@@ -262,7 +262,7 @@ describe("core/render/renderFromModel", () => {
         numStatsLoads += 1;
         return {
           kind: "statsTable",
-          rows: [{ statName: "walk", valueLines: ["Total=7", "Count=2"] }],
+          rows: [{ name: "Walk total", valueLines: ["Total=7", "Count=2"] }],
         };
       },
     };
@@ -290,7 +290,7 @@ describe("core/render/renderFromModel", () => {
           value: "2026-03-01",
           eventBase: { kind: "setStatsStartDate" },
         },
-        entries: [{ id: "walk-total", statName: "walk", display: ["total", "count"] }],
+        entries: [{ id: "walk-total", name: "Walk total", statNames: ["walk"], display: ["total", "count"] }],
       },
     };
 
@@ -305,7 +305,7 @@ describe("core/render/renderFromModel", () => {
     await Promise.resolve();
 
     expect(numStatsLoads).toBe(1);
-    expect(root.textContent()).toContain("walk");
+    expect(root.textContent()).toContain("Walk total");
     expect(root.textContent()).toContain("Total=7");
     expect(root.textContent()).toContain("Count=2");
     expect(calls).toEqual([]);

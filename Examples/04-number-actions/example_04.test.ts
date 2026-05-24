@@ -56,8 +56,8 @@ describe("Examples/04-number-actions", () => {
       "stats": {
         "startDate": "2026-03-01",
         "entries": [
-          { "id": "deep-work-minutes-total", "statName": "deep_work_minutes", "display": ["total", "average", "range"] },
-          { "id": "admin-tasks-total", "statName": "admin_tasks", "display": ["total", "count"] }
+          { "id": "deep-work-minutes-total", "name": "Deep work minutes", "statNames": ["deep_work_minutes"], "display": ["total", "average", "range"] },
+          { "id": "admin-tasks-total", "name": "Admin tasks", "statNames": ["admin_tasks"], "display": ["total", "count"] }
         ]
       },
     };

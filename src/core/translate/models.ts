@@ -148,7 +148,8 @@ export type StatsSectionModel = {
 
 export type StatsEntryDefinitionModel = {
   id: string;
-  statName: string;
+  name: string;
+  statNames: string[];
   display: StatsDisplayConfig[];
 };
 
@@ -158,7 +159,7 @@ export type LoadedStatsSectionModel =
   | { kind: "statsTable"; rows: StatsRowModel[] };
 
 export type StatsRowModel = {
-  statName: string;
+  name: string;
   valueLines: string[];
 };
 

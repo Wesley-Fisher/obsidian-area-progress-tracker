@@ -90,10 +90,23 @@ export function checkConfiguration(config: SystemConfig): ConfigurationIssue[] {
           statsIds.push(obj.id);
         }
 
-        if (!isNonEmptyString(obj.statName)) {
-          issues.push({ message: `${basePath}.statName must be a non-empty string`, path: `${basePath}.statName` });
-        } else if (!statTargets.has(obj.statName)) {
-          issues.push({ message: `${basePath}.statName references unknown action or record: ${obj.statName}`, path: `${basePath}.statName` });
+        if (!isNonEmptyString(obj.name)) {
+          issues.push({ message: `${basePath}.name must be a non-empty string`, path: `${basePath}.name` });
+        }
+
+        if (!Array.isArray(obj.statNames)) {
+          issues.push({ message: `${basePath}.statNames must be an array`, path: `${basePath}.statNames` });
+        } else if (obj.statNames.length === 0) {
+          issues.push({ message: `${basePath}.statNames must contain at least one action or record id`, path: `${basePath}.statNames` });
+        } else {
+          for (let j = 0; j < obj.statNames.length; j++) {
+            const statName = obj.statNames[j];
+            if (!isNonEmptyString(statName)) {
+              issues.push({ message: `${basePath}.statNames[${j}] must be a non-empty string`, path: `${basePath}.statNames[${j}]` });
+            } else if (!statTargets.has(statName)) {
+              issues.push({ message: `${basePath}.statNames[${j}] references unknown action or record: ${statName}`, path: `${basePath}.statNames[${j}]` });
+            }
+          }
         }
 
         if (!Array.isArray(obj.display)) {

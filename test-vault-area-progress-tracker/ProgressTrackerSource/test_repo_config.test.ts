@@ -93,8 +93,8 @@ describe("test-repo-config", () => {
       "stats": {
         "startDate": "2026-03-01",
         "entries": [
-          { "id": "walk-total", "statName": "walk", "display": ["total", "average", "count", "range"] },
-          { "id": "weight-total", "statName": "weight", "display": ["total", "average", "count", "range"] }
+          { "id": "walk-total", "name": "Walk", "statNames": ["walk"], "display": ["total", "average", "count", "range"] },
+          { "id": "weight-total", "name": "Weight", "statNames": ["weight"], "display": ["total", "average", "count", "range"] }
         ]
       }
     };
