@@ -32,6 +32,7 @@ export type AreasSectionModel =
 export type AreaRowModel = {
   areaName: string;
   daysSinceText: string;
+  startingScoreText: string;
   updatedScoreText: string;
   possibleDayText: string;
   possibleWeekText: string;

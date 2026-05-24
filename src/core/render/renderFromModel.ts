@@ -138,15 +138,17 @@ function renderAreasTable(container: HTMLElement, model: Extract<AreasSectionMod
   const hr = thead.createEl("tr");
   hr.createEl("th", { text: "Area" });
   hr.createEl("th", { text: "Days since" });
-  hr.createEl("th", { text: "Updated score" });
-  hr.createEl("th", { text: "Possible (day plan)" });
-  hr.createEl("th", { text: "Possible (week plan)" });
+  hr.createEl("th", { text: "Starting" });
+  hr.createEl("th", { text: "Updated" });
+  hr.createEl("th", { text: "Planned (day)" });
+  hr.createEl("th", { text: "Planned (week)" });
 
   const tbody = table.createEl("tbody");
   for (const row of model.rows) {
     const tr = tbody.createEl("tr");
     tr.createEl("td", { text: row.areaName });
     tr.createEl("td", { text: row.daysSinceText });
+    tr.createEl("td", { text: row.startingScoreText });
     tr.createEl("td", { text: row.updatedScoreText });
     tr.createEl("td", { text: row.possibleDayText });
     tr.createEl("td", { text: row.possibleWeekText });

@@ -47,6 +47,7 @@ export function translateAreasSection(args: {
     rows.push({
       areaName: area.name,
       daysSinceText: String(updated.daysSince),
+      startingScoreText: String(dayStartScore),
       updatedScoreText: String(updated.score),
       possibleDayText: possibleDay === null ? "—" : String(possibleDay),
       possibleWeekText: possibleWeek === null ? "—" : String(possibleWeek),
