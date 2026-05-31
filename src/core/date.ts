@@ -9,3 +9,16 @@ export function addDays(date: IsoDate, deltaDays: number): IsoDate {
   const dd = String(dt.getUTCDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}` as IsoDate;
 }
+
+export function startOfMonth(date: IsoDate): IsoDate {
+  const [y, m] = date.split("-").map((n) => Number(n));
+  return `${y}-${String(m).padStart(2, "0")}-01` as IsoDate;
+}
+
+export function startOfWeek(date: IsoDate): IsoDate {
+  const [y, m, d] = date.split("-").map((n) => Number(n));
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  const dayOfWeek = dt.getUTCDay();
+  const daysSinceMonday = (dayOfWeek + 6) % 7;
+  return addDays(date, -daysSinceMonday);
+}

@@ -14,8 +14,8 @@ describe("checkConfiguration", () => {
         health: [{ action: "walk", req: 2 }],
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "2026-03-01", entries: [{ id: "walk-total", name: "Walk", statNames: ["walk"], display: ["total", "count"] }] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [{ id: "walk-total", name: "Walk", statNames: ["walk"], display: ["total", "count"] }] },
     };
 
     expect(checkConfiguration(config)).toEqual([]);
@@ -36,8 +36,8 @@ describe("checkConfiguration", () => {
         ],
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const issues = checkConfiguration(config);
@@ -62,8 +62,8 @@ describe("checkConfiguration", () => {
         health: [{ action: "walk", req: 2 }],
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const issues = checkConfiguration(config);
@@ -84,8 +84,8 @@ describe("checkConfiguration", () => {
         health: undefined, // Invalid type
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const issues = checkConfiguration(config);
@@ -106,8 +106,8 @@ describe("checkConfiguration", () => {
         health: [{ action: "", req: 2 }],
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const issues = checkConfiguration(config);
@@ -129,8 +129,8 @@ describe("checkConfiguration", () => {
         health: [null], // Invalid entry
       },
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const issues = checkConfiguration(config);
@@ -148,8 +148,8 @@ describe("checkConfiguration", () => {
       records: [],
       requiredActions: { health: [{ action: "walk", req: 2 }] },
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     } as unknown as SystemConfig;
 
     const issues = checkConfiguration(config);
@@ -168,9 +168,8 @@ describe("checkConfiguration", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
+      weeklyPlan: { actions: {} },
       stats: {
-        startDate: 123,
         entries: [{ id: "", name: "", statNames: ["missing", ""], display: ["average", "bogus"] }],
       },
     } as unknown as SystemConfig;
@@ -178,7 +177,6 @@ describe("checkConfiguration", () => {
     const issues = checkConfiguration(config);
     const messages = issues.map((i) => i.message).join("\n");
 
-    expect(messages).toContain("stats.startDate must be a string");
     expect(messages).toContain("stats.entries[0].id must be a non-empty string");
     expect(messages).toContain("stats.entries[0].name must be a non-empty string");
     expect(messages).toContain("stats.entries[0].statNames[0] references unknown action or record: missing");

@@ -97,9 +97,8 @@ describe("test-repo-config", () => {
         "health": [{"action": "walk", "req": 1}]
       },
       "dailyPlan": { "actions": {} },
-      "weeklyPlan": { "startDate": "2026-03-01", "actions": {} },
+      "weeklyPlan": { "actions": {} },
       "stats": {
-        "startDate": "2026-03-01",
         "entries": [
           { "id": "walk-total", "name": "Walk", "statNames": ["walk"], "display": ["total", "average", "count", "range"] },
           { "id": "exercise", "name": "Exercise", "statNames": ["walk", "stretch"], "display": ["total", "average", "count", "range"] },

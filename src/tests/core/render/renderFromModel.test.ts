@@ -115,21 +115,9 @@ describe("core/render/renderFromModel", () => {
       planWeek: {
         kind: "planNoActions",
         scope: "week",
-        weekStartDate: {
-          kind: "weekStartDate",
-          label: "Week start date",
-          value: "",
-          eventBase: { kind: "setWeeklyPlanStartDate" },
-        },
         message: "No actions",
       },
       stats: {
-        startDate: {
-          kind: "statsStartDate",
-          label: "Stats start date",
-          value: "",
-          eventBase: { kind: "setStatsStartDate" },
-        },
         entries: [],
       },
     };
@@ -211,21 +199,9 @@ describe("core/render/renderFromModel", () => {
       planWeek: {
         kind: "planNoActions",
         scope: "week",
-        weekStartDate: {
-          kind: "weekStartDate",
-          label: "Week start date",
-          value: "",
-          eventBase: { kind: "setWeeklyPlanStartDate" },
-        },
         message: "No actions",
       },
       stats: {
-        startDate: {
-          kind: "statsStartDate",
-          label: "Stats start date",
-          value: "",
-          eventBase: { kind: "setStatsStartDate" },
-        },
         entries: [],
       },
     };
@@ -275,21 +251,9 @@ describe("core/render/renderFromModel", () => {
       planWeek: {
         kind: "planNoActions",
         scope: "week",
-        weekStartDate: {
-          kind: "weekStartDate",
-          label: "Week start date",
-          value: "",
-          eventBase: { kind: "setWeeklyPlanStartDate" },
-        },
         message: "No actions",
       },
       stats: {
-        startDate: {
-          kind: "statsStartDate",
-          label: "Stats start date",
-          value: "2026-03-01",
-          eventBase: { kind: "setStatsStartDate" },
-        },
         entries: [{ id: "walk-total", name: "Walk total", statNames: ["walk"], display: ["total", "count"] }],
       },
     };

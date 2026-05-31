@@ -57,9 +57,8 @@ describe("Examples/03-requiredActions-decay", () => {
       "groups": [{ "id": "health", "name": "Health" }],
       "records": [],
       "dailyPlan": { "actions": {} },
-      "weeklyPlan": { "startDate": "", "actions": {} },
+      "weeklyPlan": { "actions": {} },
       "stats": {
-        "startDate": "2026-03-01",
         "entries": [
           { "id": "walk-total", "name": "Walk", "statNames": ["walk"], "display": ["total", "count"] },
           { "id": "stretch-total", "name": "Stretch", "statNames": ["stretch"], "display": ["total", "count"] }

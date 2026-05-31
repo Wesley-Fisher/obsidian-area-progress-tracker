@@ -13,8 +13,8 @@ describe("render/translate/translatePlanSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
     const model = translatePlanSection({
       scope: "week",
@@ -40,8 +40,8 @@ describe("render/translate/translatePlanSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     // Next line tests incorrect types to ensure robustness
@@ -83,8 +83,8 @@ describe("render/translate/translatePlanSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const model = translatePlanSection({ scope: "day", config, plan: { actions: {} } });
@@ -117,8 +117,8 @@ describe("render/translate/translatePlanSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const model = translatePlanSection({ scope: "day", config, plan: { actions: { walk: 1 } } });

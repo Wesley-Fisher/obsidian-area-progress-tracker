@@ -1,5 +1,5 @@
 import type { ActionConfig, DailyPlanConfig, SystemConfig, WeeklyPlanConfig } from "../../types";
-import type { PlanGroupModel, PlanSectionModel, WeekStartDateModel } from "../models";
+import type { PlanGroupModel, PlanSectionModel } from "../models";
 import { buildActionOnlyGroupsFromConfig } from "./grouping";
 
 function finiteNonNegativeNumber(value: unknown): number {
@@ -39,27 +39,8 @@ export function translatePlanSection(args: {
   config: SystemConfig;
   plan: DailyPlanConfig | WeeklyPlanConfig | null;
 }): PlanSectionModel {
-  const weekStartDate: WeekStartDateModel | undefined =
-    args.scope === "week"
-      ? {
-          kind: "weekStartDate",
-          label: "Week start date",
-          value: (args.plan && "startDate" in args.plan && typeof args.plan.startDate === "string") ? args.plan.startDate : "",
-          eventBase: { kind: "setWeeklyPlanStartDate" },
-        }
-      : undefined;
-
   if (args.config.actions.length === 0) {
-    if (args.scope === "week" && weekStartDate) {
-      return {
-        kind: "planNoActions",
-        scope: "week",
-        weekStartDate,
-        message: "No actions configured.",
-      };
-    }
-
-    return { kind: "planNoActions", scope: "day", message: "No actions configured." };
+    return { kind: "planNoActions", scope: args.scope, message: "No actions configured." };
   }
 
   const planActions = args.plan?.actions ?? {};
@@ -117,9 +98,5 @@ export function translatePlanSection(args: {
     outGroups.push({ id: g.id, name: g.name, rows });
   }
 
-  if (args.scope === "week" && weekStartDate) {
-    return { kind: "planTabs", scope: "week", weekStartDate, groups: outGroups };
-  }
-
-  return { kind: "planTabs", scope: "day", groups: outGroups };
+  return { kind: "planTabs", scope: args.scope, groups: outGroups };
 }

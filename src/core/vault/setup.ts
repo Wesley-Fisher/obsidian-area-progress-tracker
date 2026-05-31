@@ -13,8 +13,8 @@ const DEFAULT_CONFIG: SystemConfig = {
   records: [],
   requiredActions: {},
   dailyPlan: { actions: {} },
-  weeklyPlan: { startDate: "", actions: {} },
-  stats: { startDate: "", entries: [] },
+  weeklyPlan: { actions: {} },
+  stats: { entries: [] },
 };
 
 export async function ensureVaultSetup(vault: VaultLike, dataFolder: string, date: IsoDate): Promise<void> {

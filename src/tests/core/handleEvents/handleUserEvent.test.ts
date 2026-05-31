@@ -78,8 +78,8 @@ describe("handleUserEvent", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
     await vault.write(staticPaths.configPath, JSON.stringify(config));
 
@@ -97,21 +97,4 @@ describe("handleUserEvent", () => {
     expect(dayLog.actions.walk).toBe(1);
   });
 
-  it("handles setStatsStartDate by writing stats config", async () => {
-    const vault = new MemoryVault();
-    const dataFolder = "ProgressTracker";
-    const repo = createVaultRepo(vault, dataFolder);
-
-    await handleUserEvent(
-      {
-        kind: "setStatsStartDate",
-        value: "2026-03-01",
-      },
-      repo
-    );
-
-    const config = await repo.readConfig();
-    expect(config.stats.startDate).toBe("2026-03-01");
-    expect(config.stats.entries).toEqual([]);
-  });
 });

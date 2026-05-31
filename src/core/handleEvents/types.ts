@@ -21,19 +21,7 @@ export interface UserPlanEvent {
   value: number;
 }
 
-export interface UserWeeklyPlanStartDateEvent {
-  kind: "setWeeklyPlanStartDate";
-  value: string;
-}
-
-export interface UserStatsStartDateEvent {
-  kind: "setStatsStartDate";
-  value: string;
-}
-
 export type UserEvent =
   | UserActionEvent
   | UserRecordEvent
-  | UserPlanEvent
-  | UserWeeklyPlanStartDateEvent
-  | UserStatsStartDateEvent;
+  | UserPlanEvent;

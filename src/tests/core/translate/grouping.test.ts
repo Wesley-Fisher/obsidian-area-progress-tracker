@@ -14,9 +14,9 @@ function mkConfig(partial: Partial<SystemConfig>): SystemConfig {
     records: [],
     requiredActions: {},
     dailyPlan: { actions: {} },
-    weeklyPlan: { startDate: "", actions: {} },
+    weeklyPlan: { actions: {} },
     ...partial,
-    stats: partial.stats ?? { startDate: "", entries: [] },
+    stats: partial.stats ?? { entries: [] },
   };
 }
 

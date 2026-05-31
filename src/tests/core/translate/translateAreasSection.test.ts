@@ -13,15 +13,15 @@ describe("render/translate/translateAreasSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const model = translateAreasSection({
       config,
       dayLog: { updatedScore: {} } as DailyLog,
       dayPlan: { actions: {} },
-      weekPlan: { startDate: "", actions: {} },
+      weekPlan: { actions: {} },
     });
 
     expect(model.kind).toBe("areasEmpty");
@@ -37,8 +37,8 @@ describe("render/translate/translateAreasSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const dayLog: DailyLog = {
@@ -50,7 +50,7 @@ describe("render/translate/translateAreasSection", () => {
     };
 
     const dayPlan: DailyPlanConfig = { actions: { walk: 3 } }; // startingScore=39, +30 => 69
-    const weekPlan: WeeklyPlanConfig = { startDate: "", actions: { walk: 3 } }; // same baseline => 69
+    const weekPlan: WeeklyPlanConfig = { actions: { walk: 3 } }; // same baseline => 69
 
     const model = translateAreasSection({
       config,
@@ -81,8 +81,8 @@ describe("render/translate/translateAreasSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const dayLog: DailyLog = {
@@ -94,7 +94,7 @@ describe("render/translate/translateAreasSection", () => {
     };
 
     const dayPlan: DailyPlanConfig = { actions: { walk: 3 } };
-    const weekPlan: WeeklyPlanConfig = { startDate: "", actions: { walk: 3 } };
+    const weekPlan: WeeklyPlanConfig = { actions: { walk: 3 } };
 
     const model = translateAreasSection({ config, dayLog, dayPlan, weekPlan });
     expect(model.kind).toBe("areasTable");
@@ -113,8 +113,8 @@ describe("render/translate/translateAreasSection", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const dayLog: DailyLog = {
@@ -129,7 +129,7 @@ describe("render/translate/translateAreasSection", () => {
       config,
       dayLog,
       dayPlan: { actions: { walk: 3 } },
-      weekPlan: { startDate: "", actions: { walk: 3 } },
+      weekPlan: { actions: { walk: 3 } },
     });
 
     expect(model.kind).toBe("areasTable");

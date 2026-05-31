@@ -45,8 +45,8 @@ describe("render/translate/translateRenderBlock", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
     await vault.write(paths.configPath, JSON.stringify(config));
 
@@ -75,8 +75,8 @@ describe("render/translate/translateRenderBlock", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
 
     };
 
@@ -107,8 +107,8 @@ describe("render/translate/translateRenderBlock", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const dayLog: DailyLog = {
@@ -130,7 +130,7 @@ describe("render/translate/translateRenderBlock", () => {
     expect(model.actions.kind).toMatch(/activities/);
     expect(model.planDay.scope).toBe("day");
     expect(model.planWeek.scope).toBe("week");
-    expect(model.stats.startDate.kind).toBe("statsStartDate");
+    expect(model.stats.entries).toEqual([]);
   });
 
   it("loads total stats across actions and numeric records only within the configured date range", async () => {
@@ -148,9 +148,8 @@ describe("render/translate/translateRenderBlock", () => {
       records: [{ id: "weight", name: "Weight", input: { type: "number" }, groupIds: [] }],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
+      weeklyPlan: { actions: {} },
       stats: {
-        startDate,
         entries: [
           { id: "walk-total", name: "Walk", statNames: ["walk"], display: ["total", "average", "count", "range"] },
           { id: "weight-total", name: "Weight", statNames: ["weight"], display: ["total", "average", "count", "range"] },
@@ -192,6 +191,57 @@ describe("render/translate/translateRenderBlock", () => {
     });
   });
 
+  it("falls forward from the first of the month to the earliest existing daily log on or before the current date", async () => {
+    const vault = new MemoryVault();
+    const dataFolder = "ProgressTracker";
+    const repo = createVaultRepo(vault, dataFolder);
+    const endDate = "2026-03-16" as IsoDate;
+
+    const config: SystemConfig = {
+      version: 1,
+      areas: [],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
+      records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: {} },
+      stats: {
+        entries: [{ id: "walk-total", name: "Walk", statNames: ["walk"], display: ["total", "count", "range"] }],
+      },
+    };
+
+    await vault.write(repo.getStaticPaths().configPath, JSON.stringify(config));
+    await repo.writeDailyLog("2026-03-03" as IsoDate, {
+      previousScore: {},
+      startingScore: {},
+      updatedScore: {},
+      actions: { walk: 2 },
+      records: {},
+    });
+    await repo.writeDailyLog("2026-03-10" as IsoDate, {
+      previousScore: {},
+      startingScore: {},
+      updatedScore: {},
+      actions: { walk: 3 },
+      records: {},
+    });
+    await repo.writeDailyLog("2026-02-28" as IsoDate, {
+      previousScore: {},
+      startingScore: {},
+      updatedScore: {},
+      actions: { walk: 99 },
+      records: {},
+    });
+
+    const model = await loadStatsSection({ repo, endDate });
+
+    expect(model).toEqual({
+      kind: "statsTable",
+      rows: [{ name: "Walk", valueLines: ["Total=5", "Count=2", "Range=2-3"] }],
+    });
+  });
+
   it("combines multiple statNames and skips missing daily entries without dropping the row", async () => {
     const vault = new MemoryVault();
     const dataFolder = "ProgressTracker";
@@ -210,9 +260,8 @@ describe("render/translate/translateRenderBlock", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
+      weeklyPlan: { actions: {} },
       stats: {
-        startDate,
         entries: [
           { id: "movement-total", name: "Movement", statNames: ["walk", "stretch"], display: ["total", "average", "count", "range"] },
         ],
@@ -250,5 +299,49 @@ describe("render/translate/translateRenderBlock", () => {
         { name: "Movement", valueLines: ["Total=5", "Average=2.5", "Count=2", "Range=2-3"] },
       ],
     });
+  });
+
+  it("falls forward within the current week when the first day of the week has no daily log", async () => {
+    const vault = new MemoryVault();
+    const dataFolder = "ProgressTracker";
+    const date = "2026-03-19" as IsoDate;
+    const repo = createVaultRepo(vault, dataFolder);
+    const paths = getDataPaths(dataFolder, date);
+
+    const config: SystemConfig = {
+      version: 1,
+      areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 100, baseScore: 50, dailyDecayAlways: 0, dailyDecayUnattended: 0 }],
+      groups: [],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 10 }, groupIds: [], max: 0 }],
+      records: [],
+      requiredActions: {},
+      dailyPlan: { actions: {} },
+      weeklyPlan: { actions: { walk: 1 } },
+      stats: { entries: [] },
+    };
+
+    await vault.write(paths.configPath, JSON.stringify(config));
+    await repo.writeDailyLog("2026-03-18" as IsoDate, {
+      previousScore: { health: { score: 70, daysSince: 0 } },
+      startingScore: { health: { score: 70, daysSince: 0 } },
+      updatedScore: { health: { score: 70, daysSince: 0 } },
+      actions: {},
+      records: {},
+    });
+    await repo.writeDailyLog(date, {
+      previousScore: { health: { score: 10, daysSince: 0 } },
+      startingScore: { health: { score: 10, daysSince: 0 } },
+      updatedScore: { health: { score: 10, daysSince: 0 } },
+      actions: {},
+      records: {},
+    });
+
+    const model = await translateRenderBlock(mkArgs({ vault, dataFolder, date }));
+
+    expect(model.kind).toBe("dashboard");
+    if (model.kind !== "dashboard") throw new Error("expected dashboard");
+    expect(model.areas.kind).toBe("areasTable");
+    if (model.areas.kind !== "areasTable") throw new Error("expected areasTable");
+    expect(model.areas.rows[0]?.possibleWeekText).toBe("80");
   });
 });

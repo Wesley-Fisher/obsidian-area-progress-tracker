@@ -50,9 +50,6 @@ export function checkConfiguration(config: SystemConfig): ConfigurationIssue[] {
     issues.push({ message: "Missing weeklyPlan (expected object)", path: "weeklyPlan" });
   } else {
     const obj = weeklyPlan as Record<string, unknown>;
-    if (typeof obj.startDate !== "string") {
-      issues.push({ message: "weeklyPlan.startDate must be a string", path: "weeklyPlan.startDate" });
-    }
     const actions = obj.actions;
     if (!actions || typeof actions !== "object" || Array.isArray(actions)) {
       issues.push({ message: "weeklyPlan.actions must be an object", path: "weeklyPlan.actions" });
@@ -68,10 +65,6 @@ export function checkConfiguration(config: SystemConfig): ConfigurationIssue[] {
     issues.push({ message: "Missing stats (expected object)", path: "stats" });
   } else {
     const statsObj = stats as Record<string, unknown>;
-    if (typeof statsObj.startDate !== "string") {
-      issues.push({ message: "stats.startDate must be a string", path: "stats.startDate" });
-    }
-
     const entries = statsObj.entries;
     if (!Array.isArray(entries)) {
       issues.push({ message: "stats.entries must be an array", path: "stats.entries" });

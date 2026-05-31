@@ -124,25 +124,10 @@ export type PlanEntryModel =
 export type PlanSectionModel =
   | { kind: "planNoActions"; scope: "day"; message: string }
   | { kind: "planTabs"; scope: "day"; groups: PlanGroupModel[] }
-  | { kind: "planNoActions"; scope: "week"; weekStartDate: WeekStartDateModel; message: string }
-  | { kind: "planTabs"; scope: "week"; weekStartDate: WeekStartDateModel; groups: PlanGroupModel[] };
-
-export type WeekStartDateModel = {
-  kind: "weekStartDate";
-  label: string;
-  value: string;
-  eventBase: { kind: "setWeeklyPlanStartDate" };
-};
-
-export type StatsStartDateModel = {
-  kind: "statsStartDate";
-  label: string;
-  value: string;
-  eventBase: { kind: "setStatsStartDate" };
-};
+  | { kind: "planNoActions"; scope: "week"; message: string }
+  | { kind: "planTabs"; scope: "week"; groups: PlanGroupModel[] };
 
 export type StatsSectionModel = {
-  startDate: StatsStartDateModel;
   entries: StatsEntryDefinitionModel[];
 };
 

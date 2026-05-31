@@ -57,8 +57,6 @@ export interface DailyPlanConfig {
 }
 
 export interface WeeklyPlanConfig {
-  /** Base date used when computing possible outcomes for weekly planning. May be invalid/unset; callers must fall back safely. */
-  startDate: string;
   /** Planned per-week action targets. Required to exist; may be empty. */
   actions: Partial<Record<ActionId, number>>;
 }
@@ -75,8 +73,6 @@ export interface StatsEntryConfig {
 }
 
 export interface StatsConfig {
-  /** Base date used when computing stats across existing daily logs. May be invalid/unset. */
-  startDate: string;
   /** Stats rows rendered in the Stats tab. */
   entries: StatsEntryConfig[];
 }

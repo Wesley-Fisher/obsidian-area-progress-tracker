@@ -54,8 +54,8 @@ describe("onRenderProgressTrackerBlock", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const dayLog: DailyLog = buildDailyLog({ ...badConfig, actions: [] }, undefined, {}, {}) as DailyLog;
@@ -84,8 +84,8 @@ describe("onRenderProgressTrackerBlock", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
-      weeklyPlan: { startDate: "", actions: {} },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: {} },
+      stats: { entries: [] },
     };
 
     const dayLog: DailyLog = {
@@ -121,8 +121,8 @@ describe("onRenderProgressTrackerBlock", () => {
       records: [],
       requiredActions: {},
       dailyPlan: { actions: { walk: 0 } },
-      weeklyPlan: { startDate: "", actions: { walk: 0 } },
-      stats: { startDate: "", entries: [] },
+      weeklyPlan: { actions: { walk: 0 } },
+      stats: { entries: [] },
     };
 
     const dayLog: DailyLog = {

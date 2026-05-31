@@ -52,9 +52,8 @@ describe("Examples/04-number-actions", () => {
       "records": [],
       "requiredActions": {},
       "dailyPlan": { "actions": {} },
-      "weeklyPlan": { "startDate": "", "actions": {} },
+      "weeklyPlan": { "actions": {} },
       "stats": {
-        "startDate": "2026-03-01",
         "entries": [
           { "id": "deep-work-minutes-total", "name": "Deep work minutes", "statNames": ["deep_work_minutes"], "display": ["total", "average", "range"] },
           { "id": "admin-tasks-total", "name": "Admin tasks", "statNames": ["admin_tasks"], "display": ["total", "count"] }

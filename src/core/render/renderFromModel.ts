@@ -13,8 +13,6 @@ import type {
   ActivitiesSectionModelEmpty,
   ActivitiesSectionModelFilled,
   StatsSectionModel,
-  StatsStartDateModel,
-  WeekStartDateModel,
 } from "../translate/models";
 import { addThreeColRow, renderTabbedGroups, renderThreeColumnTable } from "./inner/commonTable";
 
@@ -366,10 +364,6 @@ function renderPlanTabs(container: HTMLElement, runtime: RenderRuntime, model: E
 }
 
 function renderPlanContent(container: HTMLElement, runtime: RenderRuntime, model: PlanSectionModel): void {
-  if (model.scope === "week") {
-    renderWeekStartDate(container, runtime, model.weekStartDate);
-  }
-
   if (model.kind === "planNoActions") {
     container.createEl("div", { text: model.message });
     return;
@@ -405,51 +399,7 @@ function renderPlanContent(container: HTMLElement, runtime: RenderRuntime, model
   );
 }
 
-function renderWeekStartDate(container: HTMLElement, runtime: RenderRuntime, model: WeekStartDateModel): void {
-  const uiRoot = runtime.uiRoot ?? container;
-  const ds = ensureDataset(uiRoot);
-  const instanceId = runtime.instanceId ?? ds.aptInstanceId ?? "apt";
-
-  renderConfigDateInput(container, runtime, model.label, model.value, `${instanceId}:plan:weekStartDate:input`, (value) => ({
-    ...model.eventBase,
-    value,
-  }));
-}
-
-function renderStatsStartDate(container: HTMLElement, runtime: RenderRuntime, model: StatsStartDateModel): void {
-  const uiRoot = runtime.uiRoot ?? container;
-  const ds = ensureDataset(uiRoot);
-  const instanceId = runtime.instanceId ?? ds.aptInstanceId ?? "apt";
-
-  renderConfigDateInput(container, runtime, model.label, model.value, `${instanceId}:stats:startDate:input`, (value) => ({
-    ...model.eventBase,
-    value,
-  }));
-}
-
-function renderConfigDateInput(
-  container: HTMLElement,
-  runtime: RenderRuntime,
-  label: string,
-  value: string,
-  focusKey: string,
-  createEvent: (value: string) => UserEvent
-): void {
-  const row = container.createDiv();
-  row.createEl("div", { text: label });
-
-  const input = row.createEl("input") as HTMLInputElement;
-  input.type = "text";
-  input.value = value;
-  setFocusKey(input, focusKey);
-  input.onchange = () => {
-    void runtime.onUserAction(createEvent(input.value));
-  };
-}
-
-function renderStatsContent(container: HTMLElement, runtime: RenderRuntime, model: StatsSectionModel): () => Promise<void> {
-  renderStatsStartDate(container, runtime, model.startDate);
-
+function renderStatsContent(container: HTMLElement, runtime: RenderRuntime, _model: StatsSectionModel): () => Promise<void> {
   const content = container.createDiv({ cls: "apt-section" });
   content.createEl("div", { text: "Open this tab to load stats." });
 

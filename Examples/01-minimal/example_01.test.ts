@@ -52,9 +52,8 @@ describe("Examples/01-minimal", () => {
       "records": [],
       "requiredActions": {},
       "dailyPlan": { "actions": {} },
-      "weeklyPlan": { "startDate": "", "actions": {} },
+      "weeklyPlan": { "actions": {} },
       "stats": {
-        "startDate": "2026-03-01",
         "entries": [
           { "id": "movement-total", "name": "Movement", "statNames": ["walk", "stretch"], "display": ["total", "count"] }
         ]

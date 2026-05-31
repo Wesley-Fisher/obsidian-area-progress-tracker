@@ -4,7 +4,7 @@ import type { LoadedStatsSectionModel, RenderBodyModel, StatsSectionModel } from
 import { translateAreasSection } from "./inner/translateAreasSection";
 import { translateActivitiesSection } from "./inner/translateActivitiesSection";
 import { translatePlanSection } from "./inner/translatePlanSection";
-import { addDays } from "../date";
+import { addDays, startOfMonth, startOfWeek } from "../date";
 import { STATS_DISPLAY_CONFIGS, type DailyLog, type DailyPlanConfig, type IsoDate, type Scores, type StatsConfig, type StatsDisplayConfig, type SystemConfig, type WeeklyPlanConfig } from "../types";
 
 function defaultDailyPlan(): DailyPlanConfig {
@@ -12,7 +12,7 @@ function defaultDailyPlan(): DailyPlanConfig {
 }
 
 function defaultWeeklyPlan(): WeeklyPlanConfig {
-  return { startDate: "", actions: {} };
+  return { actions: {} };
 }
 
 type StatsAggregateValues = {
@@ -24,23 +24,8 @@ type StatsAggregateValues = {
 
 const validStatsDisplays = new Set<StatsDisplayConfig>(STATS_DISPLAY_CONFIGS);
 
-function tryParseIsoDate(raw: string): IsoDate | undefined {
-  const trimmed = raw.trim();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return undefined;
-  const [y, m, d] = trimmed.split("-").map((n) => Number(n));
-  if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return undefined;
-  const dt = new Date(Date.UTC(y, m - 1, d));
-  const yyyy = dt.getUTCFullYear();
-  const mm = dt.getUTCMonth() + 1;
-  const dd = dt.getUTCDate();
-  // Reject impossible dates (e.g. 2026-02-30) that would roll over.
-  if (yyyy !== y || mm !== m || dd !== d) return undefined;
-  return trimmed as IsoDate;
-}
-
 function normalizeStatsConfig(stats: StatsConfig): StatsConfig {
   return {
-    startDate: typeof stats.startDate === "string" ? stats.startDate : "",
     entries: Array.isArray(stats.entries)
       ? stats.entries
           .filter((entry): entry is StatsConfig["entries"][number] => typeof entry === "object" && entry !== null)
@@ -64,12 +49,6 @@ function translateStatsSection(config: SystemConfig): StatsSectionModel {
   const stats = normalizeStatsConfig(config.stats);
 
   return {
-    startDate: {
-      kind: "statsStartDate",
-      label: "Stats start date",
-      value: stats.startDate,
-      eventBase: { kind: "setStatsStartDate" },
-    },
     entries: stats.entries.map((entry) => ({
       id: entry.id,
       name: entry.name,
@@ -126,13 +105,9 @@ export async function loadStatsSection(args: { repo: RenderBlockArgs["repo"]; en
     return { kind: "statsEmpty", message: "No stats configured." };
   }
 
-  const startDate = tryParseIsoDate(stats.startDate);
+  const startDate = await findFirstExistingLogDate(args.repo, startOfMonth(args.endDate), args.endDate);
   if (!startDate) {
-    return { kind: "statsEmpty", message: "Set a stats start date to load stats." };
-  }
-
-  if (startDate > args.endDate) {
-    return { kind: "statsEmpty", message: "Stats start date is after the current block date." };
+    return { kind: "statsEmpty", message: "No daily logs found yet for this month." };
   }
 
   const actionIds = new Set(config.actions.map((action) => action.id));
@@ -210,7 +185,7 @@ export async function translateRenderBlock(args: RenderBlockArgs): Promise<Rende
   dayPlan = (config as Partial<SystemConfig>).dailyPlan ?? defaultDailyPlan();
   weekPlan = (config as Partial<SystemConfig>).weeklyPlan ?? defaultWeeklyPlan();
   dayPlan = { actions: dayPlan.actions ?? {} };
-  weekPlan = { startDate: typeof weekPlan.startDate === "string" ? weekPlan.startDate : "", actions: weekPlan.actions ?? {} };
+  weekPlan = { actions: weekPlan.actions ?? {} };
 
   try {
     dayLog = await args.repo.readDailyLog(blockConfig.date);
@@ -219,7 +194,7 @@ export async function translateRenderBlock(args: RenderBlockArgs): Promise<Rende
   }
 
   let weekStartScores: Scores | undefined;
-  const weekStartDate = tryParseIsoDate(weekPlan.startDate);
+  const weekStartDate = await findFirstExistingLogDate(args.repo, startOfWeek(blockConfig.date), blockConfig.date);
   if (weekStartDate) {
     try {
       const weekStartLog = await args.repo.readDailyLog(weekStartDate);
@@ -248,4 +223,20 @@ export async function translateRenderBlock(args: RenderBlockArgs): Promise<Rende
     planWeek: translatePlanSection({ scope: "week", config, plan: weekPlan }),
     stats: translateStatsSection(config),
   };
+}
+
+async function findFirstExistingLogDate(
+  repo: RenderBlockArgs["repo"],
+  startDate: IsoDate,
+  endDate: IsoDate
+): Promise<IsoDate | undefined> {
+  let date = startDate;
+  while (date <= endDate) {
+    if (await repo.existsDailyLog(date)) {
+      return date;
+    }
+    date = addDays(date, 1);
+  }
+
+  return undefined;
 }
