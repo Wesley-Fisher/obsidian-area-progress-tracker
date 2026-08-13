@@ -1,0 +1,16 @@
+{
+  "previousScore": {
+    "health": { "score": 500, "daysSince": 0, "decayActive": true },
+    "career": { "score": 500, "daysSince": 0, "decayActive": true }
+  },
+  "startingScore": {
+    "health": { "score": 489, "daysSince": 1 },
+    "career": { "score": 495, "daysSince": 1 }
+  },
+  "updatedScore": {
+    "health": { "score": 501, "daysSince": 0, "decayActive": false },
+    "career": { "score": 495, "daysSince": 1 }
+  },
+  "actions": { "walk": 1 },
+  "records": {}
+}
