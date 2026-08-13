@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { renderTabbedGroups } from "../../../../core/render/inner/commonTable";
-import type { ActivityGroup } from "../../../../core/render/inner/common";
 import { FakeButton, FakeElement, asHTMLElement } from "../fakeDom";
 
 
@@ -8,9 +7,9 @@ describe("render/commonTable", () => {
   it("renderTabbedGroups activates first tab by default and switches on click", () => {
     const root = new FakeElement("div");
 
-    const groups: ActivityGroup[] = [
-      { id: "g1", name: "G1", actions: [], records: [] },
-      { id: "g2", name: "G2", actions: [], records: [] },
+    const groups = [
+      { id: "g1", name: "G1" },
+      { id: "g2", name: "G2" },
     ];
 
     renderTabbedGroups(asHTMLElement(root), groups, (panel, g) => {
