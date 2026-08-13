@@ -3,10 +3,11 @@ import type { DailyLog, IsoDate, Scores, SystemConfig } from "../../core/types";
 import { mergePreviousIntoNextDay, recomputeForwardChain, scoresEqual, seedFromPreviousDay } from "../../core/recomputeChain";
 import { buildDailyLog } from "../../core/scoring";
 import { createVaultRepo } from "../../core/vault/repo";
+import { getDataPaths } from "../../core/vault/paths";
 import { MemoryVault } from "../memoryVault";
 
 function dayPath(d: IsoDate): string {
-  return `ProgressTracker/logs/apt.${d}.json`;
+  return getDataPaths("ProgressTracker", d).dailyLogPath;
 }
 
 describe("scoresEqual", () => {

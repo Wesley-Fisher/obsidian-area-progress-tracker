@@ -28,7 +28,8 @@ export async function createFixtureRepo(dates: IsoDate[] = ["2026-02-28", "2026-
     await vault.write(repo.getStaticPaths().configPath, config);
 
     for (const date of dates) {
-      const log = await fs.readFile(path.join(runtimeRoot, "logs", `apt.${date}.json`), "utf8");
+      const [year, month] = date.split("-");
+      const log = await fs.readFile(path.join(runtimeRoot, "logs", year, month, `apt.${date}.json`), "utf8");
       await vault.write(getDataPaths(dataFolder, date).dailyLogPath, log);
     }
 

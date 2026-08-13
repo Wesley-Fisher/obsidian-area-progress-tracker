@@ -60,7 +60,7 @@ Note: this will generate a daily log file for 2026-01-01, which can be manually 
 Also created/used in the data folder:
 * `config.json` (system definition)
 * `plans.day.json` and `plans.week.json` (planning targets)
-* `logs/apt.YYYY-MM-DD.json` (daily logs)
+* `logs/YYYY/MM/apt.YYYY-MM-DD.json` (daily logs)
 
 ## System Setup
 

@@ -43,7 +43,9 @@ export async function ensureDailyLogFile(
   configPath: string,
   date: IsoDate
 ): Promise<void> {
-  const { dailyLogPath } = getDataPaths(dataFolder, date);
+  const { dailyLogYearFolder, dailyLogFolder, dailyLogPath } = getDataPaths(dataFolder, date);
+  await ensureFolder(vault, dailyLogYearFolder);
+  await ensureFolder(vault, dailyLogFolder);
   if (await vault.exists(dailyLogPath)) return;
 
   // Build a seed daily log using previous day if present.

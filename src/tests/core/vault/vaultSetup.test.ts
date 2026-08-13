@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { IsoDate, SystemConfig } from "../../../core/types";
 import { ensureVaultSetup } from "../../../core/vault/setup";
-import { getStaticDataPaths } from "../../../core/vault/paths";
+import { getDataPaths, getStaticDataPaths } from "../../../core/vault/paths";
 
 class MemoryVault {
   private readonly files = new Map<string, string>();
@@ -39,8 +39,10 @@ describe("vault setup", () => {
     expect(await vault.exists(staticPaths.logsFolder)).toBe(true);
     expect(await vault.exists(staticPaths.configPath)).toBe(true);
 
-    const dailyLogPath = `${staticPaths.logsFolder}/apt.${date}.json`;
-    expect(await vault.exists(dailyLogPath)).toBe(true);
+    const dataPaths = getDataPaths(dataFolder, date);
+    expect(await vault.exists(dataPaths.dailyLogYearFolder)).toBe(true);
+    expect(await vault.exists(dataPaths.dailyLogFolder)).toBe(true);
+    expect(await vault.exists(dataPaths.dailyLogPath)).toBe(true);
   });
 
   it("writes a config template with version=1", async () => {

@@ -3,6 +3,8 @@ import { normalizeFolderPath } from "./normalize";
 
 export interface DataPaths {
   configPath: string;
+  dailyLogYearFolder: string;
+  dailyLogFolder: string;
   dailyLogPath: string;
 }
 
@@ -29,8 +31,13 @@ export function getStaticDataPaths(dataFolder: string): StaticDataPaths {
  */
 export function getDataPaths(dataFolder: string, date: IsoDate): DataPaths {
   const { configPath, logsFolder } = getStaticDataPaths(dataFolder);
+  const [year, month] = date.split("-");
+  const dailyLogYearFolder = `${logsFolder}/${year}`;
+  const dailyLogFolder = `${dailyLogYearFolder}/${month}`;
   return {
     configPath,
-    dailyLogPath: `${logsFolder}/apt.${date}.json`,
+    dailyLogYearFolder,
+    dailyLogFolder,
+    dailyLogPath: `${dailyLogFolder}/apt.${date}.json`,
   };
 }

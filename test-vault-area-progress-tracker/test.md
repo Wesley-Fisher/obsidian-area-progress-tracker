@@ -15,7 +15,7 @@ This note is a **manual test sandbox** for the Obsidian test vault.
 - Plugin setting **Data folder** is set to `ProgressTracker`
 - The test data folder exists with:
   - `ProgressTracker/config.json`
-  - `ProgressTracker/logs/apt.2026-03-01.json`, `apt.2026-03-02.json`, `apt.2026-03-03.json`
+  - `ProgressTracker/logs/2026/03/apt.2026-03-01.json`, `apt.2026-03-02.json`, `apt.2026-03-03.json`
 
 
 ---
