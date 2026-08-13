@@ -1,105 +1,83 @@
-import type { DailyLog, IsoDate, SystemConfig } from "../../types";
-import type { ActivitiesSectionModel, ActivitiesGroupModel, ActivityRowModel, ActionEntryModel, RecordEntryModel } from "../models";
+import type { ActionConfig, DailyLog, IsoDate, RecordConfig, SystemConfig } from "../../types";
+import type { ActivitiesColumnModel, ActivitiesSectionModel, ActivityRowModel, ActionEntryModel, RecordEntryModel } from "../models";
 import { buildActivityGroupsFromConfig } from "./grouping";
 
-export function translateActivitiesSection(args: {
-  date: IsoDate;
-  config: SystemConfig;
-  dayLog: DailyLog | null;
-}): ActivitiesSectionModel {
-  const records = args.config.records ?? [];
-  if (args.config.actions.length === 0 && records.length === 0) {
-    return { kind: "activitiesEmpty", message: "No actions or records configured." };
+function translateAction(args: { date: IsoDate; action: ActionConfig; dayLog: DailyLog | null; config: SystemConfig }): ActivityRowModel {
+  const currentRaw = Number(args.dayLog?.actions?.[args.action.id] ?? 0);
+  const current = Number.isFinite(currentRaw) ? currentRaw : 0;
+  let needed = 0;
+  for (const reqs of Object.values(args.config.requiredActions ?? {})) {
+    for (const req of reqs ?? []) {
+      if (req.action === args.action.id) needed = Math.max(req.req - current, needed);
+    }
   }
 
-  const groups = buildActivityGroupsFromConfig(args.config);
-  const outGroups: ActivitiesGroupModel[] = [];
-
-  for (const g of groups) {
-    const rows: ActivityRowModel[] = [];
-    let numActionsStillRequired = 0;
-
-    for (const action of g.actions) {
-      const currentRaw = Number(args.dayLog?.actions?.[action.id] ?? 0);
-      const current = Number.isFinite(currentRaw) ? currentRaw : 0;
-      const currentText = String(current);
-
-      // Find the maximum required count of this action, across all possible requirements
-      let needed = 0;
-      if (args.config.requiredActions) {
-        for (const areaReqKey in args.config.requiredActions) {
-          if (args.config.requiredActions[areaReqKey])
-          {
-            for (const req of args.config.requiredActions[areaReqKey]) {
-              if (req.action === action.id) {
-                needed = Math.max(req.req - current, needed);
-              }
-            }
-          }
-        }
+  const configMax = typeof args.action.max === "number" && Number.isFinite(args.action.max) && args.action.max > 0 ? args.action.max : undefined;
+  const entry: ActionEntryModel = args.action.input.type === "button"
+    ? {
+        kind: "button",
+        plus: { label: "+", disabled: configMax !== undefined ? current >= configMax : false, event: { kind: "adjustActionTotal", date: args.date, actionId: args.action.id, delta: args.action.input.step } },
+        minus: { label: "-", disabled: current <= 0, event: { kind: "adjustActionTotal", date: args.date, actionId: args.action.id, delta: -args.action.input.step } },
       }
-      if (needed > 0)
-      {
-        numActionsStillRequired += 1;
-      }
-
-      const configMax =
-        typeof action.max === "number" && Number.isFinite(action.max) && action.max > 0 ? action.max : undefined;
-
-      const entry: ActionEntryModel = (() => {
-        if (action.input.type === "button") {
-          const step = action.input.step;
-          return {
-            kind: "button",
-            plus: {
-              label: "+",
-              disabled: configMax !== undefined ? current >= configMax : false,
-              event: { kind: "adjustActionTotal", date: args.date, actionId: action.id, delta: step },
-            },
-            minus: {
-              label: "-",
-              disabled: current <= 0,
-              event: { kind: "adjustActionTotal", date: args.date, actionId: action.id, delta: -step },
-            },
-          };
-        }
-
-        const inputMax =
-          typeof action.input.max === "number" && Number.isFinite(action.input.max) && action.input.max > 0
-            ? action.input.max
-            : undefined;
+    : (() => {
+        const inputMax = typeof args.action.input.max === "number" && Number.isFinite(args.action.input.max) && args.action.input.max > 0 ? args.action.input.max : undefined;
         const effectiveMax = inputMax !== undefined && configMax !== undefined ? Math.min(inputMax, configMax) : (inputMax ?? configMax);
-
         return {
-          kind: "number",
-          min: action.input.min !== undefined ? String(action.input.min) : undefined,
+          kind: "number" as const,
+          min: args.action.input.min !== undefined ? String(args.action.input.min) : undefined,
           max: effectiveMax !== undefined ? String(effectiveMax) : undefined,
-          step: action.input.step !== undefined ? String(action.input.step) : undefined,
+          step: args.action.input.step !== undefined ? String(args.action.input.step) : undefined,
           value: String(current),
-          eventBase: { kind: "adjustActionTotal", date: args.date, actionId: action.id },
+          eventBase: { kind: "adjustActionTotal" as const, date: args.date, actionId: args.action.id },
           current,
         };
       })();
 
-      rows.push({ kind: "action", actionId: action.id, name: action.name, currentText, entry, requiredLeft: Math.max(needed, 0)});
-    }
+  return { kind: "action", actionId: args.action.id, name: args.action.name, currentText: String(current), entry, requiredLeft: Math.max(needed, 0) };
+}
 
-    for (const rec of g.records) {
-      const currentText = String(args.dayLog?.records?.[rec.id] ?? "");
-      const entry: RecordEntryModel = {
-        kind: "recordInput",
-        inputType: rec.input.type === "number" ? "number" : "text",
-        min: rec.input.type === "number" && rec.input.min !== undefined ? String(rec.input.min) : undefined,
-        max: rec.input.type === "number" && rec.input.max !== undefined ? String(rec.input.max) : undefined,
-        step: rec.input.type === "number" && rec.input.step !== undefined ? String(rec.input.step) : undefined,
-        value: currentText,
-        eventBase: { kind: "setRecordValue", date: args.date, recordId: rec.id },
+function translateRecord(args: { date: IsoDate; record: RecordConfig; dayLog: DailyLog | null }): ActivityRowModel {
+  const currentText = String(args.dayLog?.records?.[args.record.id] ?? "");
+  const input = args.record.input;
+  const entry: RecordEntryModel = {
+    kind: "recordInput",
+    inputType: input.type === "number" ? "number" : "text",
+    min: input.type === "number" && input.min !== undefined ? String(input.min) : undefined,
+    max: input.type === "number" && input.max !== undefined ? String(input.max) : undefined,
+    step: input.type === "number" && input.step !== undefined ? String(input.step) : undefined,
+    value: currentText,
+    eventBase: { kind: "setRecordValue", date: args.date, recordId: args.record.id },
+  };
+  return { kind: "record", recordId: args.record.id, name: args.record.name, currentText, entry };
+}
+
+export function translateActivitiesSection(args: { date: IsoDate; config: SystemConfig; dayLog: DailyLog | null }): ActivitiesSectionModel {
+  const records = args.config.records ?? [];
+  if (args.config.actions.length === 0 && records.length === 0) return { kind: "activitiesEmpty", message: "No actions or records configured." };
+
+  const groups = buildActivityGroupsFromConfig(args.config);
+  const outGroups = groups.map((group) => {
+    const columns: ActivitiesColumnModel[] = group.columns.map((column) => {
+      const rows = [
+        ...column.actions.map((action) => translateAction({ date: args.date, action, dayLog: args.dayLog, config: args.config })),
+        ...column.records.map((record) => translateRecord({ date: args.date, record, dayLog: args.dayLog })),
+      ];
+      return {
+        id: column.id,
+        name: column.name,
+        width: column.config.width,
+        tableWidths: column.config.tableWidths,
+        rows,
+        numActionsStillRequired: rows.filter((row) => row.kind === "action" && row.requiredLeft > 0).length,
       };
-      rows.push({ kind: "record", recordId: rec.id, name: rec.name, currentText, entry });
-    }
-
-    outGroups.push({ id: g.id, name: g.name, rows, numActionsStillRequired: numActionsStillRequired});
-  }
+    });
+    return {
+      id: group.id,
+      name: group.name,
+      columns,
+      numActionsStillRequired: columns.reduce((total, column) => total + column.numActionsStillRequired, 0),
+    };
+  });
 
   return { kind: "activitiesTabs", groups: outGroups };
 }

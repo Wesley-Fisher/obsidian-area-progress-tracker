@@ -59,6 +59,32 @@ export function checkConfiguration(config: SystemConfig): ConfigurationIssue[] {
   const areaIds = config.areas.map((a) => a.id);
   const actionIds = config.actions.map((a) => a.id);
   const recordIds = config.records.map((r) => r.id);
+  const configuredGroupIds = config.groups.map((group) => group.id);
+  const columnsByGroup = new Map<string, Set<string>>();
+  for (let i = 0; i < config.groups.length; i++) {
+    const group = config.groups[i];
+    const columns = group.columns ?? [{ id: "default", name: group.name }];
+    const columnIds = columns.map((column) => column.id);
+    columnsByGroup.set(group.id, new Set(columnIds));
+    for (const duplicate of findDuplicates(columnIds)) {
+      issues.push({ message: `Duplicate column id: ${duplicate}`, path: `groups[${i}].columns[id=${duplicate}]` });
+    }
+  }
+
+  const checkPlacements = (items: Array<{ placements: Array<{ groupId: string; columnId: string }> }>, path: string): void => {
+    items.forEach((item, index) => {
+      for (const [placementIndex, placement] of (item.placements ?? []).entries()) {
+        const columns = columnsByGroup.get(placement.groupId);
+        if (!configuredGroupIds.includes(placement.groupId)) {
+          issues.push({ message: `Unknown placement group: ${placement.groupId}`, path: `${path}[${index}].placements[${placementIndex}].groupId` });
+        } else if (!columns || !columns.has(placement.columnId)) {
+          issues.push({ message: `Unknown placement column: ${placement.columnId}`, path: `${path}[${index}].placements[${placementIndex}].columnId` });
+        }
+      }
+    });
+  };
+  checkPlacements(config.actions, "actions");
+  checkPlacements(config.records, "records");
 
   const stats = (config as Partial<SystemConfig>).stats as unknown;
   if (!stats || typeof stats !== "object" || Array.isArray(stats)) {

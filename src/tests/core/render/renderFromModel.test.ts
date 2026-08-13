@@ -44,7 +44,7 @@ describe("core/render/renderFromModel", () => {
             id: "g1",
             name: "Group",
             numActionsStillRequired: 0,
-            rows: [
+            columns: [{ id: "default", name: "Default", rows: [
               {
                 kind: "action",
                 actionId: "walk",
@@ -103,7 +103,7 @@ describe("core/render/renderFromModel", () => {
                   eventBase: { kind: "setRecordValue", date: "2026-03-16", recordId: "mood" },
                 },
               },
-            ],
+            ], numActionsStillRequired: 0 }],
           },
         ],
       },
@@ -165,7 +165,7 @@ describe("core/render/renderFromModel", () => {
           {
             id: "g1",
             name: "Group",
-            rows: [
+            columns: [{ id: "default", name: "Default", rows: [
               {
                 actionId: "walk",
                 name: "Walk",
@@ -192,7 +192,7 @@ describe("core/render/renderFromModel", () => {
                   current: 2,
                 },
               },
-            ],
+            ] }],
           },
         ],
       },

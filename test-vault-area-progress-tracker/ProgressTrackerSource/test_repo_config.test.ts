@@ -40,9 +40,8 @@ describe("test-repo-config", () => {
         }
       ],
       "groups": [
-        { "id": "morning", "name": "Morning" },
-        { "id": "work", "name": "Work" },
-        { "id": "evening", "name": "Evening" }
+        { "id": "routine", "name": "Routine", "columns": [{ "id": "morning", "name": "Morning" }, { "id": "evening", "name": "Evening" }] },
+        { "id": "work", "name": "Work", "columns": [{ "id": "main", "name": "Work" }] }
       ],
       "actions": [
         {
@@ -50,7 +49,7 @@ describe("test-repo-config", () => {
           "name": "Walk 20m",
           "input": { "type": "button", "step": 1 },
           "effects": { "health": 12 },
-          "groupIds": ["morning", "evening"],
+          "placements": [{ "groupId": "routine", "columnId": "morning" }, { "groupId": "routine", "columnId": "evening" }],
           "max": 0
         },
         {
@@ -58,7 +57,7 @@ describe("test-repo-config", () => {
           "name": "Stretch",
           "input": { "type": "button", "step": 1 },
           "effects": { "health": 0 },
-          "groupIds": ["morning", "evening"],
+          "placements": [{ "groupId": "routine", "columnId": "morning" }, { "groupId": "routine", "columnId": "evening" }],
           "max": 0
         },
         {
@@ -66,7 +65,7 @@ describe("test-repo-config", () => {
           "name": "Deep work (45m)",
           "input": { "type": "number", "min": 0, "step": 1 },
           "effects": { "career": 5 },
-          "groupIds": ["work"],
+          "placements": [{ "groupId": "work", "columnId": "main" }],
           "max": 0
         },
         {
@@ -74,7 +73,7 @@ describe("test-repo-config", () => {
           "name": "Junk food",
           "input": { "type": "button", "step": 1 },
           "effects": { "health": -15 },
-          "groupIds": ["evening"],
+          "placements": [{ "groupId": "routine", "columnId": "evening" }],
           "max": 0
         }
       ],
@@ -83,13 +82,13 @@ describe("test-repo-config", () => {
           "id": "weight",
           "name": "Weight",
           "input": { "type": "number", "min": 50, "max": 400, "step": 0.1 },
-          "groupIds": ["morning", "evening"]
+          "placements": [{ "groupId": "routine", "columnId": "morning" }, { "groupId": "routine", "columnId": "evening" }]
         },
         {
           "id": "mood",
           "name": "Mood",
           "input": { "type": "text" },
-          "groupIds": ["evening"]
+          "placements": [{ "groupId": "routine", "columnId": "evening" }]
         }
       ],
       "requiredActions":

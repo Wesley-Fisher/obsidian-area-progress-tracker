@@ -132,14 +132,14 @@ export type ActivityGroup = {
 export function buildActivityGroups(args: RenderDayModeArgs, records: RecordConfig[]): ActivityGroup[] {
   const groupsInConfig = args.config.groups ?? [];
 
-  const ungroupedActions = args.config.actions.filter((a) => !a.groupIds || a.groupIds.length === 0);
-  const ungroupedRecords = records.filter((r) => !r.groupIds || r.groupIds.length === 0);
+    const ungroupedActions = args.config.actions.filter((a) => a.placements.length === 0);
+    const ungroupedRecords = records.filter((r) => r.placements.length === 0);
 
   const groups: ActivityGroup[] = [];
 
   for (const group of groupsInConfig) {
-    const a = args.config.actions.filter((act) => act.groupIds.includes(group.id));
-    const r = records.filter((rec) => rec.groupIds.includes(group.id));
+      const a = args.config.actions.filter((act) => act.placements.some((placement) => placement.groupId === group.id));
+      const r = records.filter((rec) => rec.placements.some((placement) => placement.groupId === group.id));
     if (a.length === 0 && r.length === 0) continue;
     groups.push({ id: group.id, name: group.name, actions: a, records: r });
   }
@@ -158,11 +158,11 @@ export function buildActivityGroups(args: RenderDayModeArgs, records: RecordConf
 export function buildActionOnlyGroups(args: RenderDayModeArgs): ActivityGroup[] {
   const groupsInConfig = args.config.groups ?? [];
 
-  const ungroupedActions = args.config.actions.filter((a) => !a.groupIds || a.groupIds.length === 0);
+  const ungroupedActions = args.config.actions.filter((a) => a.placements.length === 0);
   const groups: ActivityGroup[] = [];
 
   for (const group of groupsInConfig) {
-    const a = args.config.actions.filter((act) => act.groupIds?.includes(group.id));
+    const a = args.config.actions.filter((act) => act.placements.some((placement) => placement.groupId === group.id));
     if (a.length === 0) continue;
     groups.push({ id: group.id, name: group.name, actions: a, records: [] });
   }

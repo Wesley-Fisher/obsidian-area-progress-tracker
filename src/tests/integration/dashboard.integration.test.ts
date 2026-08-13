@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { IsoDate } from "../../core/types";
 import { handleUserEvent } from "../../core/handleEvents/handleUserEvent";
 import { translateRenderBlock } from "../../core/translate/translateRenderBlock";
-import type { ActivitiesGroupModel, RenderDashboardBodyModel } from "../../core/translate/models";
+import type { ActivitiesColumnModel, RenderDashboardBodyModel } from "../../core/translate/models";
 import { createFixtureRepo } from "./fixtureVault";
 
 async function renderDashboard(date: IsoDate) {
@@ -20,11 +20,13 @@ async function renderDashboard(date: IsoDate) {
   return { ...fixture, model };
 }
 
-function activityGroup(model: RenderDashboardBodyModel, id: string): ActivitiesGroupModel {
+function activityColumn(model: RenderDashboardBodyModel, groupId: string, columnId: string): ActivitiesColumnModel {
   if (model.actions.kind !== "activitiesTabs") throw new Error("expected activity tabs");
-  const group = model.actions.groups.find((candidate) => candidate.id === id);
-  if (!group) throw new Error(`missing activity group: ${id}`);
-  return group;
+  const group = model.actions.groups.find((candidate) => candidate.id === groupId);
+  if (!group?.columns) throw new Error(`missing activity group: ${groupId}`);
+  const column = group.columns.find((candidate) => candidate.id === columnId);
+  if (!column) throw new Error(`missing activity column: ${groupId}/${columnId}`);
+  return column;
 }
 
 describe("integration: dashboard workflows", () => {
@@ -41,8 +43,10 @@ describe("integration: dashboard workflows", () => {
     expect(model.planDay).toMatchObject({ kind: "planTabs", scope: "day" });
     expect(model.planWeek).toMatchObject({ kind: "planTabs", scope: "week" });
 
-    const morning = activityGroup(model, "morning");
-    const evening = activityGroup(model, "evening");
+    const morning = activityColumn(model, "routine", "morning");
+    const evening = activityColumn(model, "routine", "evening");
+    if (model.actions.kind !== "activitiesTabs") throw new Error("expected activity tabs");
+    expect(model.actions.groups.find((group) => group.id === "routine")?.columns.map((column) => column.name)).toEqual(["Morning", "Evening"]);
     expect(morning.numActionsStillRequired).toBe(1);
     expect(evening.numActionsStillRequired).toBe(1);
 
@@ -74,9 +78,9 @@ describe("integration: dashboard workflows", () => {
     expect(model.kind).toBe("dashboard");
     if (model.kind !== "dashboard") throw new Error("expected dashboard model");
 
-    for (const groupId of ["morning", "evening"]) {
-      const group = activityGroup(model, groupId);
-      expect(group.rows).toEqual(expect.arrayContaining([
+    for (const columnId of ["morning", "evening"]) {
+      const column = activityColumn(model, "routine", columnId);
+      expect(column.rows).toEqual(expect.arrayContaining([
         expect.objectContaining({ kind: "action", actionId: "walk", currentText: "1" }),
         expect.objectContaining({ kind: "record", recordId: "weight", currentText: "141" }),
       ]));

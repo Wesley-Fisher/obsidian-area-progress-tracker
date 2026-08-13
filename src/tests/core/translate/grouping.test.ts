@@ -23,12 +23,12 @@ function mkConfig(partial: Partial<SystemConfig>): SystemConfig {
 describe("render/translate/grouping", () => {
   it("buildActivityGroupsFromConfig uses configured groups and adds Ungrouped for leftovers", () => {
     const config = mkConfig({
-      groups: [{ id: "g1", name: "Group 1" }],
+      groups: [{ id: "g1", name: "Group 1", columns: [{ id: "default", name: "Default" }] }],
       actions: [
-        { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: ["g1"], max: 0 },
-        { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0},
+        { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, placements: [{ groupId: "g1", columnId: "default" }], max: 0 },
+        { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, placements: [], max: 0},
       ],
-      records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: ["g1"] }],
+      records: [{ id: "r1", name: "R1", input: { type: "text" }, placements: [{ groupId: "g1", columnId: "default" }] }],
     });
 
     const groups = buildActivityGroupsFromConfig(config);
@@ -41,8 +41,8 @@ describe("render/translate/grouping", () => {
 
   it("buildActivityGroupsFromConfig falls back to All when nothing is grouped", () => {
     const config = mkConfig({
-      actions: [{ id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 }],
-      records: [{ id: "r1", name: "R1", input: { type: "text" }, groupIds: [] }],
+      actions: [{ id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, placements: [], max: 0 }],
+      records: [{ id: "r1", name: "R1", input: { type: "text" }, placements: [] }],
     });
 
     const groups = buildActivityGroupsFromConfig(config);
@@ -51,12 +51,12 @@ describe("render/translate/grouping", () => {
     expect(groups[0].records).toHaveLength(1);
   });
 
-  it("buildActionOnlyGroupsFromConfig returns Ungrouped when groupIds absent", () => {
+  it("buildActionOnlyGroupsFromConfig returns Ungrouped when placements are empty", () => {
     const config = mkConfig({
-      groups: [{ id: "g1", name: "Group 1" }],
+      groups: [{ id: "g1", name: "Group 1", columns: [{ id: "default", name: "Default" }] }],
       actions: [
-        { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
-        { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
+        { id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, placements: [], max: 0 },
+        { id: "a2", name: "A2", input: { type: "button", step: 1 }, effects: {}, placements: [], max: 0 },
       ],
     });
 
@@ -67,9 +67,9 @@ describe("render/translate/grouping", () => {
 
   it("buildActivityGroupsFromConfig skips empty configured groups and falls back to All when nothing else exists", () => {
     const config = mkConfig({
-      groups: [{ id: "g1", name: "Group 1" }],
+      groups: [{ id: "g1", name: "Group 1", columns: [{ id: "default", name: "Default" }] }],
       // action references unknown groupId so it won't match g1, and isn't considered ungrouped
-      actions: [{ id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: ["unknown"], max: 0 }],
+      actions: [{ id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, placements: [{ groupId: "unknown", columnId: "default" }], max: 0 }],
       records: [],
     });
 
@@ -80,8 +80,8 @@ describe("render/translate/grouping", () => {
 
   it("buildActionOnlyGroupsFromConfig skips empty configured groups and falls back to All", () => {
     const config = mkConfig({
-      groups: [{ id: "g1", name: "Group 1" }],
-      actions: [{ id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, groupIds: ["unknown"], max: 0 }],
+      groups: [{ id: "g1", name: "Group 1", columns: [{ id: "default", name: "Default" }] }],
+      actions: [{ id: "a1", name: "A1", input: { type: "button", step: 1 }, effects: {}, placements: [{ groupId: "unknown", columnId: "default" }], max: 0 }],
     });
 
     const groups = buildActionOnlyGroupsFromConfig(config);

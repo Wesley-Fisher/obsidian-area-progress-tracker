@@ -33,9 +33,9 @@ describe("render/translate/translatePlanSection", () => {
       areas: [],
       groups: [],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0  },
-        { id: "done", name: "Done", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0  },
-        { id: "deep_work", name: "Deep Work", input: { type: "number", min: 0, max: 10, step: 1 }, effects: {}, groupIds: [], max: 0 },
+        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, placements: [], max: 0  },
+        { id: "done", name: "Done", input: { type: "button", step: 1 }, effects: {}, placements: [], max: 0  },
+        { id: "deep_work", name: "Deep Work", input: { type: "number", min: 0, max: 10, step: 1 }, effects: {}, placements: [], max: 0 },
       ],
       records: [],
       requiredActions: {},
@@ -57,7 +57,7 @@ describe("render/translate/translatePlanSection", () => {
     expect(model.kind).toBe("planTabs");
     if (model.kind !== "planTabs") throw new Error("expected planTabs");
 
-    const allRows = model.groups.flatMap((g) => g.rows);
+    const allRows = model.groups.flatMap((g) => g.columns.flatMap((column) => column.rows));
     const byId = new Map(allRows.map((r) => [r.actionId, r] as const));
 
     expect(byId.get("walk")?.plannedText).toBe("0");
@@ -77,8 +77,8 @@ describe("render/translate/translatePlanSection", () => {
       areas: [],
       groups: [],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
-        { id: "done", name: "Done", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
+        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, placements: [], max: 0 },
+        { id: "done", name: "Done", input: { type: "button", step: 1 }, effects: {}, placements: [], max: 0 },
       ],
       records: [],
       requiredActions: {},
@@ -91,7 +91,7 @@ describe("render/translate/translatePlanSection", () => {
     expect(model.kind).toBe("planTabs");
     if (model.kind !== "planTabs") throw new Error("expected planTabs");
 
-    const rows = model.groups.flatMap((g) => g.rows);
+    const rows = model.groups.flatMap((g) => g.columns.flatMap((column) => column.rows));
     const byId = new Map(rows.map((r) => [r.actionId, r] as const));
 
     const walk = byId.get("walk");
@@ -113,7 +113,7 @@ describe("render/translate/translatePlanSection", () => {
       version: 1,
       areas: [],
       groups: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 1 }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, placements: [], max: 1 }],
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },
@@ -125,7 +125,7 @@ describe("render/translate/translatePlanSection", () => {
     expect(model.kind).toBe("planTabs");
     if (model.kind !== "planTabs") throw new Error("expected planTabs");
 
-    const row = model.groups.flatMap((g) => g.rows).find((r) => r.actionId === "walk");
+    const row = model.groups.flatMap((g) => g.columns.flatMap((column) => column.rows)).find((r) => r.actionId === "walk");
     if (!row || row.entry.kind !== "stepperNumber") throw new Error("expected walk stepperNumber entry");
     expect(row.entry.plus.disabled).toBe(true);
     expect(row.entry.minus.disabled).toBe(false);

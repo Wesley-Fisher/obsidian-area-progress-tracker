@@ -48,7 +48,7 @@ describe("renderActivitiesTabs", () => {
       config: {
         version: 1,
         areas: [],
-        actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2 }],
+        actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, placements: [] }],
         records: [],
       },
       dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { walk: 1 } } as DailyLog,
@@ -90,7 +90,7 @@ describe("renderActivitiesTabs", () => {
       config: {
         version: 1,
         areas: [],
-        actions: [{ id: "meditate", name: "Meditate", input: { type: "button", step: 1 }, effects: {} }],
+        actions: [{ id: "meditate", name: "Meditate", input: { type: "button", step: 1 }, effects: {}, placements: [] }],
         records: [],
       },
       dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { meditate: 1 } } as DailyLog,
@@ -119,7 +119,7 @@ describe("renderActivitiesTabs", () => {
         version: 1,
         areas: [],
         actions: [
-          { id: "pushups", name: "Pushups", input: { type: "number", max: 10, step: 1 }, effects: {}, max: 5 },
+          { id: "pushups", name: "Pushups", input: { type: "number", max: 10, step: 1 }, effects: {}, max: 5, placements: [] },
         ],
         records: [],
       },
@@ -149,8 +149,8 @@ describe("renderActivitiesTabs", () => {
       config: {
         version: 1,
         areas: [],
-        actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {} }],
-        records: [{ id: "mood", name: "Mood", input: { type: "text" } }],
+        actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, placements: [] }],
+        records: [{ id: "mood", name: "Mood", input: { type: "text" }, placements: [] }],
       },
       dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: {}, records: { mood: "ok" } } as DailyLog,
       onUserAction: async (evt: UserEvent) => {
@@ -174,7 +174,7 @@ describe("renderActivitiesTabs", () => {
       config: {
         version: 1,
         areas: [],
-        actions: [{ id: "meditate", name: "Meditate", input: { type: "button", step: 1 }, effects: {}, max: 0 }],
+        actions: [{ id: "meditate", name: "Meditate", input: { type: "button", step: 1 }, effects: {}, max: 0, placements: [] }],
         records: [],
       },
       dayLog: { previousScore: {}, startingScore: {}, updatedScore: {}, actions: { meditate: 0 } } as DailyLog,

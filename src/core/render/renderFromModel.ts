@@ -14,7 +14,7 @@ import type {
   ActivitiesSectionModelFilled,
   StatsSectionModel,
 } from "../translate/models";
-import { addThreeColRow, renderTabbedGroups, renderThreeColumnTable } from "./inner/commonTable";
+import { addThreeColRow, renderColumnTables, renderTabbedGroups, renderThreeColumnTable } from "./inner/commonTable";
 
 export type RenderRuntime = {
   date: IsoDate;
@@ -189,22 +189,19 @@ function renderActivitiesContent(container: HTMLElement, runtime: RenderRuntime,
     container,
     model.groups,
     (panel, g) => {
-      renderThreeColumnTable(panel, "apt-activities-table", (tbody) => {
-        for (const row of g.rows) {
-          if (row.kind === "action") {
-            const doUnderline = row.requiredLeft > 0;
-            const focusKeyBase = `${instanceId}:activities:${g.id}:action:${row.actionId}`;
-            addThreeColRow(tbody, row.name, row.currentText, doUnderline, (cell) =>
-              renderActionEntry(cell, runtime, row.entry, focusKeyBase)
-            );
-          } else {
-            const focusKey = `${instanceId}:activities:${g.id}:record:${row.recordId}`;
-            addThreeColRow(tbody, row.name, row.currentText, false, (cell) =>
-              renderRecordEntry(cell, runtime, row.entry, focusKey)
-            );
+      renderColumnTables(panel, g.columns, (columnPanel, column) => {
+        renderThreeColumnTable(columnPanel, "apt-activities-table", (tbody) => {
+          for (const row of column.rows) {
+            if (row.kind === "action") {
+              const focusKeyBase = `${instanceId}:activities:${g.id}:${column.id}:action:${row.actionId}`;
+              addThreeColRow(tbody, row.name, row.currentText, row.requiredLeft > 0, (cell) => renderActionEntry(cell, runtime, row.entry, focusKeyBase));
+            } else {
+              const focusKey = `${instanceId}:activities:${g.id}:${column.id}:record:${row.recordId}`;
+              addThreeColRow(tbody, row.name, row.currentText, false, (cell) => renderRecordEntry(cell, runtime, row.entry, focusKey));
+            }
           }
-        }
-      });
+        }, column.tableWidths);
+      }, (column) => column.numActionsStillRequired);
     },
     {
       tabGroupKey: "activities",
@@ -240,18 +237,19 @@ function renderActivitiesTabs(
     sec,
     model.groups,
     (panel, g) => {
-    renderThreeColumnTable(panel, "apt-activities-table", (tbody) => {
-      for (const row of g.rows) {
-        if (row.kind === "action") {
-          const doUnderline = row.requiredLeft > 0;
-          const focusKeyBase = `${instanceId}:activities:${g.id}:action:${row.actionId}`;
-          addThreeColRow(tbody, row.name, row.currentText, doUnderline, (cell) => renderActionEntry(cell, runtime, row.entry, focusKeyBase));
-        } else {
-          const focusKey = `${instanceId}:activities:${g.id}:record:${row.recordId}`;
-          addThreeColRow(tbody, row.name, row.currentText, false, (cell) => renderRecordEntry(cell, runtime, row.entry, focusKey));
+    renderColumnTables(panel, g.columns, (columnPanel, column) => {
+      renderThreeColumnTable(columnPanel, "apt-activities-table", (tbody) => {
+        for (const row of column.rows) {
+          if (row.kind === "action") {
+            const focusKeyBase = `${instanceId}:activities:${g.id}:${column.id}:action:${row.actionId}`;
+            addThreeColRow(tbody, row.name, row.currentText, row.requiredLeft > 0, (cell) => renderActionEntry(cell, runtime, row.entry, focusKeyBase));
+          } else {
+            const focusKey = `${instanceId}:activities:${g.id}:${column.id}:record:${row.recordId}`;
+            addThreeColRow(tbody, row.name, row.currentText, false, (cell) => renderRecordEntry(cell, runtime, row.entry, focusKey));
+          }
         }
-      }
-    });
+      }, column.tableWidths);
+    }, (column) => column.numActionsStillRequired);
     },
     {
       tabGroupKey: "activities",
@@ -346,11 +344,13 @@ function renderPlanTabs(container: HTMLElement, runtime: RenderRuntime, model: E
     sec,
     model.groups,
     (panel, g) => {
-    renderThreeColumnTable(panel, "apt-plan-table", (tbody) => {
-      for (const row of g.rows) {
-        const focusKeyBase = `${instanceId}:plan:${model.scope}:${g.id}:action:${row.actionId}`;
-        addThreeColRow(tbody, row.name, row.plannedText, false, (cell) => renderPlanEntry(cell, runtime, row.entry, focusKeyBase));
-      }
+    renderColumnTables(panel, g.columns, (columnPanel, column) => {
+      renderThreeColumnTable(columnPanel, "apt-plan-table", (tbody) => {
+        for (const row of column.rows) {
+          const focusKeyBase = `${instanceId}:plan:${model.scope}:${g.id}:${column.id}:action:${row.actionId}`;
+          addThreeColRow(tbody, row.name, row.plannedText, false, (cell) => renderPlanEntry(cell, runtime, row.entry, focusKeyBase));
+        }
+      }, column.tableWidths);
     });
     },
     {
@@ -380,13 +380,13 @@ function renderPlanContent(container: HTMLElement, runtime: RenderRuntime, model
     container,
     model.groups,
     (panel, g) => {
-      renderThreeColumnTable(panel, "apt-plan-table", (tbody) => {
-        for (const row of g.rows) {
-          const focusKeyBase = `${instanceId}:plan:${model.scope}:${g.id}:action:${row.actionId}`;
-          addThreeColRow(tbody, row.name, row.plannedText, false, (cell) =>
-            renderPlanEntry(cell, runtime, row.entry, focusKeyBase)
-          );
-        }
+      renderColumnTables(panel, g.columns, (columnPanel, column) => {
+        renderThreeColumnTable(columnPanel, "apt-plan-table", (tbody) => {
+          for (const row of column.rows) {
+            const focusKeyBase = `${instanceId}:plan:${model.scope}:${g.id}:${column.id}:action:${row.actionId}`;
+            addThreeColRow(tbody, row.name, row.plannedText, false, (cell) => renderPlanEntry(cell, runtime, row.entry, focusKeyBase));
+          }
+        }, column.tableWidths);
       });
     },
     {

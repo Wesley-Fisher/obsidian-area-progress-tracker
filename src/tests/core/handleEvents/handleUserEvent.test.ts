@@ -74,7 +74,7 @@ describe("handleUserEvent", () => {
       version: 1,
       areas: [],
       groups: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 1, groupIds: [] }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, max: 1, placements: [] }],
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },

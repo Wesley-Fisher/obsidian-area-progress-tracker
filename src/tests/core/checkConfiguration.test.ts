@@ -8,7 +8,7 @@ describe("checkConfiguration", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }],
       groups: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, placements: [], max: 0 }],
       records: [],
       requiredActions: {
         health: [{ action: "walk", req: 2 }],
@@ -26,7 +26,7 @@ describe("checkConfiguration", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }],
       groups: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, placements: [], max: 0 }],
       records: [],
       requiredActions: {
         career: [{ action: "walk", req: 2 }],
@@ -56,7 +56,7 @@ describe("checkConfiguration", () => {
 
       ],
       groups: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, placements: [], max: 0 }],
       records: [],
       requiredActions: {
         health: [{ action: "walk", req: 2 }],
@@ -78,7 +78,7 @@ describe("checkConfiguration", () => {
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }
       ],
       groups: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, placements: [], max: 0 }],
       records: [],
       requiredActions: {
         health: undefined, // Invalid type
@@ -100,7 +100,7 @@ describe("checkConfiguration", () => {
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }
       ],
       groups: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, placements: [], max: 0 }],
       records: [],
       requiredActions: {
         health: [{ action: "", req: 2 }],
@@ -122,7 +122,7 @@ describe("checkConfiguration", () => {
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }
       ],
       groups: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, placements: [], max: 0 }],
       records: [],
       requiredActions: {
         // @ts-expect-error  // Allow testing invalid entry for robustness
@@ -144,7 +144,7 @@ describe("checkConfiguration", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500 }],
       groups: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, placements: [], max: 0 }],
       records: [],
       requiredActions: { health: [{ action: "walk", req: 2 }] },
       dailyPlan: { actions: {} },
@@ -164,7 +164,7 @@ describe("checkConfiguration", () => {
       version: 1,
       areas: [{ id: "health", name: "Health", minScore: 0, maxScore: 1000, baseScore: 500, dailyDecayAlways: 0, dailyDecayUnattended: 10 }],
       groups: [],
-      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, groupIds: [], max: 0 }],
+      actions: [{ id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: { health: 12 }, placements: [], max: 0 }],
       records: [],
       requiredActions: {},
       dailyPlan: { actions: {} },

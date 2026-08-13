@@ -42,7 +42,7 @@ describe("Examples/03-requiredActions-decay", () => {
           "name": "Walk 20m",
           "input": { "type": "button", "step": 1 },
           "effects": { "health": 12 },
-          "groupIds": ["health"],
+          "placements": [{ "groupId": "health", "columnId": "main" }],
           "max": 0
         },
         {
@@ -50,11 +50,11 @@ describe("Examples/03-requiredActions-decay", () => {
           "name": "Stretch",
           "input": { "type": "button", "step": 1 },
           "effects": { "health": 3 },
-          "groupIds": ["health"],
+          "placements": [{ "groupId": "health", "columnId": "main" }],
           "max": 0
         }
       ],
-      "groups": [{ "id": "health", "name": "Health" }],
+      "groups": [{ "id": "health", "name": "Health", "columns": [{ "id": "main", "name": "Activities" }] }],
       "records": [],
       "dailyPlan": { "actions": {} },
       "weeklyPlan": { "actions": {} },

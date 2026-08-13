@@ -14,8 +14,8 @@ describe("core/render/commonPlan", () => {
       areas: [],
       groups: [],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
-        { id: "run", name: "Run", input: { type: "button", step: 1 }, effects: {}, groupIds: [], max: 0 },
+        { id: "walk", name: "Walk", input: { type: "button", step: 1 }, effects: {}, placements: [], max: 0 },
+        { id: "run", name: "Run", input: { type: "button", step: 1 }, effects: {}, placements: [], max: 0 },
       ],
       records: [],
       requiredActions: {},

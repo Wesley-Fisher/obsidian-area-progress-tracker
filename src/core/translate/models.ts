@@ -1,4 +1,4 @@
-import type { ActionConfig, IsoDate, RecordConfig, StatsDisplayConfig } from "../types";
+import type { IsoDate, StatsDisplayConfig } from "../types";
 import type { UserEvent } from "../handleEvents/types";
 
 export type RenderBodyModel = RenderErrorModel | RenderDashboardBodyModel;
@@ -56,7 +56,16 @@ export type ActivitiesSectionModel =
 export type ActivitiesGroupModel = {
   id: string;
   name: string;
-  rows: Array<ActivityRowModel>;
+  columns: ActivitiesColumnModel[];
+  numActionsStillRequired: number;
+};
+
+export type ActivitiesColumnModel = {
+  id: string;
+  name: string;
+  width?: number;
+  tableWidths?: { name?: number; current?: number; entry?: number };
+  rows: ActivityRowModel[];
   numActionsStillRequired: number;
 };
 
@@ -151,6 +160,14 @@ export type StatsRowModel = {
 export type PlanGroupModel = {
   id: string;
   name: string;
+  columns: PlanColumnModel[];
+};
+
+export type PlanColumnModel = {
+  id: string;
+  name: string;
+  width?: number;
+  tableWidths?: { name?: number; current?: number; entry?: number };
   rows: PlanRowModel[];
 };
 
@@ -163,8 +180,3 @@ export type PlanRowModel = {
   entry: PlanEntryModel;
 };
 
-export type GroupingInputs = {
-  groupsInConfig: Array<{ id: string; name: string }>;
-  actions: ActionConfig[];
-  records: RecordConfig[];
-};

@@ -40,8 +40,7 @@ describe("Examples/02-groups-and-records", () => {
         }
       ],
       "groups": [
-        { "id": "morning", "name": "Morning" },
-        { "id": "evening", "name": "Evening" }
+        { "id": "routine", "name": "Routine", "columns": [{ "id": "morning", "name": "Morning" }, { "id": "evening", "name": "Evening" }] }
       ],
       "actions": [
         {
@@ -49,7 +48,7 @@ describe("Examples/02-groups-and-records", () => {
           "name": "Walk 20m",
           "input": { "type": "button", "step": 1 },
           "effects": { "health": 12 },
-          "groupIds": ["morning"],
+          "placements": [{ "groupId": "routine", "columnId": "morning" }],
           "max": 0
         },
         {
@@ -57,7 +56,7 @@ describe("Examples/02-groups-and-records", () => {
           "name": "Deep work (minutes)",
           "input": { "type": "number", "min": 0, "max": 180, "step": 15 },
           "effects": { "career": 0.2 },
-          "groupIds": ["morning"],
+          "placements": [{ "groupId": "routine", "columnId": "morning" }],
           "max": 0
         },
         {
@@ -65,7 +64,7 @@ describe("Examples/02-groups-and-records", () => {
           "name": "Junk food",
           "input": { "type": "button", "step": 1 },
           "effects": { "health": -15 },
-          "groupIds": ["evening"],
+          "placements": [{ "groupId": "routine", "columnId": "evening" }],
           "max": 3
         }
       ],
@@ -74,13 +73,13 @@ describe("Examples/02-groups-and-records", () => {
           "id": "weight",
           "name": "Weight",
           "input": { "type": "number", "min": 50, "max": 400, "step": 0.1 },
-          "groupIds": ["morning"]
+          "placements": [{ "groupId": "routine", "columnId": "morning" }]
         },
         {
           "id": "note",
           "name": "Quick note",
           "input": { "type": "text" },
-          "groupIds": ["evening"]
+          "placements": [{ "groupId": "routine", "columnId": "evening" }]
         }
       ],
       "requiredActions": {},

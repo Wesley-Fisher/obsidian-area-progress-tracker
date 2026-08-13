@@ -64,19 +64,54 @@ export function renderTabbedGroups<TGroup extends TabbedGroup>(
 export function renderThreeColumnTable(
   container: HTMLElement,
   className: string,
-  addRows: (tbody: HTMLElement) => void
+  addRows: (tbody: HTMLElement) => void,
+  widths?: { name?: number; current?: number; entry?: number }
 ): void {
   const table = container.createEl("table");
   table.addClass(className);
+  table.style.width = "100%";
+  table.style.tableLayout = "fixed";
 
   const thead = table.createEl("thead");
   const hr = thead.createEl("tr");
-  hr.createEl("th", { text: "Name" });
-  hr.createEl("th", { text: "Current" });
-  hr.createEl("th", { text: "Entry" });
+  const columnWidths = [widths?.name ?? 1, widths?.current ?? 1, widths?.entry ?? 1];
+  for (const [index, label] of ["Name", "Current", "Entry"].entries()) {
+    const header = hr.createEl("th", { text: label });
+    header.style.width = `${columnWidths[index]}fr`;
+  }
 
   const tbody = table.createEl("tbody");
   addRows(tbody);
+}
+
+export function renderColumnTables<T extends { id: string; name: string; width?: number; tableWidths?: { name?: number; current?: number; entry?: number } }>(
+  container: HTMLElement,
+  columns: T[],
+  renderTable: (tableContainer: HTMLElement, column: T) => void,
+  getCount?: (column: T) => number
+): void {
+  const root = container.createDiv({ cls: "apt-column-layout" });
+  // The header and body are separate aligned grids; the outer wrapper must not become a grid item layout itself.
+  root.style.display = "block";
+  root.style.width = "100%";
+
+  const header = root.createDiv({ cls: "apt-column-layout-header" });
+  header.style.display = "grid";
+  header.style.gridTemplateColumns = columns.map((column) => `${column.width ?? 1}fr`).join(" ");
+  header.style.gap = "12px";
+  for (const column of columns) {
+    const count = getCount?.(column) ?? 0;
+    header.createEl("div", { text: count > 0 ? `${column.name} (${count})` : column.name });
+  }
+
+  const body = root.createDiv({ cls: "apt-column-layout-body" });
+  body.style.display = "grid";
+  body.style.gridTemplateColumns = columns.map((column) => `${column.width ?? 1}fr`).join(" ");
+  body.style.gap = "12px";
+  for (const column of columns) {
+    const panel = body.createDiv({ cls: "apt-column-panel" });
+    renderTable(panel, column);
+  }
 }
 
 export function addThreeColRow(

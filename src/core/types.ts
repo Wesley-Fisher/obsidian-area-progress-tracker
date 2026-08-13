@@ -6,10 +6,24 @@ export type AreaId = string;
 export type ActionId = string;
 export type RecordId = string;
 export type ActivityGroupId = string;
+export type ActivityColumnId = string;
+
+export interface ActivityColumnConfig {
+  id: ActivityColumnId;
+  name: string;
+  width?: number;
+  tableWidths?: { name?: number; current?: number; entry?: number };
+}
+
+export interface ActivityPlacement {
+  groupId: ActivityGroupId;
+  columnId: ActivityColumnId;
+}
 
 export interface ActivityGroupConfig {
   id: ActivityGroupId;
   name: string;
+  columns: ActivityColumnConfig[];
 }
 
 export interface AreaConfig {
@@ -37,7 +51,7 @@ export interface ActionConfig {
   input: ActionInputConfig;
   effects: Record<AreaId, number>;
   max: number;
-  groupIds: ActivityGroupId[];
+  placements: ActivityPlacement[];
 }
 
 export type RecordInputConfig =
@@ -48,7 +62,7 @@ export interface RecordConfig {
   id: RecordId;
   name: string;
   input: RecordInputConfig;
-  groupIds: ActivityGroupId[];
+  placements: ActivityPlacement[];
 }
 
 export interface DailyPlanConfig {

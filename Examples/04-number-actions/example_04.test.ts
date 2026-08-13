@@ -37,18 +37,18 @@ describe("Examples/04-number-actions", () => {
           "input": { "type": "number", "min": 0, "max": 240, "step": 15 },
           "effects": { "career": 0.25 },
           "max": 180,
-          "groupIds": ["career"]
+          "placements": [{ "groupId": "career", "columnId": "main" }]
         },
         {
           "id": "admin_tasks",
           "name": "Admin tasks (count)",
           "input": { "type": "button", "step": 1 },
           "effects": { "career": 1 },
-          "groupIds": ["career"],
+          "placements": [{ "groupId": "career", "columnId": "main" }],
           "max": 0
         }
       ],
-      "groups": [{ "id": "career", "name": "Career" }],
+      "groups": [{ "id": "career", "name": "Career", "columns": [{ "id": "main", "name": "Activities" }] }],
       "records": [],
       "requiredActions": {},
       "dailyPlan": { "actions": {} },

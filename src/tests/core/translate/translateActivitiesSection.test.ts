@@ -31,13 +31,13 @@ describe("render/translate/translateActivitiesSection", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      groups: [{ id: "g1", name: "Group 1" }],
+      groups: [{ id: "g1", name: "Group 1", columns: [{ id: "default", name: "Default" }] }],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, groupIds: ["g1"] },
-        { id: "jump", name: "Jump", input: { type: "button", step: 1 }, effects: {}, max: 0, groupIds: [] },
-        { id: "pushups", name: "Pushups", input: { type: "number", max: 10, step: 1 }, effects: {}, max: 5, groupIds: [] },
+        { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, placements: [{ groupId: "g1", columnId: "default" }] },
+        { id: "jump", name: "Jump", input: { type: "button", step: 1 }, effects: {}, max: 0, placements: [] },
+        { id: "pushups", name: "Pushups", input: { type: "number", max: 10, step: 1 }, effects: {}, max: 5, placements: [] },
       ],
-      records: [{ id: "mood", name: "Mood", input: { type: "text" }, groupIds: ["g1"] }],
+      records: [{ id: "mood", name: "Mood", input: { type: "text" }, placements: [{ groupId: "g1", columnId: "default" }] }],
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { actions: {} },
@@ -64,7 +64,7 @@ describe("render/translate/translateActivitiesSection", () => {
     const g1 = model.groups.find((g) => g.id === "g1")!;
     expect(g1).toBeTruthy();
 
-    const walk = g1.rows.find((r) => r.kind === "action" && r.actionId === "walk")!;
+    const walk = g1.columns[0].rows.find((r) => r.kind === "action" && r.actionId === "walk")!;
     expect(walk.kind).toBe("action");
     if (walk.kind !== "action") throw new Error("expected action");
     expect(walk.entry.kind).toBe("button");
@@ -76,7 +76,7 @@ describe("render/translate/translateActivitiesSection", () => {
     }
 
     const jump = model.groups
-      .flatMap((g) => g.rows)
+      .flatMap((g) => g.columns.flatMap((column) => column.rows))
       .find((r) => r.kind === "action" && r.actionId === "jump")!;
     if (jump.kind !== "action") throw new Error("expected action");
     expect(jump.entry.kind).toBe("button");
@@ -86,7 +86,7 @@ describe("render/translate/translateActivitiesSection", () => {
     }
 
     const pushups = model.groups
-      .flatMap((g) => g.rows)
+      .flatMap((g) => g.columns.flatMap((column) => column.rows))
       .find((r) => r.kind === "action" && r.actionId === "pushups")!;
     if (pushups.kind !== "action") throw new Error("expected action");
     expect(pushups.entry.kind).toBe("number");
@@ -95,7 +95,7 @@ describe("render/translate/translateActivitiesSection", () => {
       expect(pushups.entry.value).toBe("1");
     }
 
-    const mood = g1.rows.find((r) => r.kind === "record" && r.recordId === "mood")!;
+    const mood = g1.columns[0].rows.find((r) => r.kind === "record" && r.recordId === "mood")!;
     expect(mood.kind).toBe("record");
     if (mood.kind !== "record") throw new Error("expected record");
     expect(mood.entry.kind).toBe("recordInput");
@@ -107,11 +107,11 @@ describe("render/translate/translateActivitiesSection", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [],
-      groups: [{ id: "g1", name: "Group 1" }, {id: "g2", name: "Group 2" }],
+      groups: [{ id: "g1", name: "Group 1", columns: [{ id: "default", name: "Default" }] }, {id: "g2", name: "Group 2", columns: [{ id: "default", name: "Default" }] }],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, groupIds: ["g1", "g2"] },
+        { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, placements: [{ groupId: "g1", columnId: "default" }, { groupId: "g2", columnId: "default" }] },
       ],
-      records: [{ id: "mood", name: "Mood", input: { type: "text" }, groupIds: ["g1"] }],
+      records: [{ id: "mood", name: "Mood", input: { type: "text" }, placements: [{ groupId: "g1", columnId: "default" }] }],
       requiredActions: {},
       dailyPlan: { actions: {} },
       weeklyPlan: { actions: {} },
@@ -141,7 +141,7 @@ describe("render/translate/translateActivitiesSection", () => {
     const g2 = model.groups.find((g) => g.id === "g2")!;
     expect(g2).toBeTruthy();
 
-    const walk1 = g1.rows.find((r) => r.kind === "action" && r.actionId === "walk")!;
+    const walk1 = g1.columns[0].rows.find((r) => r.kind === "action" && r.actionId === "walk")!;
     
     // Previous checks
     expect(walk1.kind).toBe("action");
@@ -155,7 +155,7 @@ describe("render/translate/translateActivitiesSection", () => {
     }
 
     // Lighter checks on 2nd rendering
-    const walk2 = g2.rows.find((r) => r.kind === "action" && r.actionId === "walk")!;
+    const walk2 = g2.columns[0].rows.find((r) => r.kind === "action" && r.actionId === "walk")!;
     expect(walk2.kind).toBe("action");
     if (walk2.kind !== "action") throw new Error("expected action");
     expect(walk2.entry.kind).toBe("button");
@@ -165,9 +165,9 @@ describe("render/translate/translateActivitiesSection", () => {
     const config: SystemConfig = {
       version: 1,
       areas: [{ id: "area1", name: "Area 1", minScore: 0, maxScore: 10, baseScore: 0, dailyDecayAlways: 0, dailyDecayUnattended: 0}],
-      groups: [{ id: "g1", name: "Group 1" }],
+      groups: [{ id: "g1", name: "Group 1", columns: [{ id: "default", name: "Default" }] }],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, groupIds: ["g1"] },
+        { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, placements: [{ groupId: "g1", columnId: "default" }] },
       ],
       records: [],
       requiredActions: {
@@ -201,7 +201,7 @@ describe("render/translate/translateActivitiesSection", () => {
     expect(g1).toBeTruthy();
     expect(g1.numActionsStillRequired).toBe(1);
 
-    const walk = g1.rows.find((r) => r.kind === "action" && r.actionId === "walk")! as ActivityRowModelAction;
+    const walk = g1.columns[0].rows.find((r) => r.kind === "action" && r.actionId === "walk")! as ActivityRowModelAction;
     expect(walk.kind).toBe("action");
     expect(walk.requiredLeft).toBe(1); // Require 2, and have 1
   });
@@ -213,9 +213,9 @@ describe("render/translate/translateActivitiesSection", () => {
         { id: "area1", name: "Area 1", minScore: 0, maxScore: 10, baseScore: 0, dailyDecayAlways: 0, dailyDecayUnattended: 0},
         { id: "area2", name: "Area 2", minScore: 0, maxScore: 10, baseScore: 0, dailyDecayAlways: 0, dailyDecayUnattended: 0}
       ],
-      groups: [{ id: "g1", name: "Group 1" }],
+      groups: [{ id: "g1", name: "Group 1", columns: [{ id: "default", name: "Default" }] }],
       actions: [
-        { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, groupIds: ["g1"] },
+        { id: "walk", name: "Walk", input: { type: "button", step: 2 }, effects: {}, max: 2, placements: [{ groupId: "g1", columnId: "default" }] },
       ],
       records: [],
       requiredActions: {
@@ -252,7 +252,7 @@ describe("render/translate/translateActivitiesSection", () => {
     expect(g1).toBeTruthy();
     expect(g1.numActionsStillRequired).toBe(1);
 
-    const walk = g1.rows.find((r) => r.kind === "action" && r.actionId === "walk")! as ActivityRowModelAction;
+    const walk = g1.columns[0].rows.find((r) => r.kind === "action" && r.actionId === "walk")! as ActivityRowModelAction;
     expect(walk.kind).toBe("action");
     expect(walk.requiredLeft).toBe(3); // Have 1, and groups require either 4 or 2
   });
